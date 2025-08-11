@@ -1,0 +1,15 @@
+@import "../theme";
+
+button {
+  padding: 3px 10px;
+  border-radius: 3px;
+  background-color: $surface-container-high;
+
+  &:hover {
+    background-color: $surface-container-highest;
+  }
+
+  &:active {
+    background-color: $inverse-on-surface;
+  }
+}

@@ -1,0 +1,8 @@
+(defvar WORKSPACES `[{"id":1, "windows": 0},{"id": 2, "windows": 0},{"id": 3, "windows": 0},{"id": 4, "windows": 0},{"id": 5, "windows": 0},{"id": 6, "windows": 0},{"id": 7, "windows": 0},{"id": 8, "windows": 0},{"id": 9, "windows": 0},{"id": 10, "windows": 0}]`)
+(defvar ACTIVE_WINDOW `Desktop`)
+(defvar FOCUSED_WORKSPACE `{"id": 1, "windows": 0}`)
+
+(defvar VOLUME_ICON "volume-x")
+(defvar NETWORK_ICON "wifi-off")
+(defvar BATTERY_ICON "battery-warning")
+(defvar NOTIFICATION_ICON "bell-off")

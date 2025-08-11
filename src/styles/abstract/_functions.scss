@@ -1,0 +1,7 @@
+@function random-color() {
+  $r: random(255) - 1;
+  $g: random(255) - 1;
+  $b: random(255) - 1;
+  @return rgb($r, $g, $b);
+}
+

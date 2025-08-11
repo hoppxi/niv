@@ -1,0 +1,50 @@
+(defwidget right-bar []
+  (box
+    :halign "end"
+    :valign "center"
+    :space-evenly false
+    :class "right-bar"
+
+    (box
+      :class "bb-wrap r"
+      (button
+        :class "btn-bar group-btn compacted"
+        (box
+          :space-evenly false
+          :spacing 3
+
+          (label :text {formattime(EWW_TIME, "%I:%M%p")})
+          (icon :name "dot")
+          (label :text {formattime(EWW_TIME, "%a, %b %d")})
+        )
+      )
+    )
+
+    (box
+      :class "bb-wrap r"
+      (button
+        :class "btn-bar group-btn"
+        (box
+          :spacing 3
+          :space-evenly false
+          (icon :name VOLUME_ICON)
+          (icon :name NETWORK_ICON)
+          (box
+            :spacing 1
+            :space-evenly false
+            (icon :name BATTERY_ICON)
+            (label :text "${EWW_BATTERY.BAT0.capacity}%")
+          )
+        )
+      )
+    )
+
+    (box
+      :class "bb-wrap r"
+      (button
+        :class "btn-bar"
+        (icon :name NOTIFICATION_ICON)
+      )
+    )
+  )
+)
