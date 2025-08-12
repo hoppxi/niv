@@ -1,0 +1,16 @@
+@import "../theme";
+
+progressbar {
+  trough {
+    background-color: $surface-bright;
+    border-radius: 15px;
+    padding: 10px 0;
+
+    progress {
+      padding: 10px;
+      background-color: $primary;
+      border-radius: 15px;
+      min-width: 5px;
+    }
+  }
+}
