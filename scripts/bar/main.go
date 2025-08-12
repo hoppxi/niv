@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"fmt"
 	"log"
+	"net"
 	"os"
 	"os/exec"
 	"os/signal"
@@ -12,7 +13,6 @@ import (
 	"strings"
 	"syscall"
 	"time"
-	"net"
 )
 
 var commands = map[string]string{
