@@ -1,4 +1,4 @@
-(defvar WORKSPACES `[{"id":1, "windows": 0},{"id": 2, "windows": 0},{"id": 3, "windows": 0},{"id": 4, "windows": 0},{"id": 5, "windows": 0},{"id": 6, "windows": 0},{"id": 7, "windows": 0},{"id": 8, "windows": 0},{"id": 9, "windows": 0},{"id": 10, "windows": 0}]`)
+(defvar WORKSPACES `[{"id":1, "windows": 0},{"id": 2, "windows": 0},{"id": 3, "windows": 0},{"id": 4, "windows": 0},{"id": 5, "windows": 0}]`)
 (defvar ACTIVE_WINDOW `{"title": "Desktop"}`)
 (defvar FOCUSED_WORKSPACE `{"id": 1, "windows": 0}`)
 
@@ -9,3 +9,40 @@
 (defvar NETWORK_ICON "wifi-off")
 (defvar BATTERY_ICON "battery-warning")
 (defvar NOTIFICATION_ICON "bell-off")
+
+(defvar POWER_MENU_BUTTONS `[
+  {
+    "icon": "lock",
+    "label": "Lock Screen",
+    "cmd": "eww update POWER_MENU_TITLE='Locking...'; eww update POWER_MENU_STACK=1; sleep 0.5; loginctl lock-session; eww update POWER_MENU_STACK=0; eww close power-menu"
+  },
+  {
+    "icon": "pause",
+    "label": "Suspend",
+    "cmd": "eww update POWER_MENU_TITLE='Suspending...'; sleep 0.5; systemctl suspend; eww update POWER_MENU_STACK=0; eww close power-menu;"
+  },
+  {
+    "icon": "log-out",
+    "label": "Logout",
+    "cmd": "loginctl terminate-session $XDG_SESSION_ID"
+  },
+  {
+    "icon": "moon",
+    "label": "Hibernate",
+    "cmd": "eww update POWER_MENU_TITLE='Hibernating...'; sleep 0.5; systemctl hibernate; eww update POWER_MENU_STACK=0; eww close power-menu;"
+  },
+  {
+    "icon": "refresh-ccw",
+    "label": "Restart",
+    "cmd": "systemctl reboot"
+  },
+  {
+    "icon": "power",
+    "label": "Shutdown",
+    "cmd": "systemctl poweroff"
+  }
+]`)
+
+(defvar POWER_MENU_STACK 0)
+(defvar POWER_MENU_TITLE "Locking...")
+(deflisten POWER_MENU_STATE_VALUE `for i in {1..100}; do echo $i; sleep 0.01; done`)

@@ -4,3 +4,4 @@
 
 (include "./src/widgets/bar/main.yuck")
 (include "./src/widgets/clock/main.yuck")
+(include "./src/widgets/power-menu/main.yuck")

@@ -6,12 +6,12 @@ Just making some widget built with Go and `EWW` for Hyprland. No big deal :)
 
 - [x] Bar
 - [x] Clock
+- [x] Power Menu
 - [ ] Wallpaper
 - [ ] Wallpaper Manager
 - [ ] Quick Settings
 - [ ] Music Controls
 - [ ] Volume Mixer
-- [ ] Power Menu
 - [ ] System Monitor
 - [ ] Launcher
   - [ ] Clipboard (`:ch`, `:clipboard`)

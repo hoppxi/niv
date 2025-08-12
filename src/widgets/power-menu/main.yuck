@@ -1,0 +1,67 @@
+(defwidget main-power-menu []
+  (stack
+    :class "main-power-menu"
+    :valign "center"
+    :halign "center"
+    :selected POWER_MENU_STACK
+
+    (box
+      :valign "center"
+      :halign "center"
+      :orientation "v"
+      :space-evenly false
+      :spacing 5
+      (box
+        :orientation "v"
+        :class "info"
+        (label :halign "center" :class "info-title" :text "Power menu")
+        (label :halign "center" :class "info-detail" :text "Navigate with arrow key & click esc to close.")
+      )
+      (box
+        :orientation "v"
+        :spacing 3
+        :width 320
+        (for BUTTON in POWER_MENU_BUTTONS
+          (button 
+            :onclick {BUTTON.cmd}
+            :class "power-btn"
+            :timeout "3s"
+            (box 
+              :halign "start"
+              :space-evenly false
+              :spacing 3
+              (icon :name {BUTTON.icon})
+              (label :text {BUTTON.label})
+            )
+          )
+        )
+      )
+    )
+
+    (box
+      :halign "center"
+      :valign "center"
+      :orientation "v"
+      :spacing 5
+      :space-evenly false
+      (label :class "info-title" :text POWER_MENU_TITLE)
+      (progress :width 300 :value POWER_MENU_STATE_VALUE)
+    )
+  )
+)
+
+(defwindow power-menu
+  :monitor 0
+  :geometry (geometry 
+    :x "0"
+    :y "0"
+    :width "100%"
+    :height "105%"
+    :anchor "center center"
+  )
+  :stacking "fg"
+  :namespace "widget-power"
+  ; :focusable "exclusive"
+  (main-power-menu)
+)
+
