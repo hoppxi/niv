@@ -33,6 +33,20 @@ window.clock {
 
   progressbar {
     min-height: 130px;
+
+    trough {
+      background-color: transparent;
+      border-radius: 0px;
+      padding: 0px;
+
+      progress {
+        padding: 0;
+        background-color: transparent;
+        border-radius: 0;
+        min-width: 6px;
+      }
+    }
+
     &.t trough progress {
       border-radius: 9px 9px 0px 0px;
     }
