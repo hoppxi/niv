@@ -62,5 +62,5 @@ func main() {
 	}
 
 	buildWidgets(root, "scripts")
-	buildWidgets(root, "lib")
+	buildWidgets(root, "lib") // for icons and other outputs used by multiple windows
 }
