@@ -1,0 +1,30 @@
+(defwidget cava-clock []
+	(box
+		:halign "center"
+		:valign "center"
+		:space-evenly false
+		:class "workspace"
+		:orientation "v"
+		(box
+			:halign "center"
+			:valign "center"
+			:space-evenly false
+			:spacing 3
+			:class "workspace"
+			(for BAR in CAVA_BARS_NUM
+				(progress :class "t" :flipped true :orientation "v" :value {CAVA_BARS[BAR]})
+			)
+		)
+		(box
+			:halign "center"
+			:valign "center"
+			:space-evenly false
+			:spacing 3
+			:class "workspace"
+			(for BAR in CAVA_BARS_NUM
+				(progress :class "b" :orientation "v" :value {CAVA_BARS[BAR]})
+			)
+		)
+	)
+)
+
