@@ -1,3 +1,4 @@
-./niv-bar
-./niv-icons
-./build
+niv-bar
+niv-clock
+niv-icons
+build

@@ -5,7 +5,7 @@ Just making some widget built with Go and `EWW` for Hyprland. No big deal :)
 # ToDo
 
 - [x] Bar
-- [ ] Clock
+- [x] Clock
 - [ ] Wallpaper
 - [ ] Wallpaper Manager
 - [ ] Quick Settings
