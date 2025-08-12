@@ -20,7 +20,7 @@ window.bar {
     border-radius: 15px;
 
     .bb-wrap {
-      background-color: rgba($color: $background, $alpha: 0.7);
+      background-color: rgba($color: $background, $alpha: 70%);
 
       &.l {
         padding-right: 2.3px;
@@ -40,7 +40,7 @@ window.bar {
 
     box {
       padding-left: 2.3px;
-      background-color: rgba($color: $background, $alpha: 0.7);
+      background-color: rgba($color: $background, $alpha: 70%);
       border-radius: 15px;
     }
     .active ~ * {
