@@ -3,47 +3,86 @@
     :halign "end"
     :valign "center"
     :space-evenly false
-    :class "right-bar"
 
-    (box
-      :class "bb-wrap r"
-      (button
-        :class "btn-bar group-btn compacted"
-        (box
-          :space-evenly false
-          :spacing 3
-
-          (label :text {formattime(EWW_TIME, "%I:%M%p")})
-          (icon :name "dot")
-          (label :text {formattime(EWW_TIME, "%a, %b %d")})
-        )
-      )
-    )
-
-    (box
-      :class "bb-wrap r"
-      (button
-        :class "btn-bar group-btn"
-        (box
-          :spacing 3
-          :space-evenly false
-          (icon :name VOLUME_ICON)
-          (icon :name NETWORK_ICON)
+    (eventbox
+      :onhover "eww update SHOW_CONTROLS_BAR=true"
+      :onhoverlost "eww update SHOW_CONTROLS_BAR=false"
+		  :visible {SONG_STOPPED ? false : true}
+      (box
+        :space-evenly false
+        :spacing 2
+        :class "now-playing"
+        (revealer
+          :reveal SHOW_CONTROLS_BAR
+          :transition "slideleft"
           (box
-            :spacing 1
+            :class "action-container"
             :space-evenly false
-            (icon :name BATTERY_ICON)
-            (label :text "${EWW_BATTERY.BAT0.capacity}%")
+            (button :onclick "playerctl previous" :valign "center" (icon :name "skip-back"))
+            (button :onclick "playerctl play-pause" :valign "center" (icon :name {SONG_PLAYING==true ? "pause" : "play"}))
+            (button :onclick "playerctl next" :valign "center" (icon :name "skip-forward"))
+          )
+          
+        )
+
+        (eventbox
+          :onclick "eww open media-control"
+          :class "end-eventbox"
+          (box
+            :space-evenly false
+            :spacing 3
+            (icon :name "music-2")
+            (label :limit-width 20 :text "${SONG_ARTIST} - ${SONG_TITLE}")
           )
         )
       )
     )
 
     (box
-      :class "bb-wrap r"
-      (button
-        :class "btn-bar"
-        (icon :name NOTIFICATION_ICON)
+      :space-evenly false
+      :class "right-bar"
+      :valign "center"
+
+      (box
+        :class "bb-wrap r"
+        (button
+          :class "btn-bar group-btn compacted"
+          (box
+            :space-evenly false
+            :spacing 3
+
+            (label :text {formattime(EWW_TIME, "%I:%M%p")})
+            (icon :name "dot")
+            (label :text {formattime(EWW_TIME, "%a, %b %d")})
+          )
+        )
+      )
+
+      (box
+        :class "bb-wrap r"
+        (button
+          :class "btn-bar group-btn"
+          (box
+            :spacing 3
+            :space-evenly false
+            (icon :name VOLUME_ICON)
+            (icon :name NETWORK_ICON)
+            (box
+              :spacing 1
+              :space-evenly false
+              (icon :name BATTERY_ICON)
+              (label :text "${EWW_BATTERY.BAT0.capacity}%")
+            )
+          )
+        )
+      )
+
+      (box
+        :class "bb-wrap r"
+        (button
+          :class "btn-bar"
+          (icon :name NOTIFICATION_ICON)
+        )
       )
     )
   )
