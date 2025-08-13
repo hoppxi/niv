@@ -22,5 +22,5 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Error getting home directory: %v\n", err)
 		return
 	}
-	runCmd(filepath.Join(home, ".config/eww/bin/niv-clock"))
+	runCmd(filepath.Join(home, ".config/eww/bin/niv-power-menu"))
 }

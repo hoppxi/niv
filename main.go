@@ -17,10 +17,17 @@ func runCmd(name string, args ...string) {
 }
 
 func main() {
-		home, err := os.UserHomeDir()
+	home, err := os.UserHomeDir()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error getting home directory: %v\n", err)
 		return
 	}
+
+	// Start eww daemon
+	runCmd("eww", "daemon")
+
+	// Start widgets
+	runCmd(filepath.Join(home, ".config/eww/bin/niv-bar"))
+	runCmd(filepath.Join(home, ".config/eww/bin/niv-icon"))
 	runCmd(filepath.Join(home, ".config/eww/bin/niv-clock"))
 }

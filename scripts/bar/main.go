@@ -15,6 +15,24 @@ import (
 	"time"
 )
 
+func runCmd(name string, args ...string) {
+	cmd := exec.Command(name, args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Start(); err != nil {
+		fmt.Fprintf(os.Stderr, "Error starting %s: %v\n", name, err)
+	}
+}
+
+func runWidget() {
+		home, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error getting home directory: %v\n", err)
+		return
+	}
+	runCmd(filepath.Join(home, ".config/eww/bin/niv-bar"))
+}
+
 var commands = map[string]string{
 	"workspace": `
 workspaces=$(
@@ -77,6 +95,8 @@ func runShellCommand(eventType string) {
 }
 
 func main() {
+	runWidget();
+
 	runtimeDir := os.Getenv("XDG_RUNTIME_DIR")
 	instanceSig := os.Getenv("HYPRLAND_INSTANCE_SIGNATURE")
 
