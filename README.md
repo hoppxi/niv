@@ -7,10 +7,10 @@ Just making some widget built with Go and `EWW` for Hyprland. No big deal :)
 - [x] Bar
 - [x] Clock
 - [x] Power Menu
+- [x] Media Controls
 - [ ] Wallpaper
 - [ ] Wallpaper Manager
 - [ ] Quick Settings
-- [ ] Music Controls
 - [ ] Volume Mixer
 - [ ] System Monitor
 - [ ] Launcher
