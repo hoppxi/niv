@@ -95,4 +95,29 @@ window.bar {
       }
     }
   }
+
+  .now-playing {
+    .action-container {
+      background-color: $surface-container-high;
+      border-radius: 15px 3px 3px 15px;
+      padding: 0 10px;
+      button {
+        padding: 0 2px;
+        background-color: transparent;
+      }
+    }
+
+    widget.end-eventbox {
+      > box {
+        border: 1px solid transparent;
+        border-radius: 3px 15px 15px 3px;
+      }
+
+      &:hover {
+        > box {
+          border-color: $outline-variant;
+        }
+      }
+    }
+  }
 }
