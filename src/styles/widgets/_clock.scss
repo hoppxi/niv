@@ -1,19 +1,4 @@
 @import "../theme";
-@import "../abstract/functions";
-
-$bars-gradients: (
-  $on-primary,
-  $primary-container,
-  $primary-container,
-  $primary,
-  $primary,
-  $secondary,
-  $primary,
-  $primary,
-  $primary-container,
-  $primary-container,
-  $on-primary
-);
 
 window.clock {
   background-color: transparent;
@@ -29,38 +14,5 @@ window.clock {
     color: $secondary;
     font-size: 2rem;
     font-weight: 700;
-  }
-
-  progressbar {
-    min-height: 130px;
-
-    trough {
-      background-color: transparent;
-      border-radius: 0px;
-      padding: 0px;
-
-      progress {
-        padding: 0;
-        background-color: transparent;
-        border-radius: 0;
-        min-width: 6px;
-      }
-    }
-
-    &.t trough progress {
-      border-radius: 9px 9px 0px 0px;
-    }
-
-    &.b trough progress {
-      border-radius: 0px 0px 9px 9px;
-    }
-    @for $i from 1 through 60 {
-      $t: ($i - 1) / (60 - 1);
-      &:nth-child(#{$i}) {
-        trough progress {
-          background-color: gradient-color($bars-gradients, $t);
-        }
-      }
-    }
   }
 }
