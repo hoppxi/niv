@@ -3,16 +3,17 @@
 		:halign "center"
 		:valign "center"
 		:space-evenly false
-		:class "workspace"
+		:class "cava-visualizer"
 		:orientation "v"
+		:visible {SONG_STOPPED ? false : true}
 		(box
 			:halign "center"
 			:valign "center"
 			:space-evenly false
 			:spacing 3
-			:class "workspace"
+			:class "cava-visualizer"
 			(for BAR in CAVA_BARS_NUM
-				(progress :class "t" :flipped true :orientation "v" :value {CAVA_BARS[BAR]})
+				(progress :class "cava t" :flipped true :orientation "v" :value {CAVA_BARS[BAR]})
 			)
 		)
 		(box
@@ -20,9 +21,9 @@
 			:valign "center"
 			:space-evenly false
 			:spacing 3
-			:class "workspace"
+			:class "cava-visualizer"
 			(for BAR in CAVA_BARS_NUM
-				(progress :class "b" :orientation "v" :value {CAVA_BARS[BAR]})
+				(progress :class "cava b" :orientation "v" :value {CAVA_BARS[BAR]})
 			)
 		)
 	)
