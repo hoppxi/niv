@@ -14,20 +14,20 @@
 (defvar BATTERY_ICON "battery-warning")
 (defvar NOTIFICATION_ICON "bell-off")
 
-;; Power menu
-(defvar POWER_MENU_STACK 0)
-(defvar POWER_MENU_TITLE "Locking...")
-(deflisten POWER_MENU_STATE_VALUE `for i in {1..100}; do echo $i; sleep 0.01; done`)
-(defvar POWER_MENU_BUTTONS `[
+;; Wlogout
+(defvar WLOGOUT_STACK 0)
+(defvar WLOGOUT_TITLE "Locking...")
+(deflisten WLOGOUT_STATE_VALUE `for i in {1..100}; do echo $i; sleep 0.01; done`)
+(defvar WLOGOUT_BUTTONS `[
   {
     "icon": "lock",
     "label": "Lock Screen",
-    "cmd": "eww update POWER_MENU_TITLE='Locking...'; eww update POWER_MENU_STACK=1; sleep 0.5; loginctl lock-session; eww update POWER_MENU_STACK=0; eww close power-menu"
+    "cmd": "eww update WLOGOUT_TITLE='Locking...'; eww update WLOGOUT_STACK=1; sleep 0.5; loginctl lock-session; eww update WLOGOUT_STACK=0; eww close power-menu"
   },
   {
     "icon": "pause",
     "label": "Suspend",
-    "cmd": "eww update POWER_MENU_TITLE='Suspending...'; sleep 0.5; systemctl suspend; eww update POWER_MENU_STACK=0; eww close power-menu;"
+    "cmd": "eww update WLOGOUT_TITLE='Suspending...'; sleep 0.5; systemctl suspend; eww update WLOGOUT_STACK=0; eww close power-menu;"
   },
   {
     "icon": "log-out",
@@ -37,7 +37,7 @@
   {
     "icon": "moon",
     "label": "Hibernate",
-    "cmd": "eww update POWER_MENU_TITLE='Hibernating...'; sleep 0.5; systemctl hibernate; eww update POWER_MENU_STACK=0; eww close power-menu;"
+    "cmd": "eww update WLOGOUT_TITLE='Hibernating...'; sleep 0.5; systemctl hibernate; eww update WLOGOUT_STACK=0; eww close power-menu;"
   },
   {
     "icon": "refresh-ccw",
