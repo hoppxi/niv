@@ -4,32 +4,62 @@ Just making some widget built with Go and `EWW` for Hyprland. No big deal :)
 
 # ToDo
 
-- [x] Bar
-- [x] Clock
-- [x] Power Menu
-- [x] Media Controls
-- [ ] Wallpaper
-- [ ] Wallpaper Manager
+- [ ] Bar
+- [ ] Clock
+- [ ] Wlogout
+- [ ] Media Controls
 - [ ] Quick Settings
+  - [ ] Network
+  - [ ] Bluetooth
+  - [ ] Power
+  - [ ] Display
+  - [ ] Wlogout
+  - [ ] Extra utils links
 - [ ] Volume Mixer
 - [ ] System Monitor
+  - [ ] CPU
+  - [ ] Memory
+  - [ ] Network download/upload
+  - [ ] Disk usage
+- [ ] System info
 - [ ] Launcher
   - [ ] Clipboard (`:ch`, `:clipboard`)
   - [ ] App (`:app`, none)
   - [ ] Emoji Picker (`:emoji`, `:e`)
-  - [ ] Shortcuts (`:url https://...`, `:cal 10*20`, `:g google-search`, etc.)
+  - [ ] URL (`:url https://...`)
+  - [ ] Search (`:g google-search`, `:b bing-search`)
+  - [ ] Calculator (`:cal 10 -20`)
   - [ ] Note Search (`:notes`)
   - [ ] Todo Search (`:todo`)
-  - [ ] And more
+  - [ ] Bookmarks (`:bk`, `bookmarks`)
+  - [ ] Wallpaper (`:wp`, `wallpapers`)
+  - [ ] File Search (`:file`, `:f`)
+  - [ ] Packages (`:pkg pkg-name`, `:p`)
+  - [ ] Weather (`:weather`, `:w`)
+  - [ ] Screenshot (`:ss capture/folder-search`, `:screenshot`)
+  - [ ] Dictionary (`:dict word`, `:d`)
+  - [ ] Translate (`:trans text`, `:t`)
+  - [ ] Terminal (`:term termianl-app`, `:terminal`)
+  - [ ] Command (`:cmd command`)
+  - [ ] Widgets (`:w bar`)
+  - [ ] System info (`:sysinfo key`)
 - [ ] Notification
 - [ ] Screenshot Utils
+  - [ ] Sound
+  - [ ] Video Screen
+  - [ ] Screenshot
 - [ ] Calendar
 - [ ] Todo App
 - [ ] Note App
-- [ ] Translator
-- [ ] Lockscreen
-- [ ] Shelf
-- [ ] About
+- [ ] Lockscreen <!-- just overlay over hyprlock or anyother -->
+- [ ] Shelf <!-- quick links -->
+  - [ ] Bookmarks
+  - [ ] Wallpapers
+  - [ ] Save workspaces
+  - [ ] Utilities
+  - [ ] Pinned apps
 - [ ] Welcome
-- [ ] Settings
-- [ ] NIX!
+<!--
+- [ ] Wallpaper
+- [ ] Wallpaper Manager
+      Use swww -->
