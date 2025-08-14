@@ -1,0 +1,23 @@
+@import "../theme";
+
+scale {
+  trough {
+    background-color: $surface-bright;
+    border-radius: 15px;
+
+    highlight {
+      padding: 10px;
+      background-color: $primary;
+      border-radius: 15px;
+      min-width: 5px;
+    }
+  }
+
+  &.v {
+    trough {
+      highlight {
+        min-height: 5px;
+      }
+    }
+  }
+}
