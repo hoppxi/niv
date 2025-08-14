@@ -1,0 +1,14 @@
+.g-container {
+  .g-btn {
+    border-radius: 3px;
+    padding: 10px;
+
+    &:first-child {
+      border-radius: 15px 15px 3px 3px;
+    }
+
+    &:last-child {
+      border-radius: 3px 3px 15px 15px;
+    }
+  }
+}
