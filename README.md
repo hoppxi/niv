@@ -4,18 +4,24 @@ Just making some widget built with Go and `EWW` for Hyprland. No big deal :)
 
 # ToDo
 
-- [ ] Bar
-- [ ] Clock
-- [ ] Wlogout
-- [ ] Media Controls
+- [x] Bar
+- [x] Clock
+- [x] Wlogout
+- [x] Media Controls
+- [x] Notification
+- [ ] Planner
+  - [x] Calendar
+  - [ ] Todo App
+  - [ ] Note App
 - [ ] Quick Settings
+  - [x] Landing
   - [ ] Network
   - [ ] Bluetooth
+  - [ ] Volume Mixer
   - [ ] Power
   - [ ] Display
   - [ ] Wlogout
   - [ ] Extra utils links
-- [ ] Volume Mixer
 - [ ] System Monitor
   - [ ] CPU
   - [ ] Memory
@@ -43,14 +49,10 @@ Just making some widget built with Go and `EWW` for Hyprland. No big deal :)
   - [ ] Command (`:cmd command`)
   - [ ] Widgets (`:w bar`)
   - [ ] System info (`:sysinfo key`)
-- [ ] Notification
 - [ ] Screenshot Utils
   - [ ] Sound
   - [ ] Video Screen
   - [ ] Screenshot
-- [ ] Calendar
-- [ ] Todo App
-- [ ] Note App
 - [ ] Lockscreen <!-- just overlay over hyprlock or anyother -->
 - [ ] Shelf <!-- quick links -->
   - [ ] Bookmarks
