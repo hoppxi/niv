@@ -1,0 +1,81 @@
+@import "../theme";
+
+window.quick-settings {
+  background-color: rgba($color: $background, $alpha: 90%);
+  border-radius: 15px;
+}
+
+.main-quick-settings {
+  padding: 10px;
+
+  .quick-btns {
+    button {
+      background-color: transparent;
+      padding: 3px;
+      border-radius: 15px;
+
+      &:hover {
+        background-color: $surface-container-high;
+      }
+    }
+  }
+
+  .slider-container {
+    padding: 5px;
+    border-radius: 15px;
+    background-color: $surface-container;
+
+    button {
+      border-radius: 15px;
+      padding: 0;
+    }
+  }
+
+  .qs-scale.v {
+    trough {
+      border-radius: 18px;
+      highlight {
+        border-radius: 18px;
+        padding: 12px;
+        // padding-top: 0;
+        // padding-bottom: 0;
+        // min-height: 15px;
+      }
+    }
+  }
+
+  .qs-btn {
+    border-radius: 30px;
+    padding: 5px;
+    min-width: 140px;
+    background-color: $surface-container;
+
+    &:hover {
+      background-color: $surface-container-high;
+      .icon {
+        background-color: $surface-container-highest;
+      }
+    }
+
+    .icon {
+      background-color: $surface-container-high;
+      border-radius: 30px;
+      padding: 10px;
+    }
+
+    .info {
+      color: $outline;
+      font-style: italic;
+      font-size: 11px;
+    }
+  }
+
+  .g-btn {
+    padding: 12px;
+    background-color: $surface-container;
+
+    &:hover {
+      background-color: $surface-container-high;
+    }
+  }
+}
