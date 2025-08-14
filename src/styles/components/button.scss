@@ -12,4 +12,16 @@ button {
   &:active {
     background-color: $inverse-on-surface;
   }
+
+  &.highlight-action-btn {
+    background-color: $on-primary;
+
+    &:hover {
+      background-color: $primary-container;
+    }
+
+    &.single {
+      border-radius: 15px;
+    }
+  }
 }
