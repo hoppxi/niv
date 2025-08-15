@@ -2,6 +2,7 @@
 
 (include "./src/components/icons.yuck")
 (include "./src/components/navigator.yuck")
+(include "./src/components/selector.yuck")
 
 (include "./src/widgets/bar/main.yuck")
 (include "./src/widgets/clock/main.yuck")
@@ -10,3 +11,5 @@
 (include "./src/widgets/notification/main.yuck")
 (include "./src/widgets/planner/main.yuck")
 (include "./src/widgets/quick-settings/main.yuck")
+(include "./src/widgets/shelf/main.yuck")
+(include "./src/widgets/screenshot-utils/main.yuck")
