@@ -1,0 +1,13 @@
+@import "../theme";
+
+entry {
+  padding: 10px;
+  border-radius: 15px;
+  border: 1px solid $outline-variant;
+  background-color: $surface-container;
+
+  &:focus {
+    background-color: $surface-container-high;
+    border-color: $outline;
+  }
+}
