@@ -1,0 +1,30 @@
+@import "../theme";
+
+.selector-container {
+  background-color: $surface-container-high;
+  border-radius: 30px;
+
+  > box {
+    padding-left: 2.3px;
+    background-color: rgba($color: $background, $alpha: 70%);
+    border-radius: 30px;
+  }
+
+  .active ~ * {
+    padding-right: 2.3px;
+    padding-left: 0;
+  }
+
+  .selector-btn {
+    border-radius: 30px;
+    padding: 3px 13px;
+    border: 1px solid transparent;
+  }
+
+  .active {
+    padding: 0 2.3px;
+    .selector-btn {
+      border-color: $outline;
+    }
+  }
+}
