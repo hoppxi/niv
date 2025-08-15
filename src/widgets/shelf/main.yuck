@@ -1,0 +1,127 @@
+(defwidget main-shelf []
+	(box
+		:class "main-shelf"
+		(stack
+			(box
+				:orientation "v"
+				:space-evenly false
+				:spacing 10
+
+				(box
+					:class "top"
+					:space-evenly false
+					:spacing 5
+
+					(box :class "avater" :width 100 :height 100 :style "background-image: url('./assets/vectors/nixos.svg');")
+					(box 
+						:orientation "v"
+						:valign "start"
+						:space-evenly false
+						:spacing 3
+						(label :class "font-b" :halign "start" :text "hoppxi@ea")
+						(label :class "font-m" :halign "start" :text "1 hour, 22 min session time")
+						(label :class "font-m" :halign "start" :text "PC name")
+					)
+				)
+
+				(input :value {ACTIVE_WINDOW.title=="null" ? "Desktop" : ACTIVE_WINDOW.title})
+
+				(box
+					:class "pinned-apps"
+					:orientation "v"
+					:spacing 3
+					(box
+						:spacing 3
+						:class "r-1"
+						(button :onclick "brave &" (image :icon-size "large-toolbar" :icon "brave"))
+						(button :onclick "Telegram &" (image :icon-size "large-toolbar" :icon "telegram-desktop-bin"))
+						(button :onclick "code &" (image :icon-size "large-toolbar" :icon "code"))
+						(button :onclick "alacritty &" (image :icon-size "large-toolbar" :icon "Alacritty"))
+					)
+					(box
+						:spacing 3
+						:class "r-2"
+						(button :onclick "alacritty -e btop &" (image :icon-size "large-toolbar" :icon "btop"))
+						(button :onclick "alacritty -e nvim &" (image :icon-size "large-toolbar" :icon "nvim"))
+						(button :onclick "spotify &" (image :icon-size "large-toolbar" :icon "spotify"))
+						(button :onclick "vesktop &" (image :icon-size "large-toolbar" :icon "vesktop"))
+					)
+				)
+
+				(box
+					:class "g-container"
+					:orientation "v"
+					:spacing 3
+					(button :class "g-btn" 
+						(box
+							:space-evenly false
+							:spacing 3
+							(icon :name "bookmark")
+							(label :text "Bookmarks")
+						)
+					)
+					(button :class "g-btn" 
+						(box
+							:space-evenly false
+							:spacing 3
+							(icon :name "image")
+							(label :text "Wallpapers")
+						)
+					)
+					(button :class "g-btn" 
+						(box
+							:space-evenly false
+							:spacing 3
+							(icon :name "bookmark")
+							(label :text "Workspaces")
+						)
+					)
+					(button :class "g-btn" 
+						(box
+							:space-evenly false
+							:spacing 3
+							(icon :name "bookmark")
+							(label :text "Accessories")
+						)
+					)
+				)
+				(box
+					:class "g-container"
+					:orientation "v"
+					:spacing 3
+					(button :class "g-btn" 
+						(box
+							:space-evenly false
+							:spacing 3
+							(icon :name "pen")
+							(label :text "Config (niv, eww)")
+						)
+					)
+
+					(button :class "g-btn" 
+						(box
+							:space-evenly false
+							:spacing 3
+							(icon :name "info")
+							(label :text "About")
+						)
+					)
+				)
+			)
+		)
+	)
+)
+
+(defwindow shelf
+  :monitor 0
+  :geometry (geometry 
+    :x "5"
+    :y "5"
+    :width "280px"
+		:height "95%"
+    :anchor "center left"
+  )
+  :stacking "fg"
+  :namespace "widget-shelf"
+  (main-shelf)
+)
