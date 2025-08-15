@@ -21,13 +21,11 @@ Just making some widget built with Go and `EWW` for Hyprland. No big deal :)
   - [ ] Power
   - [ ] Display
   - [ ] Wlogout
-  - [ ] Extra utils links
 - [ ] System Monitor
   - [ ] CPU
   - [ ] Memory
   - [ ] Network download/upload
   - [ ] Disk usage
-- [ ] System info
 - [ ] Launcher
   - [ ] Clipboard (`:ch`, `:clipboard`)
   - [ ] App (`:app`, none)
@@ -55,6 +53,7 @@ Just making some widget built with Go and `EWW` for Hyprland. No big deal :)
   - [ ] Screenshot
 - [ ] Lockscreen <!-- just overlay over hyprlock or anyother -->
 - [ ] Shelf <!-- quick links -->
+  - [x] Landing
   - [ ] Bookmarks
   - [ ] Wallpapers
   - [ ] Save workspaces
