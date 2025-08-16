@@ -75,8 +75,8 @@
 (defwindow media-control
   :monitor 0
   :geometry (geometry 
-    :x "300"
-    :y "10"
+    :x "5"
+    :y "5"
     :width "280px"
     :anchor "top right"
   )
