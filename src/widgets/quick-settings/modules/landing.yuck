@@ -1,0 +1,156 @@
+(defwidget landing-qs []
+	(box
+		:class "landing"
+		:orientation "v"
+		:space-evenly false
+		:spacing 5
+
+		(box
+			:class ""
+			:spacing 5
+			:orientation "v"
+			(box
+				:class ""
+				:spacing 5
+				(quicksettings-button
+					:key "WiFi"
+					:value "5G-MIFI-34EB"
+					:uicon NETWORK_ICON
+					:active true
+					:extendable true
+					:onclick "eww update ACTIVE_STACK_QUICK_SETTINGS=1"
+				)
+				(quicksettings-button
+					:key "Bluetooth"
+					:value "uvvvw"
+					:uicon "bluetooth"
+					:active false
+					:extendable true
+					:onclick "eww update ACTIVE_STACK_QUICK_SETTINGS=2"
+				)
+			)
+
+			(box
+				:class ""
+				:spacing 5
+				(quicksettings-button
+					:key "Nightlight"
+					:value "off"
+					:uicon "eye"
+					:active false
+					:extendable true
+					:onclick "eww update ACTIVE_STACK_QUICK_SETTINGS=3"
+				)
+				(quicksettings-button
+					:key "Battery"
+					:value "${EWW_BATTERY.BAT0.capacity}% ${EWW_BATTERY.BAT0.status}"
+					:uicon BATTERY_ICON
+					:active false
+					:extendable true
+					:onclick "eww update ACTIVE_STACK_QUICK_SETTINGS=4"
+				)
+			)
+		)
+
+		(box
+			:spacing 5
+			
+			(box
+				; :space-evenly false
+				:spacing 5
+
+				(box
+					:class "slider-container"
+					:spacing 5
+					:space-evenly false
+					(box
+						:orientation "v"
+						:valign "fill"
+						(button :onclick "eww update ACTIVE_STACK_QUICK_SETTINGS=5" (icon :name VOLUME_ICON))
+						(label :text "25%")
+					)
+					(scale :class "qs-scale v" :height 130 :orientation "v" :flipped true)
+				)
+
+				(box
+					:class "slider-container"
+					:spacing 5
+					:space-evenly false
+					(box
+						:orientation "v"
+						:valign "fill"
+						(button :onclick "eww update ACTIVE_STACK_QUICK_SETTINGS=3" (icon :name "sun"))
+						(label :text "25%")
+					)
+					(scale :class "qs-scale v" :height 130 :orientation "v" :flipped true)
+				)
+			)
+			(box
+				:class ""
+				:spacing 5
+				:orientation "v"
+				(quicksettings-button
+					:key "Airplane"
+					:value "off"
+					:uicon "plane"
+					:active false
+					:extendable false
+				)
+				(quicksettings-button
+					:key "Notifications"
+					:value "on"
+					:uicon NOTIFICATION_ICON
+					:active true
+					:extendable true
+					:onclick "eww update ACTIVE_STACK_QUICK_SETTINGS=6"
+				)
+				(quicksettings-button
+					:key "Music title"
+					:value "Artists"
+					:uicon "music-2"
+					:active true
+					:extendable true
+					:onclick "eww close quick-settings; eww open media-control"
+				)
+			)
+		)
+
+		(box
+			:class "g-container"
+			:orientation "v"
+			:spacing 3
+			(button :class "g-btn about"
+				(box
+					:space-evenly false
+					:spacing 3
+					(icon :name "clipboard")
+					(label :text "Clipboard")
+				)
+			)
+			(button :class "g-btn about"
+				(box
+					:space-evenly false
+					:spacing 3
+					(icon :name "fullscreen")
+					(label :text "Screenshot")
+				)
+			)
+			(button :class "g-btn about"
+				(box
+					:space-evenly false
+					:spacing 3
+					(icon :name "bookmark")
+					(label :text "Bookmarks")
+				)
+			)
+			(button :class "g-btn about"
+				(box
+					:space-evenly false
+					:spacing 3
+					(icon :name "monitor")
+					(label :text "System monitor")
+				)
+			)
+		)
+	)
+)

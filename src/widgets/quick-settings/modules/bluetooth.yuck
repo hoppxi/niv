@@ -1,0 +1,143 @@
+(defvar ACTIVE_STACK_BLUETOOTH_QS 0)
+(defvar BLUETOOTH_QS_NAVIGATOR `[
+  {
+    "id": 0,
+    "icon": "info",
+    "label": "Info"
+  },
+  {
+    "id": 1,
+    "icon": "settings",
+    "label": "Settings"
+	}
+]`)
+
+
+(defwidget bluetooth-qs []
+	(box
+		:orientation "v"
+		:space-evenly false
+		:spacing 10
+		:class "bluetooth"
+
+		(box
+			:space-evenly false
+			:spacing 5
+			(button :onclick "eww update ACTIVE_STACK_QUICK_SETTINGS=0" :class "full-rounded" (icon :name "arrow-left"))
+			(label :text "Bluetooth")
+		)
+		(navigator 
+			:children BLUETOOTH_QS_NAVIGATOR 
+			:stack "ACTIVE_STACK_BLUETOOTH_QS" 
+			:active ACTIVE_STACK_BLUETOOTH_QS
+			:halign "center" 
+			:valign "center"
+		)
+
+		(stack
+			:selected ACTIVE_STACK_BLUETOOTH_QS
+			:transition "slideleft"
+
+			(box
+				:spacing 3
+				:orientation "v"	
+				:space-evenly false
+				(label :class "font-s" :text "Current Bluetooth Connection")
+				(box
+					:class "g-container"
+					:spacing 3
+					:orientation "v"				
+
+					;; Device Name
+					(button :class "g-btn" 
+						(box :space-evenly false :spacing 3 :orientation "v"
+							(box :space-evenly false :spacing 5
+								(icon :name "bluetooth") 
+								(label :text "Device")
+							)
+							(label :class "font-s" :halign "start" :text "Sony WH-1000XM4")
+						)
+					)
+
+					;; MAC Address
+					(button :class "g-btn" 
+						(box :space-evenly false :spacing 3 :orientation "v"
+							(box :space-evenly false :spacing 5
+								(icon :name "badge") 
+								(label :text "MAC")
+							)
+							(label :class "font-s" :halign "start" :text "11:22:33:44:55:66")
+						)
+					)
+
+					;; Signal Strength
+					(button :class "g-btn" 
+						(box :space-evenly false :spacing 3 :orientation "v"
+							(box :space-evenly false :spacing 5
+								(icon :name "signal") 
+								(label :text "Signal")
+							)
+							(label :class "font-s" :halign "start" :text "-60 dBm")
+						)
+					)
+
+					;; Battery Level
+					(button :class "g-btn" 
+						(box :space-evenly false :spacing 3 :orientation "v"
+							(box :space-evenly false :spacing 5
+								(icon :name "battery") 
+								(label :text "Battery")
+							)
+							(label :class "font-s" :halign "start" :text "85%")
+						)
+					)
+
+					;; Profile in Use
+					(button :class "g-btn" 
+						(box :space-evenly false :spacing 3 :orientation "v"
+							(box :space-evenly false :spacing 5
+								(icon :name "headphones") 
+								(label :text "Profile")
+							)
+							(label :class "font-s" :halign "start" :text "A2DP Sink")
+						)
+					)
+				)
+			)
+			(box
+				:class "g-container"
+				:orientation "v"
+				:spacing 3
+				
+				;; Bluetooth Toggle
+				(button :class "g-btn toggle-btn" 
+					(centerbox
+						(box :space-evenly false :spacing 5 :halign "start"
+							(icon :name "bluetooth")
+							(label :text "Bluetooth")
+						)
+						(box)
+						(box :halign "end" (icon :name "toggle-right"))
+					)
+				)
+
+				;; Disconnect
+				(button :class "g-btn" 
+					(box :space-evenly false :spacing 5 :halign "start"
+						(icon :name "bluetooth-off")
+						(label :text "Disconnect")
+					)
+				)
+
+				;; Launch Bluetooth Manager
+				(button :class "g-btn" 
+					(box :space-evenly false :spacing 5 :halign "start"
+						(icon :name "settings")
+						(label :text "Launch blueman")
+					)
+				)
+			)
+
+		)
+	)
+)

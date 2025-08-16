@@ -1,4 +1,12 @@
+(include "./src/widgets/quick-settings/modules/landing.yuck")
+(include "./src/widgets/quick-settings/modules/network.yuck")
+(include "./src/widgets/quick-settings/modules/bluetooth.yuck")
+(include "./src/widgets/quick-settings/modules/display.yuck")
+(include "./src/widgets/quick-settings/modules/battery.yuck")
+(include "./src/widgets/quick-settings/modules/volume.yuck")
+(include "./src/widgets/quick-settings/modules/notifications.yuck")
 
+(defvar ACTIVE_STACK_QUICK_SETTINGS 0)
 (defwidget main-quick-settings []
 
   (box
@@ -8,150 +16,28 @@
     :spacing 10
 
     (centerbox
-      :width 280
       :class "top"
-      (box :halign "start" (label :halign "start" :text {formattime(EWW_TIME, "%I:%M%p")}))
-      (box)
-      (box
-        :halign "end"
-        :class "quick-btns"
-        (button (icon :name "file"))
-        (button (icon :name "info"))
-        (button :onclick "eww open wlogout" (icon :name "power"))
+      (box 
+        :halign "start"
+        :space-evenly false
+        :spacing 3
+        (button (icon :name "settings"))
+        (box :halign "start" (label :halign "start" :text {formattime(EWW_TIME, "%a, %I:%M%p")}))
       )
+      (box)
+      (button :halign "end" :onclick "eww open wlogout" (icon :name "power"))
     )
 
     (stack
-      (box
-        :orientation "v"
-        :space-evenly false
-        :spacing 5
-
-        (box
-          :space-evenly false
-          :width 280
-          :spacing 5
-          (box
-            :space-evenly false
-            :spacing 5
-            (box
-              :class "slider-container"
-              :spacing 5
-              (box
-                :orientation "v"
-                :valign "fill"
-                (button (icon :name VOLUME_ICON))
-                (label :text "25%")
-              )
-              (scale :class "qs-scale v" :height 130 :orientation "v" :flipped true)
-            )
-            (box
-              :class "slider-container"
-              :spacing 5
-              (box  
-                :orientation "v"
-                :valign "fill"
-                (button (icon :name "sun"))
-                (label :text "12%")
-              )
-              (scale :class "qs-scale v" :height 130 :orientation "v" :flipped true)
-            )
-          )
-          (box
-            :orientation "v"
-            :spacing 5
-            (button
-              :class "qs-btn"
-              (box
-                :space-evenly false
-                :spacing 5
-                (box :class "icon" :valign "center" (icon :name NETWORK_ICON))
-                (box
-                  :valign "center"
-                  :orientation "v"
-                  :space-evenly false
-                  :spacing 2
-                  (label :halign "start" :text "Wifi")
-                  (label :limit-width 13 :class "info" :halign "start":text "5g-mifi-34eb")
-                )
-              )
-            )
-            (button
-              :class "qs-btn"
-              (box
-                :space-evenly false
-                :spacing 5
-                (box :class "icon" :valign "center" (icon :name "bluetooth"))
-                (box
-                  :valign "center"
-                  :orientation "v"
-                  :space-evenly false
-                  :spacing 2
-                  (label :halign "start" :text "Bluetooth")
-                  (label :limit-width 13 :class "info" :halign "start":text "uvvvw")
-                )
-              )
-            )   
-            (button
-              :class "qs-btn"
-              (box
-                :space-evenly false
-                :spacing 5
-                (box :class "icon" :valign "center" (icon :name BATTERY_ICON))
-                (box
-                  :valign "center"
-                  :orientation "v"
-                  :space-evenly false
-                  :spacing 2
-                  (label :halign "start" :text "Battery")
-                  (label :limit-width 13 :class "info" :halign "start":text "${EWW_BATTERY.BAT0.capacity}% ${EWW_BATTERY.BAT0.status}")
-                )
-              )
-            )
-          )
-        )
-        (box
-          :class "g-container"
-          :orientation "v"
-          :spacing 3
-          (button 
-            :class "g-btn"
-            (box
-              :space-evenly false
-              :spacing 5
-              (icon :name "clipboard")
-              (label :text "Clipboard")
-            )
-          )
-          (button 
-            :class "g-btn"
-            (box
-              :space-evenly false
-              :spacing 5
-              (icon :name "monitor")
-              (label :text "Screenshot Utils")
-            )
-          )
-          (button 
-            :class "g-btn"
-            (box
-              :space-evenly false
-              :spacing 5
-              (icon :name "bell")
-              (label :text "Notifications")
-            )
-          )
-          (button 
-            :class "g-btn"
-            (box
-              :space-evenly false
-              :spacing 5
-              (icon :name "info")
-              (label :text "About PC")
-            )
-          )
-        )
-      )
+      :selected ACTIVE_STACK_QUICK_SETTINGS
+      :transition {ACTIVE_STACK_QUICK_SETTINGS==0 ? "slideleft" : "slideright"}
+      (landing-qs)
+      (network-qs)
+      (bluetooth-qs)
+      (display-qs)
+      (battery-qs)
+      (volume-qs)
+      (notifications-qs)
     )
   )
 )
@@ -159,8 +45,8 @@
 (defwindow quick-settings
   :monitor 0
   :geometry (geometry 
-    :x "10"
-    :y "10"
+    :x "5"
+    :y "5"
     :width "300px"
     :anchor "top right"
   )
