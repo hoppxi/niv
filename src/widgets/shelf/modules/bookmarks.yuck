@@ -1,0 +1,65 @@
+(defwidget bookmarks-shelf []
+	(box
+		:orientation "v"
+		:space-evenly false
+		:spacing 10
+
+		(box
+			:space-evenly false
+			:spacing 5
+			(button :onclick "eww update ACTIVE_STACK_SHELF=0" :class "full-rounded" (icon :name "arrow-left"))
+			(label :text "Bookmarks")
+		)
+
+		(box
+			:class "g-container"
+			:orientation "v"
+			:spacing 3
+			(button :class "g-btn" 
+				(box
+					:space-evenly false
+					:spacing 3
+					(icon :name "bookmark")
+					(label :text "Bookmarks")
+				)
+			)
+			(button :class "g-btn" 
+				(box
+					:space-evenly false
+					:spacing 3
+					(icon :name "image")
+					(label :text "Wallpapers")
+				)
+			)
+			(button :class "g-btn" 
+				(box
+					:space-evenly false
+					:spacing 3
+					(icon :name "bookmark")
+					(label :text "Workspaces")
+				)
+			)
+			(button :class "g-btn" 
+				(box
+					:space-evenly false
+					:spacing 3
+					(icon :name "bookmark")
+					(label :text "Accessories")
+				)
+			)
+		)
+		(box
+			:class "g-container"
+			:orientation "v"
+			:spacing 3
+			(button :class "g-btn" 
+				(box
+					:space-evenly false
+					:spacing 3
+					(icon :name "plus")
+					(label :text "Bookmarks")
+				)
+			)
+		)
+	)
+)

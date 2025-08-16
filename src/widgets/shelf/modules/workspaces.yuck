@@ -1,0 +1,66 @@
+(defwidget workspaces-shelf []
+	(box
+		:orientation "v"
+		:space-evenly false
+		:spacing 10
+
+		(box
+			:space-evenly false
+			:spacing 5
+			(button :onclick "eww update ACTIVE_STACK_SHELF=0" :class "full-rounded" (icon :name "arrow-left"))
+			(label :text "Workspaces")
+		)
+
+		(box
+			:class "g-container"
+			:orientation "v"
+			:spacing 3
+			(button :class "g-btn" 
+				(box
+					:space-evenly false
+					:spacing 5
+					(image :icon "code")
+					(label :text "Coding")
+				)
+			)
+			(button :class "g-btn" 
+				(box
+					:space-evenly false
+					:spacing 5
+					(image :icon "social")
+					(label :text "Entertainment")
+				)
+			)
+			(button :class "g-btn" 
+				(box
+					:space-evenly false
+					:spacing 5
+					(image :icon "bookmark")
+					(label :text "Article")
+				)
+			)
+			(button :class "g-btn" 
+				(box
+					:space-evenly false
+					:spacing 5
+					(image :icon "video")
+					(label :text "Movie")
+				)
+			)
+		)
+
+		(box
+			:class "g-container"
+			:orientation "v"
+			:spacing 3
+			(button :class "g-btn" 
+				(box
+					:space-evenly false
+					:spacing 3
+					(icon :name "plus")
+					(label :text "Workspaces")
+				)
+			)
+		)
+	)
+)
