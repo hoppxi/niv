@@ -1,12 +1,12 @@
 @import "../theme";
 
 window.notification {
-  background-color: $background;
+  background-color: rgba($color: $background, $alpha: 90%);
   border-radius: 15px;
 }
 
 .main-notification {
-  padding: 10px;
+  padding: 8px;
   border-radius: 15px;
 
   .notification-group {

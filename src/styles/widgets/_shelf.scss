@@ -1,4 +1,5 @@
 @import "../theme";
+@import "../abstract/functions";
 
 window.shelf {
   background-color: rgba($color: $background, $alpha: 90%);
@@ -52,6 +53,12 @@ window.shelf {
   .g-container {
     .g-btn {
       padding: 12px;
+
+      .font-s {
+        color: $outline;
+        font-style: italic;
+        font-size: 11px;
+      }
     }
   }
 }
