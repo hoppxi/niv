@@ -15,39 +15,37 @@
 (defvar NOTIFICATION_ICON "bell-off")
 
 ;; Wlogout
-(defvar WLOGOUT_STACK 0)
-(defvar WLOGOUT_TITLE "Locking...")
-(deflisten WLOGOUT_STATE_VALUE `for i in {1..100}; do echo $i; sleep 0.01; done`)
+(defvar REVEALER_WLOGOUT true)
 (defvar WLOGOUT_BUTTONS `[
   {
     "icon": "lock",
     "label": "Lock Screen",
-    "cmd": "eww update WLOGOUT_TITLE='Locking...'; eww update WLOGOUT_STACK=1; sleep 0.5; loginctl lock-session; eww update WLOGOUT_STACK=0; eww close power-menu"
+    "cmd": "eww update REVEALER_WLOGOUT=false; sleep 1; loginctl lock-session; eww update REVEALER_WLOGOUT=true; eww close wlogout"
   },
   {
     "icon": "pause",
     "label": "Suspend",
-    "cmd": "eww update WLOGOUT_TITLE='Suspending...'; sleep 0.5; systemctl suspend; eww update WLOGOUT_STACK=0; eww close power-menu;"
+    "cmd": "eww update REVEALER_WLOGOUT=false; sleep 1; systemctl suspend; eww update REVEALER_WLOGOUT=true; eww close wlogout;"
   },
   {
     "icon": "log-out",
     "label": "Logout",
-    "cmd": "loginctl terminate-session $XDG_SESSION_ID"
+    "cmd": "eww update REVEALER_WLOGOUT=false; sleep 1; loginctl terminate-session $XDG_SESSION_ID"
   },
   {
     "icon": "moon",
     "label": "Hibernate",
-    "cmd": "eww update WLOGOUT_TITLE='Hibernating...'; sleep 0.5; systemctl hibernate; eww update WLOGOUT_STACK=0; eww close power-menu;"
+    "cmd": "eww update REVEALER_WLOGOUT=false; sleep 1; systemctl hibernate; eww update REVEALER_WLOGOUT=true; eww close wlogout;"
   },
   {
     "icon": "refresh-ccw",
     "label": "Restart",
-    "cmd": "systemctl reboot"
+    "cmd": "eww update REVEALER_WLOGOUT=false; sleep 1; systemctl reboot"
   },
   {
     "icon": "power",
     "label": "Shutdown",
-    "cmd": "systemctl poweroff"
+    "cmd": "eww update REVEALER_WLOGOUT=false; sleep 1; systemctl poweroff"
   }
 ]`)
 
