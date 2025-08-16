@@ -1,0 +1,29 @@
+(defwidget main-lockscreen []
+  (box
+    :class "main-lockscreen"
+    :valign "center"
+    :halign "center"
+    :orientation "v"
+    :space-evenly false
+
+		:style "background-image: url('wallpaperpath');"
+
+		(main-clock)
+  )
+)
+
+(defwindow lockscreen
+  :monitor 0
+  :geometry (geometry 
+    :x "0"
+    :y "0"
+    :width "100%"
+		:height "100%"
+    :anchor "center center"
+  )
+  :stacking "fg"
+  :namespace "widget-lockscreen"
+	;:focusable "exclusive"
+  (main-lockscreen)
+)
+
