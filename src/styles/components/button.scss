@@ -51,3 +51,20 @@ button {
     }
   }
 }
+
+.expander-btn {
+  padding: 5px;
+  border-radius: 3px;
+  background-color: $surface-container-high;
+  title {
+    padding: 5px;
+  }
+
+  &:hover {
+    background-color: $surface-container-highest;
+  }
+
+  &:active {
+    background-color: $inverse-on-surface;
+  }
+}
