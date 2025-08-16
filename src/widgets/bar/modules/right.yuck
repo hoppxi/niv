@@ -9,6 +9,7 @@
       :class "bb-wrap r"
       (button
         :class "btn-bar group-btn compacted"
+        :onclick "eww open planner"
         (box
           :space-evenly false
           :spacing 3
@@ -24,6 +25,7 @@
       :class "bb-wrap r"
       (button
         :class "btn-bar group-btn"
+        :onclick "eww open quick-settings"
         (box
           :spacing 3
           :space-evenly false
@@ -43,6 +45,7 @@
       :visible {SONG_STOPPED ? false : true}
       (button
         :class "btn-bar"
+        :onclick "eww open media-control"
         (icon :name "music-2")
       )
     )
@@ -50,6 +53,7 @@
       :class "bb-wrap r"
       (button
         :class "btn-bar"
+        :onclick "eww open notification"
         (icon :name NOTIFICATION_ICON)
       )
     )

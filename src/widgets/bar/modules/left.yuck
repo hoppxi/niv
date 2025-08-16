@@ -10,6 +10,7 @@
       :class "bb-wrap l"
       (button
         :class "btn-bar"
+        :onclick "eww open shelf"
         (vector :name "nixos")
       )
     )
@@ -18,6 +19,7 @@
       :class "bb-wrap l"
       (button
         :class "btn-bar"
+        :onclick "eww open launcher"
         (icon :name "search")
       )
     )
@@ -26,6 +28,7 @@
       :class "bb-wrap l"
       (button
         :class "btn-bar"
+        :onclick "eww open system-monitor"
         (icon :name "activity")
       )
     )
