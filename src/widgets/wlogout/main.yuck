@@ -1,22 +1,21 @@
 (defwidget main-wlogout []
-  (stack
-    :class "main-wlogout"
+  (box
     :valign "center"
     :halign "center"
-    :selected WLOGOUT_STACK
-
+    :class "main-wlogout"
+    :orientation "v"
+    :space-evenly false
+    :spacing 5
     (box
-      :valign "center"
-      :halign "center"
       :orientation "v"
-      :space-evenly false
-      :spacing 5
-      (box
-        :orientation "v"
-        :class "info"
-        (label :halign "center" :class "info-title" :text "Wlogout")
-        (label :halign "center" :class "info-detail" :text "Navigate with arrow key & click esc to close.")
-      )
+      :class "info"
+      (label :halign "center" :class "info-title" :text "Wlogout")
+      (label :halign "center" :class "info-detail" :text "Navigate with arrow key & click esc to close.")
+    )
+    (revealer
+      :reveal REVEALER_WLOGOUT
+      :transition "slideup"
+      :duration "1s"
       (box
         :orientation "v"
         :spacing 3
@@ -38,17 +37,8 @@
         )
       )
     )
-
-    (box
-      :halign "center"
-      :valign "center"
-      :orientation "v"
-      :spacing 5
-      :space-evenly false
-      (label :class "info-title" :text WLOGOUT_TITLE)
-      (progress :width 300 :value WLOGOUT_STATE_VALUE)
-    )
   )
+
 )
 
 (defwindow wlogout
