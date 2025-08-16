@@ -1,4 +1,4 @@
-(defvar ACTIVE_STACK_NOTIFICATION 0)
+
 (defvar NOTIFICATIONS_HISTORY `[
   [
     {
@@ -60,110 +60,55 @@
   ]
 ]`)
 
-(defvar NOTIFICATION_SETTINGS `[
-	{
-		"icon": "bell",
-		"label": "Enable Notifications",
-		"state": true,
-		"action": "enable_notifications"
-	},
-	{
-		"icon": "envelope",
-		"label": "Email Alerts",
-		"state": false,
-		"action": "toggle_email_alerts"
-	},
-	{
-		"icon": "comment",
-		"label": "Message Pop-ups",
-		"state": true,
-		"action": "show_message_popups"
-	},
-	{
-		"icon": "calendar",
-		"label": "Event Reminders",
-		"state": false,
-		"action": "activate_event_reminders"
-	}
-]`)
-
-(defvar NOTIFICATION_NAVIGATOR `[
-	{
-    "id": 0,
-    "icon": "bell",
-    "label": "Notifications"
-  },
-  {
-    "id": 1,
-    "icon": "settings",
-    "label": "Settings"
-	}
-]`)
 
 (defwidget main-notification []
+
 	(box
 		:orientation "v"
 		:space-evenly false
+		:spacing 5
 		:class "main-notification"
-
-		(navigator 
-			:children NOTIFICATION_NAVIGATOR 
-			:stack "ACTIVE_STACK_NOTIFICATION" 
-			:active ACTIVE_STACK_NOTIFICATION
-			:halign "center" 
-			:valign "center"
-		)
-
-		(stack
-			:selected ACTIVE_STACK_NOTIFICATION
-			:transition {ACTIVE_STACK_NOTIFICATION==0 ? "slideleft" : "slideright" }
+		(scroll
+			:height 300
 			(box
 				:orientation "v"
 				:space-evenly false
-				:spacing 5
-				(scroll
-					:height 300
+				:spacing 10
+
+				(for NOTIFICAIONS_GROUP in NOTIFICATIONS_HISTORY
 					(box
 						:orientation "v"
 						:space-evenly false
-						:spacing 10
-
-						(for NOTIFICAIONS_GROUP in NOTIFICATIONS_HISTORY
-							(box
-								:orientation "v"
-								:space-evenly false
-								:class "notification-group"
-								:spacing 3
-								(for NOTIFICATION in NOTIFICAIONS_GROUP
-									(eventbox
-										:onclick {NOTIFICATION.click_action}
-										:onrightclick "dismiss"
-										:class "noitification-eventbox"
+						:class "notification-group"
+						:spacing 3
+						(for NOTIFICATION in NOTIFICAIONS_GROUP
+							(eventbox
+								:onclick {NOTIFICATION.click_action}
+								:onrightclick "dismiss"
+								:class "noitification-eventbox"
+								(box
+									:orientation "v"
+									:space-evenly false
+									:class "notification"
+									(box
+										:class "top"
 										(box
+											:halign "start"
+											:spacing 3
+											:space-evenly false
+											:valign "center"
+											(image :valign "center" :class "app-icon" :image-width 16 :icon {NOTIFICATION.app_icon})
+											(label :valign "center" :class "app-name" :text {NOTIFICATION.app_name})
+										)
+										(label :class "timestamp" :halign "end" :text {formattime(NOTIFICATION.timestamp, "%I:%M%p")})
+									)
+									(box
+										:space-evenly false
+										(box 
 											:orientation "v"
 											:space-evenly false
-											:class "notification"
-											(box
-												:class "top"
-												(box
-													:halign "start"
-													:spacing 3
-													:space-evenly false
-													:valign "center"
-													(image :valign "center" :class "app-icon" :image-width 16 :icon {NOTIFICATION.app_icon})
-													(label :valign "center" :class "app-name" :text {NOTIFICATION.app_name})
-												)
-												(label :class "timestamp" :halign "end" :text {formattime(NOTIFICATION.timestamp, "%I:%M%p")})
-											)
-											(box
-												:space-evenly false
-												(box 
-													:orientation "v"
-													:space-evenly false
-													(label :class "title" :wrap true :lines 5 :halign "start" :text {NOTIFICATION.title})
-													(label :class "details" :wrap true :lines 5 :halign "start" :text {NOTIFICATION.details})
-												)
-											)
+											(label :class "title" :wrap true :lines 5 :halign "start" :text {NOTIFICATION.title})
+											(label :class "details" :wrap true :lines 5 :halign "start" :text {NOTIFICATION.details})
 										)
 									)
 								)
@@ -171,40 +116,18 @@
 						)
 					)
 				)
-				(button :class "highlight-action-btn single" :halign "end" (label :text "clear"))
-		)
-
-			(box
-				:orientation "v"
-				:class "g-container"
-				:spacing 3
-				:space-evenly false
-				(for SETTINGS in NOTIFICATION_SETTINGS
-					(button
-						:class "g-btn toggle-btn"
-						:onclick {SETTINGS.action}
-						(box
-							(box
-								:halign "start"
-								:spacing 3
-								:space-evenly false
-								(icon :name {SETTINGS.icon})
-								(label :text {SETTINGS.label})
-							)
-							(box :halign "end" (icon :name {SETTINGS.state ? "toggle-right" : "toggle-left"}))
-						)
-					)
-				)
 			)
 		)
-	)
+		(button :class "highlight-action-btn single" :halign "end" (label :text "clear"))
+)
+
 )
 
 (defwindow notification
   :monitor 0
   :geometry (geometry 
-    :x "10"
-    :y "10"
+    :x "5"
+    :y "5"
     :width "305px"
     :anchor "top right"
   )
