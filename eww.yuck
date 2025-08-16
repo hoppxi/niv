@@ -3,6 +3,7 @@
 (include "./src/components/icons.yuck")
 (include "./src/components/navigator.yuck")
 (include "./src/components/selector.yuck")
+(include "./src/components/qs-button.yuck")
 
 (include "./src/widgets/bar/main.yuck")
 (include "./src/widgets/clock/main.yuck")
@@ -13,3 +14,6 @@
 (include "./src/widgets/quick-settings/main.yuck")
 (include "./src/widgets/shelf/main.yuck")
 (include "./src/widgets/screenshot-utils/main.yuck")
+(include "./src/widgets/lockscreen/main.yuck")
+(include "./src/widgets/system-monitor/main.yuck")
+(include "./src/widgets/launcher/main.yuck")
