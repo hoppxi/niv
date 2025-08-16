@@ -15,11 +15,12 @@ Just making some widget built with Go and `EWW` for Hyprland. No big deal :)
   - [ ] Note App
 - [ ] Quick Settings
   - [x] Landing
-  - [ ] Network
-  - [ ] Bluetooth
-  - [ ] Volume Mixer
-  - [ ] Power
-  - [ ] Display
+  - [x] Network
+  - [x] Bluetooth
+  - [x] Volume Mixer
+  - [x] Power
+  - [x] Display
+  - [x] Notification
 - [x] System Monitor
   - [x] CPU
   - [x] Memory
