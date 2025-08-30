@@ -1,0 +1,79 @@
+@import "../theme";
+
+window.quick-settings {
+  background-color: rgba($color: $background, $alpha: 90%);
+  border-radius: 15px;
+}
+
+.main-quick-settings {
+  padding: 10px;
+
+  .top {
+    button {
+      border-radius: 50%;
+      padding: 6px;
+    }
+  }
+
+  .slider-container {
+    padding: 5px;
+
+    .qs-scale.v {
+      trough highlight {
+        padding: 11px;
+      }
+    }
+  }
+
+  .g-container {
+    .g-btn {
+      padding: 10px;
+
+      .font-s {
+        margin-left: 20px;
+      }
+    }
+  }
+  .font-s {
+    color: $outline;
+    font-style: italic;
+    font-size: 11px;
+  }
+
+  .expander-btn {
+    &:first-child {
+      border-radius: 15px 15px 3px 3px;
+    }
+    &:last-child {
+      border-radius: 3px 3px 15px 15px;
+    }
+
+    &:first-child:last-child {
+      border-radius: 15px;
+    }
+
+    .font-s {
+      margin-left: 10px;
+    }
+  }
+
+  .volume .volume-mixer,
+  .display .displayctl {
+    padding: 10px;
+    border-radius: 15px;
+    background-color: $surface-container-high;
+
+    .title {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .info {
+      label:not(.top) {
+        color: $outline;
+        font-style: italic;
+        font-size: 11px;
+      }
+    }
+  }
+}

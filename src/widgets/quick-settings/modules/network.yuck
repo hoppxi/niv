@@ -1,0 +1,224 @@
+(defvar ACTIVE_STACK_NETWORK_QS 0)
+(defvar NETWORK_QS_NAVIGATOR `[
+	{
+    "id": 0,
+    "icon": "wifi",
+    "label": "Connect"
+  },
+  {
+    "id": 1,
+    "icon": "info",
+    "label": "Info"
+  },
+  {
+    "id": 2,
+    "icon": "settings",
+    "label": "Settings"
+	}
+]`)
+
+
+(defwidget network-qs []
+	(box
+		:orientation "v"
+		:space-evenly false
+		:spacing 10
+		:class "network"
+
+		(box
+			:space-evenly false
+			:spacing 5
+			(button :onclick "eww update ACTIVE_STACK_QUICK_SETTINGS=0" :class "full-rounded" (icon :name "arrow-left"))
+			(label :text "Network")
+		)
+		(navigator 
+			:children NETWORK_QS_NAVIGATOR 
+			:stack "ACTIVE_STACK_NETWORK_QS" 
+			:active ACTIVE_STACK_NETWORK_QS
+			:halign "center" 
+			:valign "center"
+		)
+
+		(stack
+			:selected ACTIVE_STACK_NETWORK_QS
+			:transition "slideleft"
+		
+			(box
+				:orientation "v"
+				:spacing 3
+				:space-evenly false
+				
+				(label :class "font-s" :text "Select Wi-Fi & enter password")
+
+				(box
+					:orientation "v"
+					:spacing 3
+					:class "g-container"
+					:space-evenly false
+
+					(expander
+						:name "Wi-Fi name"
+						:class "expander-btn"
+						(box
+							:orientation "v"
+							:space-evenly false
+							(input)
+							(label :halign "start" :class "font-s" :text "Enter password to contiune")
+						)
+					)
+					(expander
+						:name "Wi-Fi name"
+						:class "expander-btn"
+						(box
+							:orientation "v"
+							:space-evenly false
+							(input)
+							(label :halign "start" :class "font-s" :text "Enter password to contiune")
+						)
+					)
+				)
+			)
+			(box
+				:spacing 3
+				:orientation "v"	
+				:space-evenly false
+				(label :class "font-s" :text "Current connection")
+				(box
+					:class "g-container"
+					:spacing 3
+					:orientation "v"				
+
+					;; SSID
+					(button :class "g-btn" 
+						(box :space-evenly false :spacing 3 :orientation "v"
+							(box :space-evenly false :spacing 5
+								(icon :name "wifi") 
+								(label :text "SSID")
+							)
+							(label :class "font-s" :halign "start" :text "Home_Network")
+						)
+					)
+
+					;; IP Address
+					(button :class "g-btn" 
+						(box :space-evenly false :spacing 3 :orientation "v"
+							(box :space-evenly false :spacing 5
+								(icon :name "globe") 
+								(label :text "IP Address")
+							)
+							(label :class "font-s" :halign "start" :text "192.168.1.24")
+						)
+					)
+
+					;; MAC Address
+					(button :class "g-btn" 
+						(box :space-evenly false :spacing 3 :orientation "v"
+							(box :space-evenly false :spacing 5
+								(icon :name "badge") 
+								(label :text "MAC")
+							)
+							(label :class "font-s" :halign "start" :text "AA:BB:CC:DD:EE:FF")
+						)
+					)
+
+					;; Signal Strength
+					(button :class "g-btn" 
+						(box :space-evenly false :spacing 3 :orientation "v"
+							(box :space-evenly false :spacing 5
+								(icon :name "signal") 
+								(label :text "Signal")
+							)
+							(label :class "font-s" :halign "start" :text "-55 dBm")
+						)
+					)
+
+					;; Frequency
+					(button :class "g-btn" 
+						(box :space-evenly false :spacing 3 :orientation "v"
+							(box :space-evenly false :spacing 5
+								(icon :name "radio") 
+								(label :text "Frequency")
+							)
+							(label :class "font-s" :halign "start" :text "5 GHz")
+						)
+					)
+
+					;; Link Speed
+					(button :class "g-btn" 
+						(box :space-evenly false :spacing 3 :orientation "v"
+							(box :space-evenly false :spacing 5
+								(icon :name "activity") 
+								(label :text "Link Speed")
+							)
+							(label :class "font-s" :halign "start" :text "300 Mbps")
+						)
+					)
+
+					;; Security
+					(button :class "g-btn" 
+						(box :space-evenly false :spacing 3 :orientation "v"
+							(box :space-evenly false :spacing 5
+								(icon :name "shield") 
+								(label :text "Security")
+							)
+							(label :class "font-s" :halign "start" :text "WPA2-Personal")
+						)
+					)
+				)
+			)
+			(box
+				:class "g-container"
+				:orientation "v"
+				:spacing 3
+				
+				(button :class "g-btn toggle-btn" 
+					(centerbox
+						(box
+							:space-evenly false
+							:spacing 5
+							:halign "start"
+							(icon :name "wifi")
+							(label :text "Wi-Fi")
+						)
+						(box)
+						(box :halign "end" (icon :name "toggle-right"))
+					)
+				)
+
+				(button :class "g-btn toggle-btn" 
+					(centerbox
+						(box
+							:space-evenly false
+							:spacing 5
+							:halign "start"
+							(icon :name "plane")
+							(label :text "Airplane Mode")
+						)
+						(box)
+						(box :halign "end" (icon :name "toggle-right"))
+					)
+				)
+
+
+				(button :class "g-btn" 
+					(box
+						:space-evenly false
+						:spacing 5
+						:halign "start"
+						(icon :name "wifi-off")
+						(label :text "Disconnect")
+					)
+				)
+				(button :class "g-btn" 
+					(box
+						:space-evenly false
+						:spacing 5
+						:halign "start"
+						(icon :name "router")
+						(label :text "Launch nmtui")
+					)
+				)
+			)
+		)
+	)
+)

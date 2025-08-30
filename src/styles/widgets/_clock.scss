@@ -1,0 +1,18 @@
+@import "../theme";
+
+window.clock {
+  background-color: transparent;
+}
+
+.main-clock {
+  .time {
+    color: $secondary;
+    font-size: 9rem;
+    font-weight: 900;
+  }
+  .date {
+    color: $secondary;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+}

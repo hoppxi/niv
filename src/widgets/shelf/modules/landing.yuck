@@ -1,0 +1,96 @@
+(defwidget landing-shelf []
+	(box
+		:orientation "v"
+		:space-evenly false
+		:spacing 10
+		
+		(box
+			:class "pinned-apps"
+			:orientation "v"
+			:spacing 3
+			(box
+				:spacing 3
+				:class "r-1"
+				(button :onclick "brave &" (image :icon-size "large-toolbar" :icon "brave"))
+				(button :onclick "Telegram &" (image :icon-size "large-toolbar" :icon "telegram-desktop-bin"))
+				(button :onclick "code &" (image :icon-size "large-toolbar" :icon "code"))
+				(button :onclick "alacritty &" (image :icon-size "large-toolbar" :icon "Alacritty"))
+			)
+			(box
+				:spacing 3
+				:class "r-2"
+				(button :onclick "alacritty -e btop &" (image :icon-size "large-toolbar" :icon "btop"))
+				(button :onclick "alacritty -e nvim &" (image :icon-size "large-toolbar" :icon "nvim"))
+				(button :onclick "spotify &" (image :icon-size "large-toolbar" :icon "spotify"))
+				(button :onclick "vesktop &" (image :icon-size "large-toolbar" :icon "vesktop"))
+			)
+		)
+
+		(box
+			:class "g-container"
+			:orientation "v"
+			:spacing 3
+			(button :class "g-btn" :onclick "eww update ACTIVE_STACK_SHELF=1"
+				(box
+					:space-evenly false
+					:spacing 3
+					(icon :name "bookmark")
+					(label :text "Bookmarks")
+				)
+			)
+			(button :class "g-btn" :onclick "eww update ACTIVE_STACK_SHELF=2"
+				(box
+					:space-evenly false
+					:spacing 3
+					(icon :name "image")
+					(label :text "Wallpapers")
+				)
+			)
+			(button :class "g-btn" :onclick "eww update ACTIVE_STACK_SHELF=3"
+				(box
+					:space-evenly false
+					:spacing 3
+					(icon :name "bookmark")
+					(label :text "Workspaces")
+				)
+			)
+			(button :class "g-btn" :onclick "eww update ACTIVE_STACK_SHELF=4"
+				(box
+					:space-evenly false
+					:spacing 3
+					(icon :name "bookmark")
+					(label :text "Accessories")
+				)
+			)
+		)
+		(box
+			:class "g-container"
+			:orientation "v"
+			:spacing 3
+			:space-evenly false
+			(button :class "g-btn" 
+				(box
+					:space-evenly false
+					:spacing 3
+					:orientation "v"
+					(box
+						:space-evenly false
+						:spacing 3
+						(icon :name "pen")
+						(label :text "Config")
+					)
+					(label :class "font-s" :text "Wallpapers, bookmarks, pinned apps...")
+				)
+			)
+
+			(button :class "g-btn" :onclick "eww update ACTIVE_STACK_SHELF=5"
+				(box
+					:space-evenly false
+					:spacing 3
+					(icon :name "info")
+					(label :text "About")
+				)
+			)
+		)
+	)
+)

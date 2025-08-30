@@ -1,0 +1,21 @@
+(defwidget icon [name]
+  (box
+    :class "icon"
+    :style "background-image: url('./assets/icons/${name}.svg')"
+    :height 16
+    :width 16
+    :halign "center"
+    :valign "center"
+  )
+)
+
+(defwidget vector [name]
+  (box
+    :class "icon vector"
+    :style "background-image: url('./assets/vectors/${name}.svg')"
+    :height 18
+    :width 18
+    :halign "center"
+    :valign "center"
+  )
+)

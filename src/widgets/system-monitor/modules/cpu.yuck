@@ -1,0 +1,35 @@
+(defwidget cpu-sm []
+
+	(box
+		:orientation "v"
+		:space-evenly false
+		:spacing 5
+		:class "sys-monitor"
+		(label :class "title" :halign "start" :text "CPU")
+
+		(box
+			:space-evenly false		 
+			:spacing 10 
+			(box
+				:class "slider-container"
+				:spacing 5
+				(box
+					:orientation "v"
+					:valign "fill"
+					(button (icon :name "cpu"))
+					(label :text "25%")
+				)
+				(progress :class "qs-scale v" :height 130 :orientation "v" :flipped true)
+			)
+			(box
+				:orientation "v"
+				:space-evenly false
+				:class "info"
+				(label :class "top" :halign "start" :text "CPU name")
+				(label :halign "start" :text "Base Frequency")
+				(label :halign "start" :text "Number of Cores / Threads")
+				(label :halign "start" :text "Architecture")
+			)
+		)
+	)
+	)

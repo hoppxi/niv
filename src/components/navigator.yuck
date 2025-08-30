@@ -1,0 +1,22 @@
+(defwidget navigator [children stack active halign valign]
+	(box
+		:class "navigator"
+		:space-evenly false
+		:halign halign
+		:valign valign
+		(for child in children
+			(box
+				:class {active==child.id ? "active" : ""}
+				(button 
+					:onclick "eww update ${stack}=${child.id}"
+					(box
+						:space-evenly false
+						:spacing 3
+						(icon :name {child.icon})
+						(label :visible {active==child.id && true} :text {child.label})
+					)
+				)
+			)
+		)
+	)
+)

@@ -1,0 +1,28 @@
+(include "./src/widgets/clock/modules/clock.yuck")
+; (include "./src/widgets/clock/modules/cava.yuck")
+
+(defwidget main-clock []
+  (box
+    :class "main-clock"
+    :valign "center"
+    :halign "center"
+    :orientation "v"
+    :space-evenly false
+    (clock-clock)
+    ; (cava-clock)
+  )
+)
+
+(defwindow clock
+  :monitor 0
+  :geometry (geometry 
+    :x "0"
+    :y "10%"
+    :width "500px"
+    :anchor "top center"
+  )
+  :stacking "bg"
+  :namespace "widget-clock"
+  (main-clock)
+)
+

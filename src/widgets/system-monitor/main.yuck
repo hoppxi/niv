@@ -1,0 +1,85 @@
+(include "./src/widgets/system-monitor/modules/cpu.yuck")
+(include "./src/widgets/system-monitor/modules/memory.yuck")
+(include "./src/widgets/system-monitor/modules/network.yuck")
+(include "./src/widgets/system-monitor/modules/battery.yuck")
+
+(defvar ACTIVE_STACK_SYSTEM_MONITOR 0)
+(defvar SYSTEM_MONITOR_NAVIGATOR `[
+	{
+    "id": 0,
+    "icon": "cpu",
+    "label": "CPU"
+  },
+  {
+    "id": 1,
+    "icon": "memory-stick",
+    "label": "RAM"
+  }, 	
+	{
+    "id": 2,
+    "icon": "signal",
+    "label": "Net"
+  },
+  {
+    "id": 3,
+    "icon": "battery",
+    "label": "Bat"
+  }
+]`)
+(defwidget main-system-monitor []
+
+	(box
+		:orientation "v"
+		:space-evenly false
+		:spacing 5
+		:class "main-system-monitor"
+
+		(label :class "font-b" :halign "center" :text "System monitor")
+
+
+		(navigator 
+			:children SYSTEM_MONITOR_NAVIGATOR 
+			:stack "ACTIVE_STACK_SYSTEM_MONITOR" 
+			:active ACTIVE_STACK_SYSTEM_MONITOR
+			:halign "center" 
+			:valign "center"
+		)
+
+		(stack
+			:selected ACTIVE_STACK_SYSTEM_MONITOR
+			:transition "slideleft"
+			(cpu-sm)
+			(memory-sm)
+			(network-sm)
+			(battery-sm)
+		)
+
+		(box 
+			:class "g-container" 
+			(button 
+				:class "g-btn" 
+				:onclick "alacritty -e btop &"
+				(box 
+					:space-evenly false
+					:spacing 5
+					(image :icon "btop") 
+					(label :text "Btop++")
+				)
+			)
+		)
+	)
+)
+
+(defwindow system-monitor
+  :monitor 0
+  :geometry (geometry 
+    :x "5"
+    :y "5"
+    :width "280px"
+    :anchor "top left"
+  )
+  :stacking "fg"
+  :namespace "widget-system-monitor"
+  (main-system-monitor)
+)
+

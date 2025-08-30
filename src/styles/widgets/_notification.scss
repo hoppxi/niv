@@ -1,0 +1,60 @@
+@import "../theme";
+
+window.notification {
+  background-color: rgba($color: $background, $alpha: 90%);
+  border-radius: 15px;
+}
+
+.main-notification {
+  padding: 8px;
+  border-radius: 15px;
+
+  .notification-group {
+    .notification {
+      padding: 6px;
+      padding-bottom: 10px;
+      background-color: $surface-container-high;
+      border-radius: 3px;
+
+      .top {
+        border-bottom: 1px solid $outline-variant;
+        padding-bottom: 5px;
+      }
+
+      .app-name,
+      .timestamp {
+        font-size: 12px;
+        font-style: italic;
+        color: $outline;
+      }
+
+      .title {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px;
+      }
+
+      .details {
+        font-size: 11px;
+      }
+
+      .action-btn {
+        background-color: $surface-container-highest;
+        padding: 3px 10px;
+        border-radius: 3px;
+      }
+    }
+
+    .noitification-eventbox:first-child {
+      .notification {
+        border-radius: 15px 15px 3px 3px;
+      }
+    }
+
+    .noitification-eventbox:last-child {
+      .notification {
+        border-radius: 3px 3px 15px 15px;
+      }
+    }
+  }
+}

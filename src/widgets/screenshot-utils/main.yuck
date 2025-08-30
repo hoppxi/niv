@@ -1,0 +1,120 @@
+(defvar ACTIVE_STACK_SCREENSHOT_UTILS 0)
+(defvar SCREENSHOT_UTILS_NAVIGATOR `[
+	{
+    "id": 0,
+    "icon": "image",
+    "label": "Screenshot"
+  },
+  {
+    "id": 1,
+    "icon": "video",
+    "label": "Screen Record"
+  }
+]`)
+
+(defvar ACTIVE_SCREENSHOT_SELECTOR_SSU 0)
+(defvar SCREENSHOT_SELECTOR_SSU `[
+	{
+		"id": 0,
+		"icon": "fullscreen",
+		"label": "Fullscreen"
+	},
+	{
+		"id": 1,
+		"icon": "square",
+		"label": "Select area"
+	},
+	{
+		"id": 2,
+		"icon": "monitor",
+		"label": "Desktop"
+	}
+]`)
+
+(defvar ACTIVE_VIDEO_SELECTOR_SSU 0)
+(defvar VIDEO_SELECTOR_SSU `[
+	{
+		"id": 0,
+		"icon": "fullscreen",
+		"label": "Fullscreen"
+	},
+	{
+		"id": 1,
+		"icon": "square",
+		"label": "Select area"
+	}
+]`)
+
+(defwidget main-screenshot-utils []
+	(box
+		:class "main-screenshot-utils"
+		:orientation "v"
+		:space-evenly false
+		:spacing 5
+
+		(label :class "font-b" :halign "center" :text "Screenshot-utils")
+
+		(navigator 
+			:children SCREENSHOT_UTILS_NAVIGATOR 
+			:stack "ACTIVE_STACK_SCREENSHOT_UTILS" 
+			:active ACTIVE_STACK_SCREENSHOT_UTILS
+			:halign "center" 
+			:valign "center"
+		)
+
+		(stack
+			:selected ACTIVE_STACK_SCREENSHOT_UTILS
+			:transition {ACTIVE_STACK_SCREENSHOT_UTILS==0 ? "slideleft" : "slideright"}
+			(box
+				:orientation "v"
+				:space-evenly false
+				:spacing 5
+				
+				(label :class "info" :text "Select mode")
+				(selector 
+					:children SCREENSHOT_SELECTOR_SSU
+					:stack "ACTIVE_SCREENSHOT_SELECTOR_SSU"
+					:active ACTIVE_SCREENSHOT_SELECTOR_SSU
+				)
+				(label :style "margin-top: 20px" :class "info" :text "Click to capture")
+				(button
+					:halign "center"
+					:class "record-btn"
+					(box :class "f1")
+				)
+			)
+
+			(box
+				:orientation "v"
+				:space-evenly false
+				:spacing 5
+				
+				(label :class "info" :text "Select mode")
+				(selector 
+					:children VIDEO_SELECTOR_SSU
+					:stack "ACTIVE_VIDEO_SELECTOR_SSU"
+					:active ACTIVE_VIDEO_SELECTOR_SSU
+				)
+				(label :style "margin-top: 20px" :class "info" :text "Click to start recording")
+				(button
+					:halign "center"
+					:class "record-btn video"
+					(box :class "f1")
+				)
+			)
+		)
+	)
+)
+
+(defwindow screenshot-utils
+  :monitor 0
+  :geometry (geometry 
+    :x "0"
+    :y "50"
+    :width "280px"
+    :anchor "bottom center"
+  )
+  :stacking "fg"
+  :namespace "widget-screenshot-utils"
+  (main-screenshot-utils)
+)

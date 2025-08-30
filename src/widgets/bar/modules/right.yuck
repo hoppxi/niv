@@ -1,0 +1,61 @@
+(defwidget right-bar []
+(box
+  :space-evenly false
+  :class "right-bar"
+  :halign "end"
+  :valign "center"
+
+    (box
+      :class "bb-wrap r"
+      (button
+        :class "btn-bar group-btn compacted"
+        :onclick "eww open planner"
+        (box
+          :space-evenly false
+          :spacing 3
+
+          (label :text {formattime(EWW_TIME, "%I:%M%p")})
+          (icon :name "dot")
+          (label :text {formattime(EWW_TIME, "%a, %b %d")})
+        )
+      )
+    )
+
+    (box
+      :class "bb-wrap r"
+      (button
+        :class "btn-bar group-btn"
+        :onclick "eww open quick-settings"
+        (box
+          :spacing 3
+          :space-evenly false
+          (icon :name VOLUME_ICON)
+          (icon :name NETWORK_ICON)
+          (box
+            :spacing 1
+            :space-evenly false
+            (icon :name BATTERY_ICON)
+            (label :text "${EWW_BATTERY.BAT0.capacity}%")
+          )
+        )
+      )
+    )
+    (box
+      :class "bb-wrap r"
+      :visible {SONG_STOPPED ? false : true}
+      (button
+        :class "btn-bar"
+        :onclick "eww open media-control"
+        (icon :name "music-2")
+      )
+    )
+    (box
+      :class "bb-wrap r"
+      (button
+        :class "btn-bar"
+        :onclick "eww open notification"
+        (icon :name NOTIFICATION_ICON)
+      )
+    )
+  )
+)

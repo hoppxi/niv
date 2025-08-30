@@ -1,0 +1,140 @@
+
+(defvar NOTIFICATIONS_HISTORY `[
+  [
+    {
+      "app_name": "Telegram",
+      "app_icon": "telegram-desktop-bin",
+      "notification_image": "",
+      "click_action": "Telegram & disown",
+      "title": "Ezas (16)",
+      "details": "'Hi, i am looking for your time to be with me!' now",
+      "timestamp": "1755174783"
+    },
+    {
+      "app_name": "Telegram",
+      "app_icon": "telegram-desktop-bin",
+      "notification_image": "",
+      "click_action": "Telegram & disown",
+      "title": "Ezas (16)",
+      "details": "'Hi, i am looking for your time to be with me!' now",
+      "timestamp": "1755174783"
+    },
+    {
+      "app_name": "Telegram",
+      "app_icon": "telegram-desktop-bin",
+      "notification_image": "",
+      "click_action": "Telegram & disown",
+      "title": "Ezas (16)",
+      "details": "'Hi, i am looking for your time to be with me!' now",
+      "timestamp": "1755174783"
+    }
+  ],
+  [
+    {
+      "app_name": "Brave",
+      "app_icon": "brave",
+      "notification_image": "",
+      "click_action": "Brave & disown",
+      "title": "Ezas (16)",
+      "details": "'Hi, i am looking for your time to be with me!' now",
+      "timestamp": "1755174783"
+    },
+    {
+      "app_name": "Brave",
+      "app_icon": "brave",
+      "notification_image": "",
+      "click_action": "Brave & disown",
+      "title": "Ezas (16)",
+      "details": "'Hi, i am looking for your time to be with me!' now",
+      "timestamp": "1755174783"
+    },
+    {
+      "app_name": "Brave",
+      "app_icon": "brave",
+      "notification_image": "",
+      "click_action": "Brave & disown",
+      "title": "Ezas (16)",
+      "details": "'Hi, i am looking for your time to be with me!' now",
+      "timestamp": "1755174783"
+    }
+  ]
+]`)
+
+
+(defpoll noti :interval "1s" `dunstctl history | jq -c .`)
+
+(defwidget main-notification []
+
+	(box
+		:orientation "v"
+		:space-evenly false
+		:spacing 5
+		:class "main-notification"
+		(scroll
+			:height 300
+			(box
+				:orientation "v"
+				:space-evenly false
+				:spacing 10
+
+				;(for NOTIFICAIONS_GROUP in noti
+					(box
+						:orientation "v"
+						:space-evenly false
+						:class "notification-group"
+						:spacing 3
+						(for NOTIFICATION in {noti.data[0]}
+							(eventbox
+								;:onclick {NOTIFICATION.click_action}
+								:onrightclick "dismiss"
+								:class "noitification-eventbox"
+								(box
+									:orientation "v"
+									:space-evenly false
+									:class "notification"
+									(box
+										:class "top"
+										(box
+											:halign "start"
+											:spacing 3
+											:space-evenly false
+											:valign "center"
+											(image :valign "center" :class "app-icon" :image-width 16 :path {NOTIFICATION.icon_path.data == "" ? "/home/hoppxi/.config/eww/assets/vectors/nixos.svg" : NOTIFICATION.icon_path.data})
+											(label :valign "center" :class "app-name" :text {NOTIFICATION.appname.data})
+										)
+										(label :class "timestamp" :halign "end" :text {formattime(NOTIFICATION.timestamp.data, "%I:%M%p")})
+									)
+									(box
+										:space-evenly false
+										(box 
+											:orientation "v"
+											:space-evenly false
+											(label :class "title" :wrap true :lines 2 :halign "start" :text {NOTIFICATION.summary.data})
+											(label :class "details" :wrap true :wrap-mode "char" :text {NOTIFICATION.body.data})
+										)
+									)
+								)
+							)
+						;)
+					)
+				)
+			)
+		)
+		(button :onclick "dunstctl history-clear" :class "highlight-action-btn single" :halign "end" (label :text "clear"))
+)
+
+)
+
+(defwindow notification
+  :monitor 0
+  :geometry (geometry 
+    :x "5"
+    :y "5"
+    :width "305px"
+    :anchor "top right"
+  )
+  :stacking "fg"
+  :namespace "widget-notification"
+  (main-notification)
+)
+

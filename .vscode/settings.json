@@ -1,0 +1,9 @@
+{
+  "editor.tabSize": 2,
+  "editor.indentSize": "tabSize",
+
+  "files.associations": {
+    "*.yuck": "go"
+  }
+  // "json.validate.enable": false
+}

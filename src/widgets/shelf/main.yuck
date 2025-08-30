@@ -1,0 +1,61 @@
+(include "./src/widgets/shelf/modules/landing.yuck")
+(include "./src/widgets/shelf/modules/bookmarks.yuck")
+(include "./src/widgets/shelf/modules/wallpapers.yuck")
+(include "./src/widgets/shelf/modules/workspaces.yuck")
+(include "./src/widgets/shelf/modules/accessories.yuck")
+(include "./src/widgets/shelf/modules/about.yuck")
+
+(defvar ACTIVE_STACK_SHELF 0)
+(defwidget main-shelf []
+	(box
+		:class "main-shelf"
+		:orientation "v"
+		:spacing 10
+		:space-evenly false
+
+		(box
+			:class "top"
+			:space-evenly false
+			:spacing 5
+
+			(box :class "avater" :width 100 :height 100 :style "background-image: url('./assets/vectors/nixos.svg');")
+			(box 
+				:orientation "v"
+				:valign "start"
+				:space-evenly false
+				:spacing 3
+				(label :class "font-b" :halign "start" :text "hoppxi@ea")
+				(label :class "font-m" :halign "start" :text "1 hour, 22 min session time")
+				(label :class "font-m" :halign "start" :text "PC name")
+			)
+		)
+
+		(input :value {ACTIVE_WINDOW.title=="null" ? "Desktop" : ACTIVE_WINDOW.title})
+
+
+		(stack
+			:selected ACTIVE_STACK_SHELF
+			:transition {ACTIVE_STACK_SHELF==0 ? "slideleft" : "slideright"}
+			(landing-shelf)
+			(bookmarks-shelf)
+			(wallpapers-shelf)
+			(workspaces-shelf)
+			(accessories-shelf)
+			(about-shelf)
+		)
+	)
+)
+
+(defwindow shelf
+  :monitor 0
+  :geometry (geometry 
+    :x "5"
+    :y "5"
+    :width "280px"
+		:height "95%"
+    :anchor "center left"
+  )
+  :stacking "fg"
+  :namespace "widget-shelf"
+  (main-shelf)
+)

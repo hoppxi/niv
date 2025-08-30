@@ -1,0 +1,58 @@
+(defwidget main-wlogout []
+  (box
+    :valign "center"
+    :halign "center"
+    :class "main-wlogout"
+    :orientation "v"
+    :space-evenly false
+    :spacing 5
+    (box
+      :orientation "v"
+      :class "info"
+      (label :halign "center" :class "info-title" :text "Wlogout")
+      (label :halign "center" :class "info-detail" :text "Navigate with arrow key & click esc to close.")
+    )
+    (revealer
+      :reveal REVEALER_WLOGOUT
+      :transition "slideup"
+      :duration "1s"
+      (box
+        :orientation "v"
+        :spacing 3
+        :width 320
+        :class "g-container"
+        (for BUTTON in WLOGOUT_BUTTONS
+          (button 
+            :onclick {BUTTON.cmd}
+            :class "g-btn"
+            :timeout "3s"
+            (box 
+              :halign "start"
+              :space-evenly false
+              :spacing 3
+              (icon :name {BUTTON.icon})
+              (label :text {BUTTON.label})
+            )
+          )
+        )
+      )
+    )
+  )
+
+)
+
+(defwindow wlogout
+  :monitor 0
+  :geometry (geometry 
+    :x "0"
+    :y "0"
+    :width "100%"
+    :height "105%"
+    :anchor "center center"
+  )
+  :stacking "fg"
+  :namespace "widget-wlogout"
+  ; :focusable "exclusive"
+  (main-wlogout)
+)
+

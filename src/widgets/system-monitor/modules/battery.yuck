@@ -1,0 +1,36 @@
+(defwidget battery-sm []
+	
+	(box
+		:orientation "v"
+		:space-evenly false
+		:spacing 5
+		:class "sys-monitor"
+		(label :class "title" :halign "start" :text "Battery")
+
+		(box
+			:space-evenly false		 
+			:spacing 10 
+			(box
+				:class "slider-container"
+				:spacing 5
+				(box
+					:orientation "v"
+					:valign "fill"
+					(button (icon :name BATTERY_ICON))
+					(label :text "25%")
+				)
+				(progress :class "qs-scale v" :height 130 :orientation "v" :flipped true)
+			)
+			(box
+				:orientation "v"
+				:space-evenly false
+				:class "info"
+				(label :halign "start" :text "Total Installed")
+				(label :halign "start" :text "Free")
+				(label :halign "start" :text "Swap")
+				(label :halign "start" :text "Used")
+				(label :halign "start" :text "usage: 80%")
+			)
+		)
+	)
+)

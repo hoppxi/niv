@@ -1,0 +1,55 @@
+(defwidget main-launcher []
+	(box
+		:class "main-launcher"
+		:orientation "v"
+		:spacing 4
+		:space-evenly false
+		(box
+			:class "launcher"
+			:orientation "v"
+			:spacing 3
+			:space-evenly false
+			(label :class "info font-s" :halign "end" :text "type ':help' for more options")
+			(overlay
+				(input :active true :class "launcher-input")
+				(box :class "launcher-icon" :halign "start" (icon :name "search"))
+			)
+		)
+		(box
+			:class "result g-container padded-12 app"
+			:orientation "v"
+			:spacing 3
+			:space-evenly false		
+			(button :class "g-btn about"
+				(box
+					:space-evenly false
+					:spacing 5
+					(image :icon "brave")
+					(label :text "Brave")
+				)
+			)
+			(button :class "g-btn about"
+				(box
+					:space-evenly false
+					:spacing 5
+					(image :icon "telegram-desktop-bin")
+					(label :text "Telegram")
+				)
+			)
+		)
+	)
+)
+
+(defwindow launcher
+  :monitor 0
+  :geometry (geometry 
+    :x "0"
+    :y "100"
+    :width "500px"
+    :anchor "top center"
+  )
+  :stacking "fg"
+  :namespace "widget-launcher"
+	:focusable "ondemand"
+  (main-launcher)
+)

@@ -1,0 +1,87 @@
+(defwidget main-media-control []
+	(overlay
+		:class "main-media-control"
+		(box
+			:orientation "v"
+			:space-evenly false
+			:spacing 3
+			:class "main"
+
+			(overlay
+				(box
+					:style "background-image: url('${SONG_ALBUM_ART}'); background-repeat: no-repeat; background-size: cover;"
+					:width 260
+					:height 200
+					:class "album-art"
+				)
+
+				(box
+					:space-evenly false
+					:spacing 0
+					:halign "center"
+					:valign "end"
+					:class "cava-visualizer"
+					(for BAR in CAVA_BARS_NUM
+						(progress :class "cava t" :flipped true :orientation "v" :value {CAVA_BARS[BAR]})
+					)
+				)
+			)
+
+			(box
+				:orientation "v"
+				:class "bottom"
+				:space-evenly false
+
+				(label :halign "start" :limit-width 30 :class "info-title" :text {SONG_TITLE})
+				(label :halign "start" :limit-width 30 :class "info-artist" :text {SONG_ARTIST})
+
+				(box
+					:orientation "v"
+					:class "seek"
+					:space-evenly false
+					:spacing 5
+
+					(box
+						(label :halign "start" :class "seek-min" :text {SONG_SEEK_POSITION_ELAPSED})
+						(label :halign "end" :class "seek-min" :text {SONG_SEEK_POSITION_TOTAL})
+					)
+					(scale :class "seek-slider" :onchange "playerctl position {}" :value SONG_SEEK_POSITION_NORMALIZED)
+				)
+				
+				(box
+					:class "action-container"
+					:space-evenly false
+					(box (button :onclick "playerctl loop Track" (icon :name "repeat")))
+					(box (button :onclick "playerctl previous" (icon :name "skip-back")))
+					(box (button :onclick "playerctl play-pause" (icon :name {SONG_PLAYING==true ? "pause" : "play"})))
+					(box (button :onclick "playerctl next" (icon :name "skip-forward")))
+					(box (button :onclick "playerctl shuffle Toggle" (icon :name "shuffle")))
+				)
+			)
+		)
+
+		(box
+			:class "status"
+			:valign "start"
+			:halign "end"
+			:space-evenly false
+			:spacing 3
+			(icon :name "music-2")
+			(label :text {SONG_STATUS})
+		)
+	)
+)
+
+(defwindow media-control
+  :monitor 0
+  :geometry (geometry 
+    :x "5"
+    :y "5"
+    :width "280px"
+    :anchor "top right"
+  )
+  :stacking "fg"
+  :namespace "widget-media"
+  (main-media-control)
+)
+

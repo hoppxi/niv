@@ -1,0 +1,123 @@
+@import "../theme";
+
+window.bar {
+  background-color: rgba($color: $background, $alpha: 0.9);
+}
+
+.main-bar {
+  padding: 2px 10px;
+
+  .btn-bar {
+    min-height: 20px;
+    padding: 0 10px;
+    transition: padding 0.3s;
+    border-radius: 100px;
+  }
+
+  .left-bar,
+  .right-bar {
+    background-color: $surface-container-high;
+    border-radius: 15px;
+
+    .bb-wrap {
+      background-color: rgba($color: $background, $alpha: 70%);
+
+      &.l {
+        padding-right: 2.3px;
+        border-radius: 15px 12px 12px 15px;
+      }
+
+      &.r {
+        padding-left: 2.3px;
+        border-radius: 12px 15px 15px 12px;
+      }
+    }
+  }
+
+  .workspace {
+    background-color: $surface-container-high;
+    border-radius: 15px;
+
+    box {
+      padding-left: 2.3px;
+      background-color: rgba($color: $background, $alpha: 70%);
+      border-radius: 15px;
+    }
+    .active ~ * {
+      padding-right: 2.3px;
+      padding-left: 0;
+    }
+    .active {
+      padding: 0 2.3px;
+    }
+
+    .workspace-btn {
+      background-color: $surface-container-high;
+      border-radius: 15px;
+      padding: 0 13px;
+
+      &:hover {
+        label {
+          // color: $surface-tint;
+          font-weight: 900;
+        }
+      }
+
+      &.active {
+        padding: 0px 26px;
+        background-color: $on-primary;
+        font-weight: 900;
+
+        &:hover {
+          background-color: $primary-container;
+        }
+
+        &.no-window {
+          background-color: $secondary-container;
+
+          &:hover {
+            background-color: $on-secondary;
+          }
+        }
+      }
+
+      &.has-window:not(.active) {
+        label {
+          // color: $surface-tint;
+          font-weight: 900;
+        }
+
+        &:hover {
+          label {
+            color: $inverse-primary;
+          }
+        }
+      }
+    }
+  }
+
+  .now-playing {
+    .action-container {
+      background-color: $surface-container-high;
+      border-radius: 15px 3px 3px 15px;
+      padding: 0 10px;
+      button {
+        padding: 0 2px;
+        background-color: transparent;
+      }
+    }
+
+    widget.end-eventbox {
+      > box {
+        border: 1px solid transparent;
+        border-radius: 3px 15px 15px 3px;
+      }
+
+      &:hover {
+        > box {
+          border-color: $outline-variant;
+        }
+      }
+    }
+  }
+}

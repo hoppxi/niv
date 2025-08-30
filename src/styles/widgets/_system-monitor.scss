@@ -1,0 +1,32 @@
+@import "../theme";
+
+window.system-monitor {
+  background-color: rgba($color: $background, $alpha: 90%);
+  border-radius: 15px;
+}
+
+.main-system-monitor {
+  padding: 10px;
+  .font-b {
+    font-weight: 800;
+    font-size: 14px;
+  }
+  .sys-monitor {
+    padding: 10px;
+    border-radius: 15px;
+    background-color: $surface-container-high;
+
+    .title {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .info {
+      label:not(.top) {
+        color: $outline;
+        font-style: italic;
+        font-size: 11px;
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+@import "../theme";
+
+.navigator {
+  margin: 10px;
+  background-color: $surface-container-high;
+  border-radius: 15px;
+
+  > box {
+    padding-left: 2.3px;
+    background-color: rgba($color: $background, $alpha: 70%);
+    border-radius: 15px;
+  }
+
+  .active ~ * {
+    padding-right: 2.3px;
+    padding-left: 0;
+  }
+
+  button {
+    border-radius: 15px;
+    padding: 3px 13px;
+
+    &,
+    * {
+      background-color: $surface-container-high;
+    }
+
+    &:hover {
+      background-color: $surface-container-highest;
+    }
+  }
+
+  .active {
+    padding: 0 2.3px;
+
+    button {
+      &,
+      * {
+        background-color: $on-primary;
+      }
+      &:hover {
+        &,
+        * {
+          background-color: $primary-container;
+        }
+      }
+    }
+  }
+}

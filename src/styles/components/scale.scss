@@ -1,0 +1,49 @@
+@import "../theme";
+
+scale {
+  trough {
+    background-color: $surface-bright;
+    border-radius: 15px;
+
+    highlight {
+      padding: 10px;
+      background-color: $primary;
+      border-radius: 15px;
+      min-width: 5px;
+    }
+  }
+
+  &.v {
+    trough {
+      highlight {
+        min-height: 5px;
+      }
+    }
+  }
+}
+
+.slider-container {
+  padding: 5px;
+  border-radius: 15px;
+  background-color: $surface-container;
+
+  button {
+    border-radius: 15px;
+    padding: 0;
+  }
+}
+
+.qs-scale.v,
+.sm-progress.v {
+  trough {
+    border-radius: 18px;
+    highlight,
+    progress {
+      border-radius: 18px;
+      padding: 12px;
+      // padding-top: 0;
+      // padding-bottom: 0;
+      // min-height: 15px;
+    }
+  }
+}

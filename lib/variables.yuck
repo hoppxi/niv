@@ -1,0 +1,62 @@
+; Bar
+(defvar WORKSPACES `[{"id":1, "windows": 0},{"id": 2, "windows": 0},{"id": 3, "windows": 0},{"id": 4, "windows": 0},{"id": 5, "windows": 0}]`)
+(defvar ACTIVE_WINDOW `{"title": "Desktop"}`)
+(defvar FOCUSED_WORKSPACE `{"id": 1, "windows": 0}`)
+(defvar SHOW_CONTROLS_BAR false)
+
+;; Cava visualizer
+(defvar CAVA_BARS `[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]`)
+(defvar CAVA_BARS_NUM `[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59]`)
+
+;; Icons
+(defvar VOLUME_ICON "volume-x")
+(defvar NETWORK_ICON "wifi-off")
+(defvar BATTERY_ICON "battery-warning")
+(defvar NOTIFICATION_ICON "bell-off")
+
+;; Wlogout
+(defvar REVEALER_WLOGOUT true)
+(defvar WLOGOUT_BUTTONS `[
+  {
+    "icon": "lock",
+    "label": "Lock Screen",
+    "cmd": "eww update REVEALER_WLOGOUT=false; sleep 1; loginctl lock-session; eww update REVEALER_WLOGOUT=true; eww close wlogout"
+  },
+  {
+    "icon": "pause",
+    "label": "Suspend",
+    "cmd": "eww update REVEALER_WLOGOUT=false; sleep 1; systemctl suspend; eww update REVEALER_WLOGOUT=true; eww close wlogout;"
+  },
+  {
+    "icon": "log-out",
+    "label": "Logout",
+    "cmd": "eww update REVEALER_WLOGOUT=false; sleep 1; loginctl terminate-session $XDG_SESSION_ID"
+  },
+  {
+    "icon": "moon",
+    "label": "Hibernate",
+    "cmd": "eww update REVEALER_WLOGOUT=false; sleep 1; systemctl hibernate; eww update REVEALER_WLOGOUT=true; eww close wlogout;"
+  },
+  {
+    "icon": "refresh-ccw",
+    "label": "Restart",
+    "cmd": "eww update REVEALER_WLOGOUT=false; sleep 1; systemctl reboot"
+  },
+  {
+    "icon": "power",
+    "label": "Shutdown",
+    "cmd": "eww update REVEALER_WLOGOUT=false; sleep 1; systemctl poweroff"
+  }
+]`)
+
+;; Media control
+(defvar SONG_TITLE "----")
+(defvar SONG_ARTIST "--")
+(defvar SONG_ALBUM_ART "./assets/images/album-art.jpg")
+(defvar SONG_STATUS "Stopped")
+(defvar SONG_PLAYING false)
+(defvar SONG_PASUED false)
+(defvar SONG_STOPPED true)
+(defvar SONG_SEEK_POSITION_ELAPSED "00:00")
+(defvar SONG_SEEK_POSITION_TOTAL "00:00")
+(defvar SONG_SEEK_POSITION_NORMALIZED 0)

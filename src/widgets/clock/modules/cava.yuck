@@ -1,0 +1,31 @@
+(defwidget cava-clock []
+	(box
+		:halign "center"
+		:valign "center"
+		:space-evenly false
+		:class "cava-visualizer"
+		:orientation "v"
+		;; :visible {SONG_STOPPED ? false : true}
+		(box
+			:halign "center"
+			:valign "center"
+			:space-evenly false
+			:spacing 3
+			:class "cava-visualizer"
+			(for BAR in CAVA_BARS_NUM
+				(progress :class "cava t" :flipped true :orientation "v" :value {CAVA_BARS[BAR]})
+			)
+		)
+		(box
+			:halign "center"
+			:valign "center"
+			:space-evenly false
+			:spacing 3
+			:class "cava-visualizer"
+			(for BAR in CAVA_BARS_NUM
+				(progress :class "cava b" :orientation "v" :value {CAVA_BARS[BAR]})
+			)
+		)
+	)
+)
+

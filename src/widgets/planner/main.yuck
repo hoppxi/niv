@@ -1,0 +1,60 @@
+(defvar ACTIVE_STACK_PLANNER 0)
+(defvar PLANNER_NAVIGATOR `[
+	{
+    "id": 0,
+    "icon": "calendar",
+    "label": "Calendar"
+  },
+  {
+    "id": 1,
+    "icon": "list-todo",
+    "label": "Todo"
+  },
+  {
+    "id": 2,
+    "icon": "notebook-pen",
+    "label": "Note"
+	}
+]`)
+
+(defwidget main-planner []
+	(box
+		:class "main-planner"
+		:orientation "v"
+		:space-evenly false
+
+		(box
+			:class "top"
+
+			(centerbox
+				(box :halign "start" (label :class "title" :halign "start" :text "Daily \\nActivity"))
+				(box :halign "center")
+				(navigator 
+					:children PLANNER_NAVIGATOR 
+					:stack "ACTIVE_STACK_PLANNER" 
+					:active ACTIVE_STACK_PLANNER
+					:halign "end" 
+					:valign "end"
+				)
+			)
+		)
+		(stack
+			(calendar :class "calendar")
+		)
+	)
+)
+
+(defwindow planner
+  :monitor 0
+  :geometry (geometry 
+    :x "60"
+    :y "5"
+    :width "325px"
+    ; :height "105%"
+    :anchor "top right"
+  )
+  :stacking "fg"
+  :namespace "widget-planner"
+  (main-planner)
+)
+

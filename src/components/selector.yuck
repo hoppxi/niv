@@ -1,0 +1,23 @@
+(defwidget selector [children stack active]
+	(box
+		:class "selector-container"
+		:space-evenly false
+		:halign "center"
+		(for child in children
+			(box
+				:class {active==child.id ? "active" : ""}
+				(button
+					:onclick "eww update ${stack}=${child.id}"
+					:class "selector-btn"
+					(box
+						:space-evenly false
+						:spacing 3
+						:orientation "v"
+						(icon :name {child.icon})
+						(label :text {child.label})
+					)
+				)
+			)
+		)
+	)
+)

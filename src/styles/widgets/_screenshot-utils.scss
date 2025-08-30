@@ -1,0 +1,47 @@
+@import "../theme";
+
+window.screenshot-utils {
+  background-color: rgba($color: $background, $alpha: 90%);
+  border-radius: 15px;
+}
+
+.main-screenshot-utils {
+  padding: 10px;
+
+  .font-b {
+    font-weight: 800;
+    font-size: 14px;
+  }
+
+  .record-btn {
+    // margin-top: 50px;
+    padding: 2px;
+    border-radius: 50%;
+    border: 2px solid $on-surface;
+
+    .f1 {
+      padding: 20px;
+      background-color: $on-surface;
+      border-radius: 50%;
+    }
+
+    &.video .f1 {
+      background-color: $error-container;
+    }
+
+    &:hover {
+      .f1 {
+        background-color: $on-surface-variant;
+      }
+
+      &.video .f1 {
+        background-color: $on-error;
+      }
+    }
+  }
+
+  .info {
+    color: $outline;
+    font-style: italic;
+  }
+}

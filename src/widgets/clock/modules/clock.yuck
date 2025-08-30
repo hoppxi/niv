@@ -1,0 +1,11 @@
+(defwidget clock-clock []
+	(box
+		:halign "center"
+		:valign "center"
+		:space-evenly false
+		:orientation "v"
+		:class "clock"
+		(label :halign "center" :class "time" :text {formattime(EWW_TIME, "%I:%M")})
+		(label :halign "center" :class "date" :text {formattime(EWW_TIME, "%a, %b %d, %YG.C.")})
+	)
+)

@@ -1,0 +1,48 @@
+(defwidget left-bar []
+  (box
+    :valign "center"
+    :halign "start"
+    :space-evenly false
+    :spacing 0
+    :class "left-bar"
+
+    (box
+      :class "bb-wrap l"
+      (button
+        :class "btn-bar"
+        :onclick "eww open shelf"
+        (vector :name "nixos")
+      )
+    )
+
+    (box
+      :class "bb-wrap l"
+      (button
+        :class "btn-bar"
+        :onclick "eww open launcher"
+        (icon :name "search")
+      )
+    )
+
+    (box
+      :class "bb-wrap l"
+      (button
+        :class "btn-bar"
+        :onclick "eww open system-monitor"
+        (icon :name "activity")
+      )
+    )
+   
+    (box
+      :class "bb-wrap l"
+      (button
+        :class "btn-bar"
+        :onclick "hyprctl keyword opacity 0"
+        (label 
+          :limit-width 20
+          :text {ACTIVE_WINDOW.title=="null" ? "Desktop" : ACTIVE_WINDOW.title}
+        )
+      )
+    )
+  )
+)

@@ -1,0 +1,94 @@
+(defwidget display-qs []
+	(box
+		:orientation "v"
+		:space-evenly false
+		:spacing 10
+		:class "display"
+
+		(box
+			:space-evenly false
+			:spacing 5
+			(button :onclick "eww update ACTIVE_STACK_QUICK_SETTINGS=0" :class "full-rounded" (icon :name "arrow-left"))
+			(label :text "Display")
+		)
+
+		(box		
+			:orientation "v"
+			:space-evenly false
+			:spacing 5
+		
+			(box
+				:orientation "v"
+				:space-evenly false
+				:spacing 5
+				:class "displayctl"
+				
+				(label :class "title" :halign "start" :text "Brightness")
+
+				(box
+					:space-evenly false		 
+					:spacing 10 
+					(box
+						:class "slider-container"
+						:spacing 5
+						(box
+							:orientation "v"
+							:valign "fill"
+							(button (icon :name "sun"))
+							(label :text "25%")
+						)
+						(scale :class "qs-scale v" :height 130 :orientation "v" :flipped true)
+					)
+					(box
+						:orientation "v"
+						:space-evenly false
+						:class "info"
+						(label :halign "start" :text "About display")
+						(label :halign "start" :text "Free")
+						(label :halign "start" :text "Swap")
+						(label :halign "start" :text "Used")
+						(label :halign "start" :text "usage: 80%")
+					)
+				)
+			)
+
+			(box
+				:orientation "v"
+				:space-evenly false
+				:spacing 5
+				:class "displayctl"
+				(label :class "title" :halign "start" :text "Nightlight")
+
+				(box
+					:space-evenly false		 
+					:spacing 10 
+					(box
+						:class "slider-container"
+						:spacing 5
+						(box
+							:orientation "v"
+							:valign "fill"
+							(button (icon :name "eye"))
+							(label :text "25%")
+						)
+						(scale :class "qs-scale v" :height 130 :orientation "v" :flipped true)
+					)
+					(box
+						:orientation "v"
+						:space-evenly false
+						:class "g-container"			
+						(button :class "g-btn toggle-btn"
+							(box 
+								:space-evenly false 
+								:spacing 5 
+								:halign "start"
+								(icon :name "toggle-right")
+								(label :text "Enabled")
+							)
+						)
+					)
+				)
+			)
+		)
+	)
+)

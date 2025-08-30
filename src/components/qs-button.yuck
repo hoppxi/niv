@@ -1,0 +1,23 @@
+
+(defwidget quicksettings-button [key value uicon active extendable ?onclick]
+  (button
+    :class {active ? "active qs-btn" : "qs-btn"}
+    :onclick onclick
+    (centerbox
+      (box
+        :halign "start"
+        :spacing 10
+        :space-evenly false
+        (icon :name {uicon})
+        (box
+          :orientation "v"
+          :space-evenly false
+          (label :class "title" :halign "start" :text {key})
+          (label :class "info" :halign "start" :justify "left" :text {value})
+        )
+      )
+      (box)
+      (box :halign "end" :visible {extendable} (icon :name "chevron-right"))
+    )
+  )
+)

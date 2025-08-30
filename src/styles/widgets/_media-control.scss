@@ -1,0 +1,122 @@
+@import "../theme";
+
+window.media-control {
+  background-color: rgba($color: $background, $alpha: 90%);
+  border-radius: 15px;
+}
+
+.main-media-control {
+  border-radius: 15px;
+  .main {
+    padding: 8px;
+  }
+
+  .status {
+    margin-top: 15px;
+    margin-right: 15px;
+    padding: 5px 10px;
+    border: 1px solid $outline-variant;
+    border-radius: 15px;
+    label {
+      font-size: 10px;
+    }
+  }
+
+  .album-art {
+    border-radius: 15px 15px 3px 3px;
+    border: 1px solid $outline-variant;
+  }
+
+  .bottom {
+    padding: 10px;
+    background-color: $surface-container-low;
+    border-radius: 3px 3px 15px 15px;
+  }
+
+  .info-title {
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 600;
+  }
+
+  .info-artist {
+    font-size: 11px;
+    font-style: italic;
+    color: $outline;
+    margin-bottom: 10px;
+  }
+
+  .seek {
+    margin-top: 5px;
+    .seek-slider {
+      background-color: $surface-bright;
+      border-radius: 15px;
+      border: 1px solid $outline-variant;
+
+      > contents > trough {
+        highlight {
+          background-color: $primary;
+          padding: 3px;
+          border-radius: 14px;
+        }
+      }
+    }
+
+    .seek-min {
+      font-size: 10px;
+    }
+  }
+
+  .action-container {
+    margin-top: 10px;
+    background-color: $surface-container-high;
+    border-radius: 20px;
+
+    > box {
+      padding-left: 2.3px;
+      background-color: $surface-container-low;
+      border-radius: 15px;
+    }
+
+    > :nth-child(3) ~ * {
+      padding-right: 2.3px;
+      padding-left: 0;
+    }
+
+    > :nth-child(3) {
+      padding: 0 2.3px;
+
+      button {
+        padding: 7px 30px;
+        background-color: $on-primary;
+
+        &:hover {
+          background-color: $primary-container;
+        }
+      }
+    }
+
+    button {
+      border-radius: 15px;
+      padding: 7px 12px;
+    }
+  }
+
+  .cava-visualizer {
+    background-color: transparent;
+    padding-bottom: 1px;
+  }
+
+  progressbar.cava {
+    margin: 0;
+    min-height: 130px;
+    trough {
+      min-width: 4px;
+
+      progress {
+        min-width: 0.5px;
+        padding: 1.5px;
+      }
+    }
+  }
+}

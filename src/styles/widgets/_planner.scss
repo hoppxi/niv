@@ -1,0 +1,39 @@
+@import "../theme";
+
+window.planner {
+  background-color: rgba($color: $background, $alpha: 90%);
+  border-radius: 15px;
+}
+
+.main-planner {
+  padding: 10px;
+
+  .top {
+    padding: 20px 0;
+
+    .navigator {
+      margin: 0;
+    }
+
+    .title {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+  }
+
+  .calendar {
+    padding: 5px;
+    border: 1px solid $outline-variant;
+    border-radius: 15px;
+    background-color: $surface-container;
+
+    .header {
+      border: none;
+    }
+
+    :selected {
+      background-color: $on-primary;
+      border-radius: 5px;
+    }
+  }
+}

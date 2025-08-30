@@ -1,0 +1,70 @@
+@import "../theme";
+
+button {
+  padding: 3px 10px;
+  border-radius: 3px;
+  background-color: $surface-container-high;
+
+  &:hover {
+    background-color: $surface-container-highest;
+  }
+
+  &:active {
+    background-color: $inverse-on-surface;
+  }
+
+  &.highlight-action-btn {
+    background-color: $on-primary;
+
+    &:hover {
+      background-color: $primary-container;
+    }
+
+    &.single {
+      border-radius: 15px;
+    }
+  }
+
+  &.full-rounded {
+    border-radius: 100px;
+  }
+
+  &.qs-btn {
+    border-radius: 15px;
+    padding: 10px;
+
+    .title {
+      font-weight: 600;
+    }
+
+    .info {
+      color: $outline;
+      font-style: italic;
+      font-size: 11px;
+    }
+
+    &.active {
+      background-color: $on-primary;
+      &:hover {
+        background-color: $on-secondary;
+      }
+    }
+  }
+}
+
+.expander-btn {
+  padding: 5px;
+  border-radius: 3px;
+  background-color: $surface-container-high;
+  title {
+    padding: 5px;
+  }
+
+  &:hover {
+    background-color: $surface-container-highest;
+  }
+
+  &:active {
+    background-color: $inverse-on-surface;
+  }
+}

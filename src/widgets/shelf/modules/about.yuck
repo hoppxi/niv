@@ -1,0 +1,65 @@
+(defwidget about-shelf []
+	(box
+		:orientation "v"
+		:space-evenly false
+		:spacing 10
+
+		(box
+			:space-evenly false
+			:spacing 5
+			(button :onclick "eww update ACTIVE_STACK_SHELF=0" :class "full-rounded" (icon :name "arrow-left"))
+			(label :text "About")
+		)
+
+		(box
+			:style "background-image: url('./assets/icons/battery.svg');"
+			:height 120
+		)
+
+		(box
+			:class "g-container"
+			:orientation "v"
+			:spacing 3
+			(button :class "g-btn about"
+				(box
+					:space-evenly false
+					:spacing 3
+					(icon :name "user")
+					(label :text "hoppxi@ea")
+				)
+			)
+			(button :class "g-btn about"
+				(box
+					:space-evenly false
+					:spacing 3
+					(vector :name "nixos")
+					(label :text "OS:         Nixos 25.11")
+				)
+			)
+			(button :class "g-btn about"
+				(box
+					:space-evenly false
+					:spacing 3
+					(icon :name "laptop")
+					(label :text "host:       HP elitebook")
+				)
+			)
+			(button :class "g-btn about"
+				(box
+					:space-evenly false
+					:spacing 3
+					(icon :name "code")
+					(label :text "Kernel:   6.12.41")
+				)
+			)
+			(button :class "g-btn about"
+				(box
+					:space-evenly false
+					:spacing 3
+					(icon :name "package")
+					(label :text "pkgs:       1898 nix-system")
+				)
+			)
+		)
+	)
+)

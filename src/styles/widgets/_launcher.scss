@@ -1,0 +1,24 @@
+@import "../theme";
+
+.main-launcher {
+  .launcher-input {
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 100px;
+    padding-left: 50px;
+  }
+  .launcher-icon {
+    margin-left: 20px;
+  }
+
+  .font-s {
+    color: $outline;
+    font-size: 13px;
+    font-style: italic;
+  }
+
+  .result {
+    background-color: $background;
+    border-radius: 15px;
+  }
+}

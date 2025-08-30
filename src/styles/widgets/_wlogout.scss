@@ -1,0 +1,16 @@
+@import "../theme";
+
+window.wlogout {
+  background-color: rgba($color: $background, $alpha: 70%);
+}
+
+.main-wlogout {
+  .info-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+  }
+  .info-detail {
+    font-size: 1rem;
+    font-style: italic;
+  }
+}

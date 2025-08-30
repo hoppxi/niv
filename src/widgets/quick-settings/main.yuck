@@ -1,0 +1,57 @@
+(include "./src/widgets/quick-settings/modules/landing.yuck")
+(include "./src/widgets/quick-settings/modules/network.yuck")
+(include "./src/widgets/quick-settings/modules/bluetooth.yuck")
+(include "./src/widgets/quick-settings/modules/display.yuck")
+(include "./src/widgets/quick-settings/modules/battery.yuck")
+(include "./src/widgets/quick-settings/modules/volume.yuck")
+(include "./src/widgets/quick-settings/modules/notifications.yuck")
+
+(defvar ACTIVE_STACK_QUICK_SETTINGS 0)
+(defwidget main-quick-settings []
+
+  (box
+    :orientation "v"
+    :space-evenly false
+    :class "main-quick-settings"
+    :spacing 10
+
+    (centerbox
+      :class "top"
+      (box 
+        :halign "start"
+        :space-evenly false
+        :spacing 3
+        (button (icon :name "settings"))
+        (box :halign "start" (label :halign "start" :text {formattime(EWW_TIME, "%a, %I:%M%p")}))
+      )
+      (box)
+      (button :halign "end" :onclick "eww open wlogout" (icon :name "power"))
+    )
+
+    (stack
+      :selected ACTIVE_STACK_QUICK_SETTINGS
+      :transition {ACTIVE_STACK_QUICK_SETTINGS==0 ? "slideleft" : "slideright"}
+      (landing-qs)
+      (network-qs)
+      (bluetooth-qs)
+      (display-qs)
+      (battery-qs)
+      (volume-qs)
+      (notifications-qs)
+    )
+  )
+)
+
+(defwindow quick-settings
+  :monitor 0
+  :geometry (geometry 
+    :x "5"
+    :y "5"
+    :width "300px"
+    :anchor "top right"
+  )
+  :stacking "fg"
+  :namespace "widget-quick-settings"
+  (main-quick-settings)
+)
+

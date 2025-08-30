@@ -1,0 +1,64 @@
+@import "../theme";
+@import "../abstract/functions";
+
+window.shelf {
+  background-color: rgba($color: $background, $alpha: 90%);
+  border-radius: 15px;
+}
+
+.main-shelf {
+  padding: 10px;
+
+  .top {
+    .avater {
+      border-radius: 15px;
+      background-color: $surface-container-high;
+    }
+
+    .font-b {
+      font-size: 1.5rem;
+      font-weight: 900;
+    }
+
+    .font-m {
+      color: $outline;
+      font-style: italic;
+    }
+  }
+
+  .pinned-apps {
+    button {
+      padding: 15px;
+    }
+
+    .r-1 {
+      button:first-child {
+        border-top-left-radius: 15px;
+      }
+      button:last-child {
+        border-top-right-radius: 15px;
+      }
+    }
+
+    .r-2 {
+      button:first-child {
+        border-bottom-left-radius: 15px;
+      }
+      button:last-child {
+        border-bottom-right-radius: 15px;
+      }
+    }
+  }
+
+  .g-container {
+    .g-btn {
+      padding: 12px;
+
+      .font-s {
+        color: $outline;
+        font-style: italic;
+        font-size: 11px;
+      }
+    }
+  }
+}
