@@ -58,7 +58,7 @@ window.bar {
 
       &:hover {
         label {
-          // color: $surface-tint;
+          // color: $primary;
           font-weight: 900;
         }
       }
@@ -83,13 +83,13 @@ window.bar {
 
       &.has-window:not(.active) {
         label {
-          // color: $surface-tint;
+          color: $primary;
           font-weight: 900;
         }
 
         &:hover {
           label {
-            color: $inverse-primary;
+            color: $primary;
           }
         }
       }

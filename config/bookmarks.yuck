@@ -1,0 +1,25 @@
+; Bookmark configuration file
+; This bookmark is for webpages you frequently visit
+
+(defvar CONFIG_BOOKMARKS_DATA `[
+	{
+		"url": "https://github.com",
+		"icon": "github",
+		"title": "GitHub"
+	},
+	{
+		"url": "https://reddit.com",
+		"icon": "reddit",
+		"title": "Reddit"
+	},
+	{
+		"url": "https://stackoverflow.com",
+		"icon": "stackoverflow",
+		"title": "StackOverflow"
+	},
+	{
+		"url": "https://news.ycombinator.com",
+		"icon": "hackernews",
+		"title": "HackerNews"
+	}
+]`)

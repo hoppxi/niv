@@ -7,7 +7,7 @@
 		(box
 			:space-evenly false
 			:spacing 5
-			(button :onclick "eww update ACTIVE_STACK_SHELF=0" :class "full-rounded" (icon :name "arrow-left"))
+			(button :onclick "./bin/niv-ws update shelf --stack 0" :class "full-rounded" (icon :name "arrow-left"))
 			(label :text "Bookmarks")
 		)
 
@@ -15,39 +15,20 @@
 			:class "g-container"
 			:orientation "v"
 			:spacing 3
-			(button :class "g-btn" 
-				(box
-					:space-evenly false
-					:spacing 3
-					(icon :name "bookmark")
-					(label :text "Bookmarks")
-				)
-			)
-			(button :class "g-btn" 
-				(box
-					:space-evenly false
-					:spacing 3
-					(icon :name "image")
-					(label :text "Wallpapers")
-				)
-			)
-			(button :class "g-btn" 
-				(box
-					:space-evenly false
-					:spacing 3
-					(icon :name "bookmark")
-					(label :text "Workspaces")
-				)
-			)
-			(button :class "g-btn" 
-				(box
-					:space-evenly false
-					:spacing 3
-					(icon :name "bookmark")
-					(label :text "Accessories")
+
+			(for BOOKMARK in "${CONFIG_BOOKMARKS_DATA}"
+				(button :class "g-btn" 
+					:onclick "xdg-open '${BOOKMARK.url}' &! && ./bin/niv-ws close shelf"
+					(box
+						:space-evenly false
+						:spacing 3
+						(image :icon-size "large-toolbar" :icon "${BOOKMARK.icon}")
+						(label :text "${BOOKMARK.title}")
+					)
 				)
 			)
 		)
+
 		(box
 			:class "g-container"
 			:orientation "v"

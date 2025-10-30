@@ -1,6 +1,6 @@
 ; Bar
 (defvar WORKSPACES `[{"id":1, "windows": 0},{"id": 2, "windows": 0},{"id": 3, "windows": 0},{"id": 4, "windows": 0},{"id": 5, "windows": 0}]`)
-(defvar ACTIVE_WINDOW `{"title": "Desktop"}`)
+(defvar ACTIVE_WINDOW `{"title": "Desktop", "workspace": 1}`)
 (defvar FOCUSED_WORKSPACE `{"id": 1, "windows": 0}`)
 (defvar SHOW_CONTROLS_BAR false)
 
@@ -13,6 +13,11 @@
 (defvar NETWORK_ICON "wifi-off")
 (defvar BATTERY_ICON "battery-warning")
 (defvar NOTIFICATION_ICON "bell-off")
+(defvar BLUETOOTH_ICON "bluetooth-off")
+(defvar NIGHTLIGHT_ICON "eclipse")
+(defvar BRIGHTNESS_ICON "sun")
+(defvar AIRPLANE_ICON "plane-takeoff")
+(defvar MIC_ICON "mic-off")
 
 ;; Wlogout
 (defvar REVEALER_WLOGOUT true)
@@ -52,11 +57,22 @@
 ;; Media control
 (defvar SONG_TITLE "----")
 (defvar SONG_ARTIST "--")
-(defvar SONG_ALBUM_ART "./assets/images/album-art.jpg")
+(defvar SONG_ALBUM "--")
+(defvar SONG_ALBUM_ART "./assets/icons/music-2.svg")
 (defvar SONG_STATUS "Stopped")
 (defvar SONG_PLAYING false)
-(defvar SONG_PASUED false)
+(defvar SONG_PAUSED false)
 (defvar SONG_STOPPED true)
 (defvar SONG_SEEK_POSITION_ELAPSED "00:00")
 (defvar SONG_SEEK_POSITION_TOTAL "00:00")
 (defvar SONG_SEEK_POSITION_NORMALIZED 0)
+
+;; Static data
+(defpoll AUDIO_DATA :interval "1h" :run-while false "./bin/niv-static --audio")
+(defpoll CPU_DATA :interval "1h" :run-while false "./bin/niv-static --cpu")
+(defpoll OS_DATA :interval "1h" :run-while false "./bin/niv-static --os")
+(defpoll MEMORY_DATA :interval "1h" :run-while false "./bin/niv-static --memory")
+(defpoll NETWORK_DATA :interval "1h" :run-while false "./bin/niv-static --network")
+(defpoll DISPLAY_DATA :interval "1h" :run-while false "./bin/niv-static --display")
+(defpoll BATTERY_DATA :interval "1h" :run-while false "./bin/niv-static --battery")
+(defpoll PKGS_DATA :interval "1h" :run-while false "./bin/niv-static --packages")

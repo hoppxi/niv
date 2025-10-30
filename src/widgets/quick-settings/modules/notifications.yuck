@@ -9,7 +9,7 @@
 		(box
 			:space-evenly false
 			:spacing 5
-			(button :onclick "eww update ACTIVE_STACK_QUICK_SETTINGS=0" :class "full-rounded" (icon :name "arrow-left"))
+			(button :onclick "./bin/niv-ws update quick-settings --stack 0" :class "full-rounded" (icon :name "arrow-left"))
 			(label :text "Notifications")
 		)		
 		(box

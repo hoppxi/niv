@@ -7,7 +7,7 @@
 		(box
 			:space-evenly false
 			:spacing 5
-			(button :onclick "eww update ACTIVE_STACK_SHELF=0" :class "full-rounded" (icon :name "arrow-left"))
+			(button :onclick "./bin/niv-ws update shelf --stack 0" :class "full-rounded" (icon :name "arrow-left"))
 			(label :text "Workspaces")
 		)
 
@@ -15,38 +15,19 @@
 			:class "g-container"
 			:orientation "v"
 			:spacing 3
-			(button :class "g-btn" 
-				(box
-					:space-evenly false
-					:spacing 5
-					(image :icon "code")
-					(label :text "Coding")
+
+			(for WORKSPACE in "${CONFIG_WORKSPACES_DATA}"
+				(button :class "g-btn" 
+					:onclick "./scripts/open-workspaces.sh --workspaces '${WORKSPACE.workspaces}' --cmd '${WORKSPACE.cmd}'"
+					(box
+						:space-evenly false
+						:spacing 5
+						(image :icon "${WORKSPACE.icon}")
+						(label :text "${WORKSPACE.title}")
+					)
 				)
 			)
-			(button :class "g-btn" 
-				(box
-					:space-evenly false
-					:spacing 5
-					(image :icon "social")
-					(label :text "Entertainment")
-				)
-			)
-			(button :class "g-btn" 
-				(box
-					:space-evenly false
-					:spacing 5
-					(image :icon "bookmark")
-					(label :text "Article")
-				)
-			)
-			(button :class "g-btn" 
-				(box
-					:space-evenly false
-					:spacing 5
-					(image :icon "video")
-					(label :text "Movie")
-				)
-			)
+
 		)
 
 		(box

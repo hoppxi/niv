@@ -7,13 +7,16 @@
 		(box
 			:space-evenly false
 			:spacing 5
-			(button :onclick "eww update ACTIVE_STACK_SHELF=0" :class "full-rounded" (icon :name "arrow-left"))
+			(button :onclick "./bin/niv-ws update shelf --stack 0" :class "full-rounded" (icon :name "arrow-left"))
 			(label :text "About")
 		)
 
 		(box
-			:style "background-image: url('./assets/icons/battery.svg');"
+			:style "background-image: url('${CONFIG_PROFILE_DATA.picture}'); background-size: cover; background-position: center; background-repeat: no-repeat; border-radius: 50%;"
 			:height 120
+			:width 120
+			:halign "center"
+			:valign "center"
 		)
 
 		(box
@@ -25,7 +28,7 @@
 					:space-evenly false
 					:spacing 3
 					(icon :name "user")
-					(label :text "hoppxi@ea")
+					(label :text "${CONFIG_PROFILE_DATA.uname} (${CONFIG_PROFILE_DATA.name})")
 				)
 			)
 			(button :class "g-btn about"
@@ -33,7 +36,7 @@
 					:space-evenly false
 					:spacing 3
 					(vector :name "nixos")
-					(label :text "OS:         Nixos 25.11")
+					(label :text "OS:             ${OS_DATA.os.platform}")
 				)
 			)
 			(button :class "g-btn about"
@@ -41,7 +44,7 @@
 					:space-evenly false
 					:spacing 3
 					(icon :name "laptop")
-					(label :text "host:       HP elitebook")
+					(label :text "host:           ${OS_DATA.os.hostname}")
 				)
 			)
 			(button :class "g-btn about"
@@ -49,15 +52,15 @@
 					:space-evenly false
 					:spacing 3
 					(icon :name "code")
-					(label :text "Kernel:   6.12.41")
+					(label :text "Kernel:      ${OS_DATA.os.kernel}")
 				)
 			)
 			(button :class "g-btn about"
 				(box
 					:space-evenly false
 					:spacing 3
-					(icon :name "package")
-					(label :text "pkgs:       1898 nix-system")
+					(vector :name "linux")
+					(label :text "running:   ${OS_DATA.os.os}")
 				)
 			)
 		)

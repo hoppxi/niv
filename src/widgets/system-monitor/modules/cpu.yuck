@@ -25,10 +25,10 @@
 				:orientation "v"
 				:space-evenly false
 				:class "info"
-				(label :class "top" :halign "start" :text "CPU name")
-				(label :halign "start" :text "Base Frequency")
-				(label :halign "start" :text "Number of Cores / Threads")
-				(label :halign "start" :text "Architecture")
+				(label :class "top" :halign "start" :text "${CPU_DATA.cpu.model}")
+				(label :halign "start" :text "${CPU_DATA.cpu.base_freq_ghz} GHz")
+				(label :halign "start" :text "${CPU_DATA.cpu.cores} cores")
+				(label :halign "start" :text "${CPU_DATA.cpu.threads} threads")
 			)
 		)
 	)

@@ -25,11 +25,9 @@
 				:orientation "v"
 				:space-evenly false
 				:class "info"
-				(label :halign "start" :text "Total Installed")
-				(label :halign "start" :text "Free")
-				(label :halign "start" :text "Swap")
-				(label :halign "start" :text "Used")
-				(label :halign "start" :text "usage: 80%")
+				(label :halign "start" :text "Health: ${BATTERY_DATA.battery.health}")
+				(label :halign "start" :text "Capacity: ${BATTERY_DATA.battery.design_capacity_mwh} mWh")
+				(label :halign "start" :text "Current: ${BATTERY_DATA.battery.current_capacity_mwh} mWh")
 			)
 		)
 	)

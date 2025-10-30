@@ -1,0 +1,29 @@
+; Expermental workspace configuration file
+; Define your workspaces and the applications to launch in each workspace with their command in the array format.
+
+(defvar CONFIG_WORKSPACES_DATA `[
+	{
+		"icon": "vscode",
+		"workspaces": {
+			"1": ["code", "alacritty"],
+			"2": ["alacritty", "alacritty -e mcuc"]
+		},
+		"cmd": "",
+		"title": "Coding"
+	},
+	{
+		"icon": "firefox",
+		"workspaces": { "1": ["Brave", "firefox"], "2": ["thunderbird"] },
+		"cmd": "",
+		"title": "Browsing"
+	},
+	{
+		"icon": "spotify",
+		"workspaces": {
+			"1": ["spotify", "vlc"],
+			"2": ["mpv"]
+		},
+		"cmd": "",
+		"title": "Media"
+	}
+]`)

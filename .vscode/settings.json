@@ -3,7 +3,7 @@
   "editor.indentSize": "tabSize",
 
   "files.associations": {
-    "*.yuck": "go"
+    "*.yuck": "go" // to see the same code style
   }
   // "json.validate.enable": false
 }

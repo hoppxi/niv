@@ -58,7 +58,7 @@
 			:class "g-container" 
 			(button 
 				:class "g-btn" 
-				:onclick "alacritty -e btop &"
+				:onclick "alacritty -e btop && eww close system-monitor"
 				(box 
 					:space-evenly false
 					:spacing 5

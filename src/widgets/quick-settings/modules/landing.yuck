@@ -6,27 +6,28 @@
 		:spacing 5
 
 		(box
-			:class ""
 			:spacing 5
 			:orientation "v"
 			(box
-				:class ""
 				:spacing 5
 				(quicksettings-button
+					:lb-width 70
+					:width 100
 					:key "WiFi"
 					:value "5G-MIFI-34EB"
 					:uicon NETWORK_ICON
 					:active true
 					:extendable true
-					:onclick "eww update ACTIVE_STACK_QUICK_SETTINGS=1"
+					:onclick "./bin/niv-ws update quick-settings --stack 1"
 				)
 				(quicksettings-button
+					:lb-width 70
 					:key "Bluetooth"
 					:value "uvvvw"
-					:uicon "bluetooth"
+					:uicon BLUETOOTH_ICON
 					:active false
 					:extendable true
-					:onclick "eww update ACTIVE_STACK_QUICK_SETTINGS=2"
+					:onclick "./bin/niv-ws update quick-settings --stack 2"
 				)
 			)
 
@@ -34,20 +35,22 @@
 				:class ""
 				:spacing 5
 				(quicksettings-button
+					:lb-width 70
 					:key "Nightlight"
 					:value "off"
-					:uicon "eye"
+					:uicon NIGHTLIGHT_ICON
 					:active false
 					:extendable true
-					:onclick "eww update ACTIVE_STACK_QUICK_SETTINGS=3"
+					:onclick "./bin/niv-ws update quick-settings --stack 3"
 				)
 				(quicksettings-button
+					:lb-width 70
 					:key "Battery"
 					:value "${EWW_BATTERY.BAT0.capacity}% ${EWW_BATTERY.BAT0.status}"
 					:uicon BATTERY_ICON
 					:active false
 					:extendable true
-					:onclick "eww update ACTIVE_STACK_QUICK_SETTINGS=4"
+					:onclick "./bin/niv-ws update quick-settings --stack 4"
 				)
 			)
 		)
@@ -66,10 +69,10 @@
 					(box
 						:orientation "v"
 						:valign "fill"
-						(button :onclick "eww update ACTIVE_STACK_QUICK_SETTINGS=5" (icon :name VOLUME_ICON))
+						(button :onclick "./bin/niv-ws update quick-settings --stack 5" (icon :name VOLUME_ICON))
 						(label :text "25%")
 					)
-					(scale :class "qs-scale v" :height 130 :orientation "v" :flipped true)
+					(scale :class "qs-scale v" :onchange "pamixer --set-volume {}" :height 130 :orientation "v" :flipped true)
 				)
 
 				(box
@@ -79,38 +82,40 @@
 					(box
 						:orientation "v"
 						:valign "fill"
-						(button :onclick "eww update ACTIVE_STACK_QUICK_SETTINGS=3" (icon :name "sun"))
+						(button :onclick "./bin/niv-ws update quick-settings --stack 3" (icon :name BRIGHTNESS_ICON))
 						(label :text "25%")
 					)
-					(scale :class "qs-scale v" :height 130 :orientation "v" :flipped true)
+					(scale :class "qs-scale v" :onchange "brightnessctl set {}%" :height 130 :orientation "v" :flipped true)
 				)
 			)
 			(box
-				:class ""
 				:spacing 5
 				:orientation "v"
 				(quicksettings-button
+					:lb-width 70
 					:key "Airplane"
 					:value "off"
-					:uicon "plane"
+					:uicon AIRPLANE_ICON
 					:active false
 					:extendable false
 				)
 				(quicksettings-button
+					:lb-width 70
 					:key "Notifications"
 					:value "on"
 					:uicon NOTIFICATION_ICON
 					:active true
 					:extendable true
-					:onclick "eww update ACTIVE_STACK_QUICK_SETTINGS=6"
+					:onclick "./bin/niv-ws update quick-settings --stack 6"
 				)
 				(quicksettings-button
+					:lb-width 70
 					:key "Music title"
 					:value "Artists"
 					:uicon "music-2"
-					:active true
+					:active {SONG_STOPPED ? false : true}
 					:extendable true
-					:onclick "eww close quick-settings; eww open media-control"
+					:onclick "./bin/niv-ws open media-control"
 				)
 			)
 		)
@@ -128,6 +133,7 @@
 				)
 			)
 			(button :class "g-btn about"
+				:onclick "./bin/niv-ws open screenshot-utils"
 				(box
 					:space-evenly false
 					:spacing 3
@@ -136,6 +142,7 @@
 				)
 			)
 			(button :class "g-btn about"
+				:onclick "./bin/niv-ws open shelf --stack 1"
 				(box
 					:space-evenly false
 					:spacing 3
@@ -144,6 +151,7 @@
 				)
 			)
 			(button :class "g-btn about"
+				:onclick "./bin/niv-ws open system-monitor"
 				(box
 					:space-evenly false
 					:spacing 3

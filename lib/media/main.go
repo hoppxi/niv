@@ -1,555 +1,562 @@
+/*
+	A simple MPRIS media player monitor that updates eww variables with song info.
+	a media player that supports MPRIS over DBus (e.g. Browsers, spotify, vlc, etc).
+*/
+
 package main
 
 import (
+	"crypto/sha1"
+	"encoding/hex"
 	"fmt"
 	"io"
-	"mime"
+	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/godbus/dbus/v5"
 )
 
-const (
-	defaultTitle    = "----"
-	defaultArtist   = "--"
-	defaultArt      = "./assets/images/album-art.jpg"
-	defaultStatus   = "Stopped"
-	defaultElapsed  = "00:00"
-	defaultTotal    = "00:00"
-	defaultNormStr  = "0"
-	tmpArtDir       = "./assets/images/album-art-tmp"
-	objPath         = "/org/mpris/MediaPlayer2"
-	ifacePlayer     = "org.mpris.MediaPlayer2.Player"
-	ifaceProps      = "org.freedesktop.DBus.Properties"
-	methodGet       = "org.freedesktop.DBus.Properties.Get"
-	signalSeeked    = "Seeked"
-)
+func ewwUpdate(key, value string) {
+	value = strings.ReplaceAll(value, "'", `'\''`)
+	exec.Command("eww", "update", fmt.Sprintf("%s=%s", key, value)).Run()
+}
 
-type SongState struct {
+func formatDurationMicros(micros int64) string {
+	if micros <= 0 {
+		return "00:00"
+	}
+	secs := micros / 1_000_000
+	min := secs / 60
+	sec := secs % 60
+	return fmt.Sprintf("%02d:%02d", min, sec)
+}
+
+func clampNormalized(v float64) float64 {
+	if v < 0 {
+		return 0
+	}
+	if v > 100 {
+		return 100
+	}
+	return v
+}
+
+func formatNormalized(elapsed, total int64) string {
+	if total <= 0 {
+		return "0"
+	}
+	
+	val := float64(elapsed) / float64(total) * 100
+	val = clampNormalized(val)
+	return fmt.Sprintf("%.0f", val)
+}
+
+type SongInfo struct {
 	Title      string
 	Artist     string
-	AlbumArt   string
+	Album      string
+	ArtUrl     string 
 	Status     string
 	Playing    bool
 	Paused     bool
 	Stopped    bool
-	ElapsedStr string // "MM:SS"
-	TotalStr   string // "MM:SS"
-	NormStr    string // "0".."1" (as string)
-	// internal numeric helpers
-	elapsedSec int64
-	totalSec   int64
+	Elapsed    int64 // microseconds
+	Total      int64 // microseconds
+	Normalized string
 }
 
-var (
-	bus          *dbus.Conn
-	activeSender string // unique name (e.g., ":1.123")
-	state        = SongState{
-		Title:      defaultTitle,
-		Artist:     defaultArtist,
-		AlbumArt:   defaultArt,
-		Status:     defaultStatus,
-		Playing:    false,
-		Paused:     false,
-		Stopped:    true,
-		ElapsedStr: defaultElapsed,
-		TotalStr:   defaultTotal,
-		NormStr:    defaultNormStr,
-		elapsedSec: 0,
-		totalSec:   0,
+func emptySongInfo() SongInfo {
+	return SongInfo{
+		Title: "----",
+		Artist: "--",
+		Album: "--",
+		ArtUrl: "./assets/icons/music-2.svg",
+		Status: "Stopped", 
+		Playing: false,
+		Paused: false,
+		Stopped: true,
+		Elapsed: 0,
+		Total: 0,
+		Normalized: "0",
 	}
-)
+}
 
-func main() {
-	
-	var err error
-	bus, err = dbus.SessionBus()
+func updateEwwFromSong(info SongInfo) {
+	ewwUpdate("SONG_TITLE", info.Title)
+	ewwUpdate("SONG_ARTIST", info.Artist)
+	ewwUpdate("SONG_ALBUM_ART", info.ArtUrl)
+	ewwUpdate("SONG_ALBUM", info.Album)
+	ewwUpdate("SONG_STATUS", info.Status)
+	ewwUpdate("SONG_PLAYING", fmt.Sprintf("%v", info.Playing))
+	ewwUpdate("SONG_PAUSED", fmt.Sprintf("%v", info.Paused))
+	ewwUpdate("SONG_STOPPED", fmt.Sprintf("%v", info.Stopped))
+	ewwUpdate("SONG_SEEK_POSITION_ELAPSED", formatDurationMicros(info.Elapsed))
+	ewwUpdate("SONG_SEEK_POSITION_TOTAL", formatDurationMicros(info.Total))
+	ewwUpdate("SONG_SEEK_POSITION_NORMALIZED", info.Normalized)
+}
+
+// make a short http client with timeouts
+var httpClient = &http.Client{
+	Timeout: 8 * time.Second,
+	Transport: &http.Transport{
+		DialContext: (&net.Dialer{
+			Timeout: 5 * time.Second,
+		}).DialContext,
+		TLSHandshakeTimeout: 5 * time.Second,
+	},
+}
+
+func CleanArtURL(raw string) string {
+	if raw == "" {
+		return ""
+	}
+
+	if strings.HasPrefix(raw, "file://") {
+		path, _ := url.PathUnescape(strings.TrimPrefix(raw, "file://"))
+		return "file://" + filepath.Clean(path)
+	}
+
+	if strings.HasPrefix(raw, "/") {
+		return "file://" + filepath.Clean(raw)
+	}
+	return raw
+}
+
+func FetchArt(artUrl string) string {
+	artUrl = strings.TrimSpace(artUrl)
+	if artUrl == "" {
+		return ""
+	}
+
+	artUrl = CleanArtURL(artUrl)
+
+	// Local file
+	if strings.HasPrefix(artUrl, "file://") {
+		path, _ := url.PathUnescape(strings.TrimPrefix(artUrl, "file://"))
+		if fi, err := os.Stat(path); err == nil && !fi.IsDir() {
+			abs, _ := filepath.Abs(path)
+			return "file://" + abs
+		}
+		return ""
+	}
+
+	// HTTP/HTTPS
+	if strings.HasPrefix(artUrl, "http://") || strings.HasPrefix(artUrl, "https://") {
+		// cache name
+		h := sha1.Sum([]byte(artUrl))
+		hash := hex.EncodeToString(h[:])
+		ext := ".img"
+		u, err := url.Parse(artUrl)
+		if err == nil {
+			// try to preserve extension if present
+			if p := filepath.Ext(u.Path); p != "" {
+				ext = p
+			}
+		}
+		tmpPath := filepath.Join(os.TempDir(), "mpris_art_"+hash+ext)
+		// if exists, reuse
+		if fi, err := os.Stat(tmpPath); err == nil && !fi.IsDir() {
+			abs, _ := filepath.Abs(tmpPath)
+			return "file://" + abs
+		}
+		// download
+		resp, err := httpClient.Get(artUrl)
+		if err != nil {
+			fmt.Println("FetchArt: download error:", err)
+			return ""
+		}
+		defer resp.Body.Close()
+		if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+			fmt.Println("FetchArt: bad status", resp.StatusCode)
+			return ""
+		}
+		out, err := os.Create(tmpPath)
+		if err != nil {
+			fmt.Println("FetchArt: create file:", err)
+			return ""
+		}
+		defer out.Close()
+		_, err = io.Copy(out, resp.Body)
+		if err != nil {
+			fmt.Println("FetchArt: write file:", err)
+			// try to remove partial
+			out.Close()
+			os.Remove(tmpPath)
+			return ""
+		}
+		abs, _ := filepath.Abs(tmpPath)
+		return "file://" + abs
+	}
+
+	// unknown scheme, return unchanged (some players may provide "cover:" or data: URIs)
+	return ""
+}
+
+func getMprisPlayers(conn *dbus.Conn) ([]string, error) {
+	var names []string
+	err := conn.BusObject().Call("org.freedesktop.DBus.ListNames", 0).Store(&names)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-
-	_ = os.MkdirAll(tmpArtDir, 0o755)
-	_ = os.MkdirAll(filepath.Dir(defaultArt), 0o755)
-
-	// Subscribe to:
-	// 1) PropertiesChanged (for Metadata/PlaybackStatus/Position)
-	// 2) Seeked (more frequent position updates)
-	// 3) NameOwnerChanged (to detect player disappearance)
-	err = bus.AddMatchSignal(
-		dbus.WithMatchInterface(ifaceProps),
-	)
-	if err != nil {
-		panic(err)
-	}
-	err = bus.AddMatchSignal(
-		dbus.WithMatchInterface(ifacePlayer),
-		dbus.WithMatchMember(signalSeeked),
-	)
-	if err != nil {
-		panic(err)
-	}
-	err = bus.AddMatchSignal(
-		dbus.WithMatchInterface("org.freedesktop.DBus"),
-		dbus.WithMatchMember("NameOwnerChanged"),
-	)
-	if err != nil {
-		panic(err)
-	}
-
-	sigCh := make(chan *dbus.Signal, 64)
-	bus.Signal(sigCh)
-
-	fmt.Println("MPRIS watcher running. Waiting for players...")
-
-	// defaults
-	pushAllToEww()
-
-	for sig := range sigCh {
-		switch sig.Name {
-		case ifaceProps + ".PropertiesChanged":
-			handlePropertiesChanged(sig)
-		case ifacePlayer + "." + signalSeeked:
-			handleSeeked(sig)
-		case "org.freedesktop.DBus.NameOwnerChanged":
-			handleNameOwnerChanged(sig)
+	var players []string
+	for _, n := range names {
+		if strings.HasPrefix(n, "org.mpris.MediaPlayer2.") {
+			players = append(players, n)
 		}
 	}
+	return players, nil
 }
 
-func handlePropertiesChanged(sig *dbus.Signal) {
-	if len(sig.Body) < 2 {
-		return
-	}
-	iface, _ := sig.Body[0].(string)
-	if iface != ifacePlayer {
-		return
-	}
-	props, _ := sig.Body[1].(map[string]dbus.Variant)
-	if len(props) == 0 {
-		return
-	}
-	sender := sig.Sender
-
-	// Get the first active playing
-	if activeSender == "" && isPlayingFromProps(props) {
-		activeSender = sender
-		refreshSnapshotFromPlayer(sender)
-	}
-
-	if sender != activeSender {
-		if activeSender == "" && isPlayingFromProps(props) {
-			activeSender = sender
-			refreshSnapshotFromPlayer(sender)
-		}
-		return
-	}
-
-	for key, v := range props {
-		switch key {
-		case "Metadata":
-			md, _ := v.Value().(map[string]dbus.Variant)
-			title := getString(md["xesam:title"], defaultTitle)
-			artist := getStringFromArray(md["xesam:artist"], defaultArtist)
-			if updateString(&state.Title, "SONG_TITLE", title) {
-				// ok
-			}
-			updateString(&state.Artist, "SONG_ARTIST", artist)
-
-			// Total in ms
-			totalUSec := getInt64(md["mpris:length"], 0)
-			totalSec := totalUSec / 1_000_000
-			if totalSec <= 0 {
-				state.totalSec = 0
-				updateString(&state.TotalStr, "SONG_SEEK_POSITION_TOTAL", defaultTotal)
-			} else {
-				state.totalSec = totalSec
-				updateString(&state.TotalStr, "SONG_SEEK_POSITION_TOTAL", fmtTime(totalSec))
-			}
-
-			// album art
-			artURL := getString(md["mpris:artUrl"], "")
-			if artURL != "" {
-				local := downloadAlbumArt(artURL)
-				if local != "" {
-					updateString(&state.AlbumArt, "SONG_ALBUM_ART", local)
-				}
-			}
-
-			// normalized 0-100
-			recomputeNormalized()
-
-		case "PlaybackStatus":
-			status := getString(v, defaultStatus)
-			updateString(&state.Status, "SONG_STATUS", status)
-			updateBool(&state.Playing, "SONG_PLAYING", status == "Playing")
-			updateBool(&state.Paused, "SONG_PAUSED", status == "Paused")
-			updateBool(&state.Stopped, "SONG_STOPPED", status == "Stopped")
-
-			// If stopped, reset to defaults and release the player.
-			if status == "Stopped" {
-				resetToDefaultsAndPush()
-				activeSender = ""
-			}
-
-		case "Position":
-			// ms to ss
-			posUSec, ok := v.Value().(int64)
-			if !ok {
-				continue
-			}
-			secs := posUSec / 1_000_000
-			state.elapsedSec = max64(secs, 0)
-			updateString(&state.ElapsedStr, "SONG_SEEK_POSITION_ELAPSED", fmtTime(state.elapsedSec))
-			recomputeNormalized()
-		}
-	}
-}
-
-func handleSeeked(sig *dbus.Signal) {
-	if len(sig.Body) < 1 {
-		return
-	}
-	if sig.Sender != activeSender {
-		return
-	}
-	posUSec, ok := sig.Body[0].(int64)
-	if !ok {
-		return
-	}
-	secs := posUSec / 1_000_000
-	state.elapsedSec = max64(secs, 0)
-	updateString(&state.ElapsedStr, "SONG_SEEK_POSITION_ELAPSED", fmtTime(state.elapsedSec))
-	recomputeNormalized()
-}
-
-func handleNameOwnerChanged(sig *dbus.Signal) {
-	// Body: name, old_owner, new_owner
-	if len(sig.Body) != 3 {
-		return
-	}
-	name, _ := sig.Body[0].(string)
-	oldOwner, _ := sig.Body[1].(string)
-	newOwner, _ := sig.Body[2].(string)
-
-	if oldOwner != "" && newOwner == "" && name == activeSender {
-		resetToDefaultsAndPush()
-		activeSender = ""
-	}
-}
-
-func refreshSnapshotFromPlayer(sender string) {
-	obj := bus.Object(sender, dbus.ObjectPath(objPath))
-
-	// Metadata
-	err := obj.Call(methodGet, 0, ifacePlayer, "Metadata").Store()
-	if err == nil {
-		// godbus peculiarity; use direct Store into variable
-	}
-	var metaVar dbus.Variant
-	if call := obj.Call(methodGet, 0, ifacePlayer, "Metadata"); call.Err == nil {
-		_ = call.Store(&metaVar)
-		if md, ok := metaVar.Value().(map[string]dbus.Variant); ok {
-			title := getString(md["xesam:title"], defaultTitle)
-			artist := getStringFromArray(md["xesam:artist"], defaultArtist)
-			updateString(&state.Title, "SONG_TITLE", title)
-			updateString(&state.Artist, "SONG_ARTIST", artist)
-
-			totalUSec := getInt64(md["mpris:length"], 0)
-			state.totalSec = totalUSec / 1_000_000
-			if state.totalSec > 0 {
-				updateString(&state.TotalStr, "SONG_SEEK_POSITION_TOTAL", fmtTime(state.totalSec))
-			} else {
-				updateString(&state.TotalStr, "SONG_SEEK_POSITION_TOTAL", defaultTotal)
-			}
-
-			artURL := getString(md["mpris:artUrl"], "")
-			if artURL != "" {
-				local := downloadAlbumArt(artURL)
-				if local != "" {
-					updateString(&state.AlbumArt, "SONG_ALBUM_ART", local)
-				}
-			}
-		}
-	}
-
-	// PlaybackStatus
-	var psVar dbus.Variant
-	if call := obj.Call(methodGet, 0, ifacePlayer, "PlaybackStatus"); call.Err == nil {
-		_ = call.Store(&psVar)
-		status := getString(psVar, defaultStatus)
-		updateString(&state.Status, "SONG_STATUS", status)
-		updateBool(&state.Playing, "SONG_PLAYING", status == "Playing")
-		updateBool(&state.Paused, "SONG_PAUSED", status == "Paused")
-		updateBool(&state.Stopped, "SONG_STOPPED", status == "Stopped")
-	}
-
-	// Position
-	var posVar dbus.Variant
-	if call := obj.Call(methodGet, 0, ifacePlayer, "Position"); call.Err == nil {
-		_ = call.Store(&posVar)
-		if p, ok := posVar.Value().(int64); ok {
-			state.elapsedSec = max64(p/1_000_000, 0)
-			updateString(&state.ElapsedStr, "SONG_SEEK_POSITION_ELAPSED", fmtTime(state.elapsedSec))
-		}
-	}
-
-	recomputeNormalized()
-}
-
-func recomputeNormalized() {
-	norm := "0"
-	if state.totalSec > 0 {
-		r := float64(state.elapsedSec) / float64(state.totalSec)
-		if r < 0 {
-			r = 0
-		}
-		if r > 1 {
-			r = 1
-		}
-		// keep it compact for eww; 3 decimals
-		norm = strings.TrimRight(strings.TrimRight(fmt.Sprintf("%.3f", r), "0"), ".")
-	}
-	updateString(&state.NormStr, "SONG_SEEK_POSITION_NORMALIZED", norm)
-}
-
-// Decode D-Bus values
-func getString(v interface{}, def string) string {
-	if v == nil {
-		return def
-	}
-	switch t := v.(type) {
-	case string:
-		return t
-	case dbus.Variant:
-		return getString(t.Value(), def)
-	default:
-		return def
-	}
-}
-
-func getStringFromArray(v interface{}, def string) string {
-	if v == nil {
-		return def
-	}
-	switch t := v.(type) {
-	case []string:
-		if len(t) > 0 && t[0] != "" {
-			return t[0]
-		}
-	case []interface{}:
-		if len(t) > 0 {
-			if s, ok := t[0].(string); ok && s != "" {
-				return s
-			}
-		}
-	case dbus.Variant:
-		return getStringFromArray(t.Value(), def)
-	}
-	return def
-}
-
-func getInt64(v interface{}, def int64) int64 {
-	if v == nil {
-		return def
-	}
+func toInt64Micros(v interface{}) int64 {
 	switch t := v.(type) {
 	case int64:
 		return t
+	case uint64:
+		return int64(t)
 	case int32:
 		return int64(t)
-	case uint64:
-		if t > ^uint64(0)>>1 {
-			return def
-		}
+	case uint32:
 		return int64(t)
-	case dbus.Variant:
-		return getInt64(t.Value(), def)
+	case int:
+		return int64(t)
+	case float64:
+		return int64(t)
 	default:
-		return def
+		return 0
 	}
 }
 
-func isPlayingFromProps(props map[string]dbus.Variant) bool {
-	if val, ok := props["PlaybackStatus"]; ok {
-		return getString(val, "") == "Playing"
-	}
-	return false
-}
-
-func fmtTime(sec int64) string {
-	if sec < 0 {
-		sec = 0
-	}
-	m := sec / 60
-	s := sec % 60
-	return fmt.Sprintf("%02d:%02d", m, s)
-}
-
-func max64(a, b int64) int64 {
-	if a > b {
-		return a
-	}
-	return b
-}
-
-// Download album-art
-func downloadAlbumArt(url string) string {
-	// file:// directly.
-	if strings.HasPrefix(url, "file://") {
-		return strings.TrimPrefix(url, "file://")
-	}
-
-	// HTTP(S) download.
-	resp, err := http.Get(url)
-	if err != nil {
+func toString(v interface{}) string {
+	switch t := v.(type) {
+	case string:
+		return t
+	case dbus.ObjectPath:
+		return string(t)
+	default:
 		return ""
 	}
-	defer resp.Body.Close()
-	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return ""
-	}
-
-	ext := guessExt(url, resp.Header.Get("Content-Type"))
-	name := fmt.Sprintf("%d%s", time.Now().UnixNano(), ext)
-	dst := filepath.Join(tmpArtDir, name)
-
-	f, err := os.Create(dst)
-	if err != nil {
-		return ""
-	}
-	defer f.Close()
-	if _, err := io.Copy(f, resp.Body); err != nil {
-		return ""
-	}
-
-	_ = copyFile(dst, defaultArt)
-	return dst
 }
 
-func guessExt(url, contentType string) string {
-	// Try URL path first.
-	if u := strings.ToLower(url); strings.Contains(u, ".") {
-		switch {
-		case strings.HasSuffix(u, ".jpg"), strings.HasSuffix(u, ".jpeg"):
-			return ".jpg"
-		case strings.HasSuffix(u, ".png"):
-			return ".png"
-		case strings.HasSuffix(u, ".webp"):
-			return ".webp"
+func getSongInfo(obj dbus.BusObject) SongInfo {
+	propsIface := "org.freedesktop.DBus.Properties"
+	call := obj.Call(propsIface+".GetAll", 0, "org.mpris.MediaPlayer2.Player")
+	if call.Err != nil {
+		// can't access player props (maybe exited)
+		return emptySongInfo()
+	}
+
+	rawProps, ok := call.Body[0].(map[string]dbus.Variant)
+	if !ok {
+		return emptySongInfo()
+	}
+	// PlaybackStatus may not exist
+	status := ""
+	if s, ok := rawProps["PlaybackStatus"]; ok {
+		status = toString(s.Value())
+	}
+
+	metaVariant, hasMeta := rawProps["Metadata"]
+	var meta map[string]dbus.Variant
+	if hasMeta {
+		if mv, ok := metaVariant.Value().(map[string]dbus.Variant); ok {
+			meta = mv
 		}
 	}
-	// Then MIME type.
-	if ext, _ := mime.ExtensionsByType(contentType); len(ext) > 0 {
-		return ext[0]
+
+	var (
+		title, artist, album, artUrl string
+		length, pos                  int64
+	)
+
+	if meta != nil {
+		if t, ok := meta["xesam:title"]; ok {
+			title = toString(t.Value())
+		}
+		if a, ok := meta["xesam:artist"]; ok {
+			// could be []string or []interface{}
+			switch arr := a.Value().(type) {
+			case []string:
+				if len(arr) > 0 {
+					artist = arr[0]
+				}
+			case []interface{}:
+				if len(arr) > 0 {
+					artist = fmt.Sprint(arr[0])
+				}
+			}
+		}
+		if al, ok := meta["xesam:album"]; ok {
+			album = toString(al.Value())
+		}
+		if art, ok := meta["mpris:artUrl"]; ok {
+			artUrl = toString(art.Value())
+		}
+		if l, ok := meta["mpris:length"]; ok {
+			length = toInt64Micros(l.Value())
+		}
 	}
-	// Fallback.
-	return ".jpg"
+
+	// Position can be present in top-level properties
+	if p, ok := rawProps["Position"]; ok {
+		pos = toInt64Micros(p.Value())
+	}
+
+	// Normalize and fetch art only if changed to avoid repeated downloads
+	var fetchedArt string
+	if artUrl != "" {
+		fetchedArt = FetchArt(artUrl)
+	}
+
+	si := SongInfo{
+		Title:      title,
+		Artist:     artist,
+		Album:      album,
+		ArtUrl:     fetchedArt,
+		Status:     status,
+		Playing:    status == "Playing",
+		Paused:     status == "Paused",
+		Stopped:    status == "Stopped",
+		Elapsed:    pos,
+		Total:      length,
+		Normalized: formatNormalized(pos, length),
+	}
+
+	return si
 }
 
-func copyFile(src, dst string) error {
-	b, err := os.ReadFile(src)
+func main() {
+	conn, err := dbus.ConnectSessionBus()
 	if err != nil {
-		return err
+		panic(err)
 	}
-	return os.WriteFile(dst, b, 0o644)
-}
+	defer conn.Close()
 
-// Eww integration
+	var (
+		mtx          sync.Mutex
+		player       string
+		obj          dbus.BusObject
+		songInfo     = emptySongInfo()
+		lastUpdate   = time.Now()
+		activeMatches []string // keep track of added match rules so we can remove them when switching players
+	)
 
-func pushAllToEww() {
-	updateString(&state.Title, "SONG_TITLE", state.Title)
-	updateString(&state.Artist, "SONG_ARTIST", state.Artist)
-	updateString(&state.AlbumArt, "SONG_ALBUM_ART", state.AlbumArt)
-	updateString(&state.Status, "SONG_STATUS", state.Status)
-	updateBool(&state.Playing, "SONG_PLAYING", state.Playing)
-	updateBool(&state.Paused, "SONG_PAUSED", state.Paused)
-	updateBool(&state.Stopped, "SONG_STOPPED", state.Stopped)
-	updateString(&state.ElapsedStr, "SONG_SEEK_POSITION_ELAPSED", state.ElapsedStr)
-	updateString(&state.TotalStr, "SONG_SEEK_POSITION_TOTAL", state.TotalStr)
-	updateString(&state.NormStr, "SONG_SEEK_POSITION_NORMALIZED", state.NormStr)
-}
+	updateEwwFromSong(songInfo)
 
-func resetToDefaultsAndPush() {
-	state = SongState{
-		Title:      defaultTitle,
-		Artist:     defaultArtist,
-		AlbumArt:   defaultArt,
-		Status:     defaultStatus,
-		Playing:    false,
-		Paused:     false,
-		Stopped:    true,
-		ElapsedStr: defaultElapsed,
-		TotalStr:   defaultTotal,
-		NormStr:    defaultNormStr,
-		elapsedSec: 0,
-		totalSec:   0,
+	signalChan := make(chan *dbus.Signal, 50)
+	conn.Signal(signalChan)
+
+	// We want to get NameOwnerChanged signals to detect new/removed players
+	conn.BusObject().Call("org.freedesktop.DBus.AddMatch", 0,
+		"type='signal',interface='org.freedesktop.DBus',member='NameOwnerChanged'")
+
+	addMatch := func(rule string) {
+		// avoid duplicates
+		for _, r := range activeMatches {
+			if r == rule {
+				return
+			}
+		}
+		conn.BusObject().Call("org.freedesktop.DBus.AddMatch", 0, rule)
+		activeMatches = append(activeMatches, rule)
 	}
-	pushAllToEww()
-}
 
-func updateString(field *string, varName, newVal string) bool {
-	old := *field
-	if old == newVal && ewwMatches(varName, newVal) {
-		return false
+	removeAllMatches := func() {
+		for _, r := range activeMatches {
+			conn.BusObject().Call("org.freedesktop.DBus.RemoveMatch", 0, r)
+		}
+		activeMatches = activeMatches[:0]
 	}
-	*field = newVal
-	runEwwUpdate(varName, newVal)
-	return true
-}
 
-func updateBool(field *bool, varName string, newVal bool) bool {
-	old := *field
-	s := fmt.Sprintf("%v", newVal)
-	if old == newVal && ewwMatches(varName, s) {
-		return false
+	findPlayer := func() string {
+		players, _ := getMprisPlayers(conn)
+		if len(players) > 0 {
+			return players[0]
+		}
+		return ""
 	}
-	*field = newVal
-	runEwwUpdate(varName, s)
-	return true
-}
 
-func ewwMatches(varName, want string) bool {
-	// If eww is not running or returns error, we don't block updates.
-	out, err := exec.Command("bash", "-lc", fmt.Sprintf("eww get %s 2>/dev/null || true", shellQuote(varName))).Output()
-	if err != nil {
-		return false
+	setPlayer := func(newPlayer string) {
+		mtx.Lock()
+		defer mtx.Unlock()
+		if newPlayer == player {
+			return
+		}
+		// remove previous matches to avoid stale events
+		removeAllMatches()
+
+		if newPlayer == "" {
+			player = ""
+			obj = nil
+			songInfo = emptySongInfo()
+			lastUpdate = time.Now()
+			updateEwwFromSong(songInfo)
+			return
+		}
+
+		player = newPlayer
+		obj = conn.Object(player, "/org/mpris/MediaPlayer2")
+		songInfo = getSongInfo(obj)
+		lastUpdate = time.Now()
+		updateEwwFromSong(songInfo)
+
+		// Add a match for PropertiesChanged only from this sender
+		propsRule := fmt.Sprintf("type='signal',interface='org.freedesktop.DBus.Properties',sender='%s'", player)
+		addMatch(propsRule)
+		// Add a match for Seeked signals
+		seekRule := fmt.Sprintf("type='signal',interface='org.mpris.MediaPlayer2.Player',member='Seeked',sender='%s'", player)
+		addMatch(seekRule)
 	}
-	got := strings.TrimSpace(string(out))
-	got = normalizeEwwValue(got)
-	want = normalizeEwwValue(want)
-	return got == want
-}
 
-func normalizeEwwValue(s string) string {
-	t := strings.TrimSpace(s)
-	t = strings.Trim(t, `"'`)
-	switch strings.ToLower(t) {
-	case "true", "1":
-		return "true"
-	case "false", "0":
-		return "false"
-	default:
-		return t
+	setPlayer(findPlayer())
+
+	ticker := time.NewTicker(1 * time.Second)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ticker.C:
+			mtx.Lock()
+			// Advance elapsed if playing, based on lastUpdate
+			now := time.Now()
+			if songInfo.Playing {
+				delta := now.Sub(lastUpdate)
+				// add microseconds
+				add := int64(delta.Seconds() * 1_000_000)
+				songInfo.Elapsed += add
+				// protect against negative or absurd values
+				if songInfo.Elapsed < 0 {
+					songInfo.Elapsed = 0
+				}
+				if songInfo.Total > 0 && songInfo.Elapsed > songInfo.Total+5_000_000 { // allow small overshoot
+					songInfo.Elapsed = songInfo.Total
+				}
+				songInfo.Normalized = formatNormalized(songInfo.Elapsed, songInfo.Total)
+				updateEwwFromSong(songInfo)
+			}
+			lastUpdate = now
+			mtx.Unlock()
+
+			// try to find a player if none present
+			mtx.Lock()
+			curPlayer := player
+			mtx.Unlock()
+			if curPlayer == "" {
+				setPlayer(findPlayer())
+			}
+
+		case sig := <-signalChan:
+			if sig == nil || len(sig.Body) == 0 {
+				continue
+			}
+			// NameOwnerChanged: player started or stopped
+			if sig.Name == "org.freedesktop.DBus.NameOwnerChanged" {
+				if len(sig.Body) >= 3 {
+					name, _ := sig.Body[0].(string)
+					oldOwner, _ := sig.Body[1].(string)
+					newOwner, _ := sig.Body[2].(string)
+					if strings.HasPrefix(name, "org.mpris.MediaPlayer2.") {
+						if newOwner != "" && player == "" {
+							// new player started and we don't have one
+							setPlayer(name)
+						} else if name == player && newOwner == "" && oldOwner != "" {
+							// current player disappeared
+							setPlayer("")
+						}
+					}
+				}
+				continue
+			}
+
+			if strings.HasSuffix(sig.Name, "PropertiesChanged") {
+				// check if signal is from our current player
+				mtx.Lock()
+				curObj := obj
+				mtx.Unlock()
+				if curObj == nil {
+					continue
+				}
+				if len(sig.Body) >= 2 {
+					changed, ok := sig.Body[1].(map[string]dbus.Variant)
+					if ok {
+						mtx.Lock()
+						if s, exists := changed["PlaybackStatus"]; exists {
+							status := toString(s.Value())
+							if status == "Playing" && !songInfo.Playing {
+								lastUpdate = time.Now()
+							}
+							songInfo.Status = status
+							songInfo.Playing = status == "Playing"
+							songInfo.Paused = status == "Paused"
+							songInfo.Stopped = status == "Stopped"
+						}
+						// If Position reported in changed props (some players set it here), update
+						if p, exists := changed["Position"]; exists {
+							songInfo.Elapsed = toInt64Micros(p.Value())
+							lastUpdate = time.Now()
+						}
+						// If Metadata changed, re-query metadata to handle numeric type differences and art changes
+						if _, exists := changed["Metadata"]; exists {
+							newInfo := getSongInfo(curObj)
+							// keep elapsed if newInfo.Elapsed == 0 (some players don't send pos in metadata)
+							if newInfo.Elapsed != 0 {
+								songInfo.Elapsed = newInfo.Elapsed
+							}
+							// update total if present
+							if newInfo.Total != 0 {
+								songInfo.Total = newInfo.Total
+							}
+							// update title/artist/album/art when changed
+							if newInfo.Title != "" {
+								songInfo.Title = newInfo.Title
+							}
+							if newInfo.Artist != "" {
+								songInfo.Artist = newInfo.Artist
+							}
+							if newInfo.Album != "" {
+								songInfo.Album = newInfo.Album
+							}
+							if newInfo.ArtUrl != "" && newInfo.ArtUrl != songInfo.ArtUrl {
+								songInfo.ArtUrl = newInfo.ArtUrl
+							}
+							// if new playback status present, update it too
+							if newInfo.Status != "" {
+								songInfo.Status = newInfo.Status
+								songInfo.Playing = newInfo.Playing
+								songInfo.Paused = newInfo.Paused
+								songInfo.Stopped = newInfo.Stopped
+							}
+						}
+						// recompute normalized
+						songInfo.Normalized = formatNormalized(songInfo.Elapsed, songInfo.Total)
+						updateEwwFromSong(songInfo)
+						mtx.Unlock()
+					}
+				}
+			}
+
+			// Seeked signal: body[0] is new position in microseconds (int64)
+			if strings.HasSuffix(sig.Name, "Seeked") {
+				if len(sig.Body) > 0 {
+					mtx.Lock()
+					if pos, ok := sig.Body[0].(int64); ok {
+						songInfo.Elapsed = pos
+					} else {
+						// try numeric conversion
+						songInfo.Elapsed = toInt64Micros(sig.Body[0])
+					}
+					lastUpdate = time.Now()
+					songInfo.Normalized = formatNormalized(songInfo.Elapsed, songInfo.Total)
+					updateEwwFromSong(songInfo)
+					mtx.Unlock()
+				}
+			}
+		}
 	}
-}
-
-func runEwwUpdate(varName, val string) {
-	cmd := exec.Command("bash", "-lc",
-		fmt.Sprintf("eww update %s=%s", shellQuote(varName), singleQuote(val)))
-	_ = cmd.Run()
-}
-
-func singleQuote(s string) string {
-	// Safely single-quote a shell string: ' -> '\'' pattern.
-	return "'" + strings.ReplaceAll(s, "'", `'\''`) + "'"
-}
-
-func shellQuote(s string) string {
-	// Simple shell-safe wrapper for var names.
-	return "'" + strings.ReplaceAll(s, "'", `'\''`) + "'"
 }

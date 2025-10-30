@@ -6,7 +6,7 @@
     :orientation "v"
     :space-evenly false
 
-		:style "background-image: url('wallpaperpath');"
+		:style "background-image: url('WALLPAPER_PATH');"
 
 		(main-clock)
   )

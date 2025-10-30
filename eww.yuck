@@ -1,5 +1,11 @@
 (include "./lib/variables.yuck")
 
+(include "./config/apps.yuck")
+(include "./config/profile.yuck")
+(include "./config/wallpapers.yuck")
+(include "./config/workspaces.yuck")
+(include "./config/bookmarks.yuck")
+
 (include "./src/components/icons.yuck")
 (include "./src/components/navigator.yuck")
 (include "./src/components/selector.yuck")

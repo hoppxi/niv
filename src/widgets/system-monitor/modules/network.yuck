@@ -32,11 +32,19 @@
 				:orientation "v"
 				:space-evenly false
 				:class "info"
-				(label :halign "start" :text "Total Installed")
-				(label :halign "start" :text "Free")
-				(label :halign "start" :text "Swap")
-				(label :halign "start" :text "Used")
-				(label :halign "start" :text "usage: 80%")
+
+				(label :halign "start" :text "Interfaces:")
+				(box
+					:orientation "v"
+					:space-evenly false
+
+					(for INTERFACE in "${NETWORK_DATA.network.interfaces}"
+						(label :halign "start" :text "	${INTERFACE}")
+					)
+				)
+				(label :halign "start" :text "MAC: ${NETWORK_DATA.network.mac_address}")
+				(label :halign "start" :text "Driver: ${NETWORK_DATA.network.driver}")
+				(label :halign "start" :text "Firmware: ${NETWORK_DATA.network.firnware}")
 			)
 		)
 	)

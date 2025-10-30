@@ -1,3 +1,9 @@
+/*
+ A simple Go program that changes the stroke color of all SVG files in the given folder to a specified new color.
+ Usage: go run main.go <folder-path> <new-color>
+ Intended for use to change SVG stroke colors in bulk for icons and vectors.
+*/
+
 package main
 
 import (

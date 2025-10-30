@@ -7,7 +7,7 @@
 		(box
 			:space-evenly false
 			:spacing 5
-			(button :onclick "eww update ACTIVE_STACK_SHELF=0" :class "full-rounded" (icon :name "arrow-left"))
+			(button :onclick "./bin/niv-ws update shelf --stack 0" :class "full-rounded" (icon :name "arrow-left"))
 			(label :text "Wallpapers")
 		)
 
@@ -32,40 +32,17 @@
 				:class "g-container"
 				:orientation "v"
 				:spacing 3
-				(button :class "g-btn" 
-					(box
-						:space-evenly false
-						:spacing 3
-						:style "background-image: url('./assets/icons/battery.svg')"
-						:width 210
-						:height 160
-					)
-				)
-				(button :class "g-btn" 
-					(box
-						:space-evenly false
-						:spacing 3
-						:style "background-image: url('./assets/icons/wifi.svg')"
-						:width 210
-						:height 160
-					)
-				)
-				(button :class "g-btn" 
-					(box
-						:space-evenly false
-						:spacing 3
-						:style "background-image: url('./assets/icons/volume.svg')"
-						:width 210
-						:height 160
-					)
-				)
-				(button :class "g-btn" 
-					(box
-						:space-evenly false
-						:spacing 3
-						:style "background-image: url('./assets/icons/bell.svg')"
-						:width 210
-						:height 160
+
+				(for WALLPAPER in "${CONFIG_WALLPAPERS_DATA}"
+					(button :class "g-btn"
+						:onclick "swww img ${WALLPAPER} --transition-type=grow --transition-pos=top-right" 
+						(box
+							:space-evenly false
+							:spacing 3
+							:style "background-image: url('${WALLPAPER}'); background-size: cover; background-position: center; background-repeat: no-repeat; border-radius: 15px;"
+							:width 210
+							:height 160
+						)
 					)
 				)
 			)

@@ -10,7 +10,7 @@
       :class "bb-wrap l"
       (button
         :class "btn-bar"
-        :onclick "eww open shelf"
+        :onclick "./bin/niv-ws open shelf"
         (vector :name "nixos")
       )
     )
@@ -19,7 +19,7 @@
       :class "bb-wrap l"
       (button
         :class "btn-bar"
-        :onclick "eww open launcher"
+        :onclick "./bin/niv-ws open launcher"
         (icon :name "search")
       )
     )
@@ -28,7 +28,7 @@
       :class "bb-wrap l"
       (button
         :class "btn-bar"
-        :onclick "eww open system-monitor"
+        :onclick "./bin/niv-ws open system-monitor"
         (icon :name "activity")
       )
     )
@@ -43,6 +43,12 @@
           :text {ACTIVE_WINDOW.title=="null" ? "Desktop" : ACTIVE_WINDOW.title}
         )
       )
+    )
+
+    (systray
+      :icon-size 14
+      :spacing 5
+      :style "padding: 0px 10px"
     )
   )
 )

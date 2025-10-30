@@ -1,0 +1,16 @@
+; Wallpaper configuration file
+; This file contains paths to wallpapers available for selection
+
+(defvar CONFIG_WALLPAPERS_DATA `[
+	"/media/hdd/codebase/apps/wallpy/wallpapers/wallpaper_2025-04-18_16-48-30.jpg",
+	"/media/hdd/codebase/apps/wallpy/wallpapers/wallpaper_2025-04-18_17-43-38.jpg",
+	"/media/hdd/codebase/apps/wallpy/wallpapers/wallpaper_2025-04-18_16-48-52.jpg",
+	"/media/hdd/codebase/apps/wallpy/wallpapers/wallpaper_2025-04-18_17-45-32.jpg",
+	"/media/hdd/codebase/apps/wallpy/wallpapers/wallpaper_2025-04-18_16-55-44.jpg",
+	"/media/hdd/codebase/apps/wallpy/wallpapers/wallpaper_2025-04-18_17-45-44.jpg",
+	"/media/hdd/codebase/apps/wallpy/wallpapers/wallpaper_2025-04-18_16-55-50.jpg",
+	"/media/hdd/codebase/apps/wallpy/wallpapers/wallpaper_2025-04-19_05-28-58.jpg",
+	"/media/hdd/codebase/apps/wallpy/wallpapers/wallpaper_2025-04-18_16-55-59.jpg",
+	"/media/hdd/codebase/apps/wallpy/wallpapers/wallpaper_2025-04-19_05-32-11.jpg",
+	"/media/hdd/codebase/apps/wallpy/wallpapers/wallpaper_2025-04-18_16-56-48.jpg"
+]`)

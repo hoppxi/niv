@@ -25,7 +25,7 @@
         (box :halign "start" (label :halign "start" :text {formattime(EWW_TIME, "%a, %I:%M%p")}))
       )
       (box)
-      (button :halign "end" :onclick "eww open wlogout" (icon :name "power"))
+      (button :halign "end" :onclick "./bin/niv-ws open wlogout" (icon :name "power"))
     )
 
     (stack

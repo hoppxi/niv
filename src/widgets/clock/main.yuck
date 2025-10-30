@@ -1,5 +1,5 @@
 (include "./src/widgets/clock/modules/clock.yuck")
-; (include "./src/widgets/clock/modules/cava.yuck")
+(include "./src/widgets/clock/modules/spaces.yuck")
 
 (defwidget main-clock []
   (box
@@ -9,7 +9,7 @@
     :orientation "v"
     :space-evenly false
     (clock-clock)
-    ; (cava-clock)
+    (spaces-clock)
   )
 )
 

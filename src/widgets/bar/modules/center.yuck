@@ -12,7 +12,7 @@
         (box
           :class {FOCUSED_WORKSPACE.id == WORKSPACE.id ? "active" : ""}
           (button
-            :class {FOCUSED_WORKSPACE.id == WORKSPACE.id ? (ACTIVE_WINDOW.title=="null" ? "no-window active btn-bar workspace-btn" : "active btn-bar workspace-btn") : (WORKSPACE.windows>0 ? "has-window btn-bar workspace-btn" : "btn-bar workspace-btn")}
+            :class {FOCUSED_WORKSPACE.id == WORKSPACE.id ? (ACTIVE_WINDOW.title=="Desktop" ? "no-window active btn-bar workspace-btn" : "active btn-bar workspace-btn") : (WORKSPACE.windows>0 ? "has-window btn-bar workspace-btn" : "btn-bar workspace-btn")}
             :onclick "hyprctl dispatch workspace ${WORKSPACE.id}"
             (label :text {WORKSPACE.id})
           )

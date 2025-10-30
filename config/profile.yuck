@@ -1,0 +1,10 @@
+; Profile configuration file
+; This file contains user profile information used in shelf
+
+(defvar CONFIG_PROFILE_DATA `{
+	"uname": "Ermiyas",
+	"name": "hoppxi",
+	"picture": "/home/hoppxi/Pictures/GzhN5uVWkAAbHnq.jpeg",
+	"hostuname": "hoppxi@ea",
+	"pc_name": "HP elitebook 840 G3"
+}`)

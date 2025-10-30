@@ -1,8 +1,9 @@
 
-(defwidget quicksettings-button [key value uicon active extendable ?onclick]
+(defwidget quicksettings-button [key value uicon active extendable ?onclick ?width ?lb-width]
   (button
     :class {active ? "active qs-btn" : "qs-btn"}
     :onclick onclick
+    :width width
     (centerbox
       (box
         :halign "start"
@@ -12,8 +13,8 @@
         (box
           :orientation "v"
           :space-evenly false
-          (label :class "title" :halign "start" :text {key})
-          (label :class "info" :halign "start" :justify "left" :text {value})
+          (label :class "title" :width lb-width :xalign 0 :halign "start" :text {key} :limit-width 1000 :show-truncated true :wrap true)
+          (label :class "info"  :width lb-width :xalign 0 :halign "start" :justify "left" :text {value} :limit-width 1000 :show-truncated true :wrap true)
         )
       )
       (box)

@@ -2,18 +2,23 @@
 
 window.media-control {
   background-color: rgba($color: $background, $alpha: 90%);
-  border-radius: 15px;
+  border-radius: 30px;
 }
 
 .main-media-control {
-  border-radius: 15px;
+  border-radius: 30px;
   .main {
     padding: 8px;
+    padding-bottom: 0;
+    background-color: rgba($color: #000000, $alpha: 60%);
+    border-radius: 30px;
+  }
+
+  .album-art-background {
+    border-radius: 30px;
   }
 
   .status {
-    margin-top: 15px;
-    margin-right: 15px;
     padding: 5px 10px;
     border: 1px solid $outline-variant;
     border-radius: 15px;
@@ -23,14 +28,18 @@ window.media-control {
   }
 
   .album-art {
-    border-radius: 15px 15px 3px 3px;
+    border-radius: 15px;
     border: 1px solid $outline-variant;
   }
 
   .bottom {
     padding: 10px;
-    background-color: $surface-container-low;
     border-radius: 3px 3px 15px 15px;
+  }
+
+  .info {
+    margin-left: 10px;
+    margin-top: 5px;
   }
 
   .info-title {
@@ -43,7 +52,6 @@ window.media-control {
     font-size: 11px;
     font-style: italic;
     color: $outline;
-    margin-bottom: 10px;
   }
 
   .seek {
@@ -64,23 +72,36 @@ window.media-control {
 
     .seek-min {
       font-size: 10px;
+      color: $outline;
     }
   }
 
   .action-container {
     margin-top: 10px;
-    background-color: $surface-container-high;
+    // background-color: $surface-container-high;
     border-radius: 20px;
+    // border-top: 2px solid $surface-container-low;
+    // border-bottom: 2px solid $surface-container-low;
 
     > box {
       padding-left: 2.3px;
-      background-color: $surface-container-low;
+      // background-color: $surface-container-low;
       border-radius: 15px;
     }
 
     > :nth-child(3) ~ * {
       padding-right: 2.3px;
       padding-left: 0;
+    }
+
+    button {
+      background-color: transparent;
+      border-radius: 15px;
+      padding: 7px 12px;
+
+      &:hover {
+        background-color: rgba($color: $surface-container-high, $alpha: 30%);
+      }
     }
 
     > :nth-child(3) {
@@ -94,11 +115,6 @@ window.media-control {
           background-color: $primary-container;
         }
       }
-    }
-
-    button {
-      border-radius: 15px;
-      padding: 7px 12px;
     }
   }
 

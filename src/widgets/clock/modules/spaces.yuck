@@ -1,0 +1,31 @@
+(defwidget spaces-clock []
+	(box
+		:halign "center"
+		:valign "center"
+		:space-evenly false
+		:class "smart-spacer"
+		:spacing 10
+		;:visible {SONG_STOPPED ? false : true}
+
+			; Music spacer
+		(button
+			:onclick "./bin/niv-ws open media-control"
+			:style "all: unset;"
+			(box
+				:halign "center"
+				:valign "center"
+				:space-evenly false
+				:class ",music-spacer"
+				:spacing 10
+				:visible {SONG_STOPPED ? false : true}
+
+				(icon :name "music-2" :class "music-icon")
+				(label :halign "start" :limit-width 30 :class "info-title" :text {SONG_TITLE})
+				(icon :name "hexagon" :class "separator-icon")
+				(label :halign "start" :limit-width 30 :class "info-artist" :text {SONG_ARTIST})
+			)
+		)
+	
+	)
+)
+

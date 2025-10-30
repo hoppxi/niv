@@ -11,18 +11,16 @@
 			(box
 				:spacing 3
 				:class "r-1"
-				(button :onclick "brave &" (image :icon-size "large-toolbar" :icon "brave"))
-				(button :onclick "Telegram &" (image :icon-size "large-toolbar" :icon "telegram-desktop-bin"))
-				(button :onclick "code &" (image :icon-size "large-toolbar" :icon "code"))
-				(button :onclick "alacritty &" (image :icon-size "large-toolbar" :icon "Alacritty"))
+				(for PINNED_APP in "${CONFIG_APPS_DATA.row1}"
+					(button :onclick "${PINNED_APP.cmd} && ./bin/niv-ws close shelf" (image :icon-size "large-toolbar" :icon "${PINNED_APP.icon}"))
+				)
 			)
 			(box
 				:spacing 3
 				:class "r-2"
-				(button :onclick "alacritty -e btop &" (image :icon-size "large-toolbar" :icon "btop"))
-				(button :onclick "alacritty -e nvim &" (image :icon-size "large-toolbar" :icon "nvim"))
-				(button :onclick "spotify &" (image :icon-size "large-toolbar" :icon "spotify"))
-				(button :onclick "vesktop &" (image :icon-size "large-toolbar" :icon "vesktop"))
+				(for PINNED_APP in "${CONFIG_APPS_DATA.row2}"
+					(button :onclick "${PINNED_APP.cmd} && ./bin/niv-ws close shelf" (image :icon-size "large-toolbar" :icon "${PINNED_APP.icon}"))
+				)
 			)
 		)
 
@@ -30,7 +28,7 @@
 			:class "g-container"
 			:orientation "v"
 			:spacing 3
-			(button :class "g-btn" :onclick "eww update ACTIVE_STACK_SHELF=1"
+			(button :class "g-btn" :onclick "./bin/niv-ws update shelf --stack 1"
 				(box
 					:space-evenly false
 					:spacing 3
@@ -38,7 +36,7 @@
 					(label :text "Bookmarks")
 				)
 			)
-			(button :class "g-btn" :onclick "eww update ACTIVE_STACK_SHELF=2"
+			(button :class "g-btn" :onclick "./bin/niv-ws update shelf --stack 2"
 				(box
 					:space-evenly false
 					:spacing 3
@@ -46,7 +44,7 @@
 					(label :text "Wallpapers")
 				)
 			)
-			(button :class "g-btn" :onclick "eww update ACTIVE_STACK_SHELF=3"
+			(button :class "g-btn" :onclick "./bin/niv-ws update shelf --stack 3"
 				(box
 					:space-evenly false
 					:spacing 3
@@ -54,7 +52,7 @@
 					(label :text "Workspaces")
 				)
 			)
-			(button :class "g-btn" :onclick "eww update ACTIVE_STACK_SHELF=4"
+			(button :class "g-btn" :onclick "./bin/niv-ws update shelf --stack 4"
 				(box
 					:space-evenly false
 					:spacing 3
@@ -83,7 +81,7 @@
 				)
 			)
 
-			(button :class "g-btn" :onclick "eww update ACTIVE_STACK_SHELF=5"
+			(button :class "g-btn" :onclick "./bin/niv-ws update shelf --stack 5"
 				(box
 					:space-evenly false
 					:spacing 3

@@ -18,15 +18,15 @@
 			:space-evenly false
 			:spacing 5
 
-			(box :class "avater" :width 100 :height 100 :style "background-image: url('./assets/vectors/nixos.svg');")
+			(box :class "avater" :width 100 :height 100 :style "background-image: url('${CONFIG_PROFILE_DATA.picture}'); background-size: cover; background-position: center;")
 			(box 
 				:orientation "v"
 				:valign "start"
 				:space-evenly false
 				:spacing 3
-				(label :class "font-b" :halign "start" :text "hoppxi@ea")
-				(label :class "font-m" :halign "start" :text "1 hour, 22 min session time")
-				(label :class "font-m" :halign "start" :text "PC name")
+				(label :class "font-b" :halign "start" :text "${CONFIG_PROFILE_DATA.hostuname}")
+				(label :class "font-m" :halign "start" :text "${OS_DATA.os.uptime_hours} hours uptime")
+				(label :class "font-m" :halign "start" :text "${CONFIG_PROFILE_DATA.pc_name}")
 			)
 		)
 

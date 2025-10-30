@@ -1,0 +1,49 @@
+; App configuration file
+; Define the applications to be displayed in the shelf
+
+(defvar CONFIG_APPS_DATA `{
+	"row1": [
+		{
+			"name": "Brave",
+			"icon": "brave",
+			"cmd": "brave &!"
+		},
+		{
+			"name": "VSCode",
+			"icon": "vscode",
+			"cmd": "code &!"
+		},
+		{
+			"name": "Spotify",
+			"icon": "spotify",
+			"cmd": "spotify &!"
+		},
+		{
+			"name": "Firefox",
+			"icon": "firefox",
+			"cmd": "firefox &!"
+		}
+	],
+	"row2": [
+		{
+			"name": "Thunar",
+			"icon": "thunar",
+			"cmd": "thunar &!"
+		},
+		{
+			"name": "Alacritty",
+			"icon": "alacritty",
+			"cmd": "alacritty &!"
+		},
+		{
+			"name": "Neovim",
+			"icon": "neovim",
+			"cmd": "alacritty -e nvim &!"
+		},
+		{
+			"name": "Telegram",
+			"icon": "telegram",
+			"cmd": "telegram-desktop &!"
+		}
+	]
+}`)

@@ -70,18 +70,19 @@
 				:space-evenly false
 				:spacing 5
 				
-				(label :class "info" :text "Select mode")
-				(selector 
-					:children SCREENSHOT_SELECTOR_SSU
-					:stack "ACTIVE_SCREENSHOT_SELECTOR_SSU"
-					:active ACTIVE_SCREENSHOT_SELECTOR_SSU
-				)
-				(label :style "margin-top: 20px" :class "info" :text "Click to capture")
 				(button
 					:halign "center"
 					:class "record-btn"
 					(box :class "f1")
 				)
+				(label :style "margin-bottom: 5px" :class "info" :text "Click to capture")
+
+				(selector 
+					:children SCREENSHOT_SELECTOR_SSU
+					:stack "ACTIVE_SCREENSHOT_SELECTOR_SSU"
+					:active ACTIVE_SCREENSHOT_SELECTOR_SSU
+				)
+
 			)
 
 			(box
@@ -89,18 +90,19 @@
 				:space-evenly false
 				:spacing 5
 				
-				(label :class "info" :text "Select mode")
-				(selector 
-					:children VIDEO_SELECTOR_SSU
-					:stack "ACTIVE_VIDEO_SELECTOR_SSU"
-					:active ACTIVE_VIDEO_SELECTOR_SSU
-				)
-				(label :style "margin-top: 20px" :class "info" :text "Click to start recording")
 				(button
 					:halign "center"
 					:class "record-btn video"
 					(box :class "f1")
 				)
+
+				(label :style "margin-top: 5px" :class "info" :text "Click to start recording")
+				(selector 
+					:children VIDEO_SELECTOR_SSU
+					:stack "ACTIVE_VIDEO_SELECTOR_SSU"
+					:active ACTIVE_VIDEO_SELECTOR_SSU
+				)
+
 			)
 		)
 	)
