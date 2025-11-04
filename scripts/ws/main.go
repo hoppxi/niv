@@ -1,7 +1,3 @@
-/*
-	A script to open, close and toggle widgets by tracking them.
-*/
-
 package main
 
 import (
@@ -15,8 +11,7 @@ import (
 )
 
 type ToggleEntry struct {
-	Name  string `json:"name"`
-	Stack int    `json:"stack"`
+	Name string `json:"name"`
 }
 
 type WidgetState struct {
@@ -26,13 +21,16 @@ type WidgetState struct {
 var (
 	stateFile = "/tmp/niv_state.json"
 
-	// Widgets that can be toggled
-	togglableWidgets = []string{"quick-settings", "planner", "shelf", "system-monitor", "media-control", "launcher"}
+	togglableWidgets = []string{
+		"quick-settings", "planner", "shelf", "system-monitor",
+		"media-control", "launcher", "wlogout", "screenshot-utils", "wallpaper",
+	}
 
-	// Widgets that support stack states
 	stackVarMap = map[string]string{
 		"quick-settings": "ACTIVE_STACK_QUICK_SETTINGS",
 		"shelf":          "ACTIVE_STACK_SHELF",
+		"system-monitor": "ACTIVE_STACK_SYSTEM_MONITOR",
+		"planner":        "ACTIVE_STACK_PLANNER",
 	}
 )
 
@@ -45,17 +43,31 @@ func isStackable(name string) bool {
 	return ok
 }
 
+func runEww(args ...string) error {
+	cmd := exec.Command("eww", args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+
 func readState() (*WidgetState, error) {
+	if _, err := os.Stat(stateFile); os.IsNotExist(err) {
+		s := &WidgetState{OpenToggles: []ToggleEntry{}}
+		if err := saveState(s); err != nil {
+			return nil, err
+		}
+		return s, nil
+	}
+
 	data, err := os.ReadFile(stateFile)
 	if err != nil {
-		if os.IsNotExist(err) {
-			return &WidgetState{OpenToggles: []ToggleEntry{}}, nil
-		}
 		return nil, err
 	}
+
 	var s WidgetState
-	if err := json.Unmarshal(data, &s); err != nil {
-		return nil, err
+	if err := json.Unmarshal(data, &s); err != nil || s.OpenToggles == nil {
+		s = WidgetState{OpenToggles: []ToggleEntry{}}
+		_ = saveState(&s)
 	}
 	return &s, nil
 }
@@ -68,13 +80,6 @@ func saveState(s *WidgetState) error {
 	return os.WriteFile(stateFile, data, 0644)
 }
 
-func runEww(args ...string) error {
-	cmd := exec.Command("eww", args...)
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return cmd.Run()
-}
-
 func findWidget(s *WidgetState, widget string) (int, *ToggleEntry) {
 	for i, e := range s.OpenToggles {
 		if e.Name == widget {
@@ -84,25 +89,17 @@ func findWidget(s *WidgetState, widget string) (int, *ToggleEntry) {
 	return -1, nil
 }
 
-func resetStack(widget string) {
-	if varName, ok := stackVarMap[widget]; ok {
-		runEww("update", fmt.Sprintf("%s=0", varName))
-	}
-}
-
-func setStack(widget string, stack int) {
-	if varName, ok := stackVarMap[widget]; ok {
-		runEww("update", fmt.Sprintf("%s=%d", varName, stack))
-	}
-}
-
-func closeAllToggles(s *WidgetState) {
-	for _, entry := range s.OpenToggles {
-		resetStack(entry.Name)
-		runEww("close", entry.Name)
+func closeAll(s *WidgetState) error {
+	for _, e := range s.OpenToggles {
+		runEww("close", e.Name)
+		if isStackable(e.Name) {
+			if varName, ok := stackVarMap[e.Name]; ok {
+				_ = runEww("update", fmt.Sprintf("%s=0", varName))
+			}
+		}
 	}
 	s.OpenToggles = []ToggleEntry{}
-	saveState(s)
+	return saveState(s)
 }
 
 func handleOpen(widget string, stack int) error {
@@ -111,31 +108,40 @@ func handleOpen(widget string, stack int) error {
 		return err
 	}
 
-	_, existing := findWidget(s, widget)
-
-	if len(s.OpenToggles) > 0 {
-		for _, entry := range s.OpenToggles {
-			resetStack(entry.Name)
-			runEww("close", entry.Name)
-		}
-		s.OpenToggles = []ToggleEntry{}
-	}
-
+	idx, existing := findWidget(s, widget)
 	if existing != nil {
-		saveState(s)
-		return nil
+		runEww("close", widget)
+		if isStackable(widget) {
+			if varName, ok := stackVarMap[widget]; ok {
+				_ = runEww("update", fmt.Sprintf("%s=0", varName))
+			}
+		}
+		s.OpenToggles = append(s.OpenToggles[:idx], s.OpenToggles[idx+1:]...)
+		return saveState(s)
 	}
+
+	for _, e := range s.OpenToggles {
+		runEww("close", e.Name)
+		if isStackable(e.Name) {
+			if varName, ok := stackVarMap[e.Name]; ok {
+				_ = runEww("update", fmt.Sprintf("%s=0", varName))
+			}
+		}
+	}
+	s.OpenToggles = []ToggleEntry{}
 
 	if err := runEww("open", widget); err != nil {
 		return err
 	}
 
 	if isStackable(widget) {
-		setStack(widget, stack)
+		if varName, ok := stackVarMap[widget]; ok {
+			_ = runEww("update", fmt.Sprintf("%s=%d", varName, stack))
+		}
 	}
 
 	if isTogglable(widget) {
-		s.OpenToggles = append(s.OpenToggles, ToggleEntry{Name: widget, Stack: stack})
+		s.OpenToggles = append(s.OpenToggles, ToggleEntry{Name: widget})
 	}
 
 	return saveState(s)
@@ -148,12 +154,15 @@ func handleClose(widget string) error {
 	}
 
 	if widget == "all" {
-		closeAllToggles(s)
-		return nil
+		return closeAll(s)
 	}
 
 	runEww("close", widget)
-	resetStack(widget)
+	if isStackable(widget) {
+		if varName, ok := stackVarMap[widget]; ok {
+			_ = runEww("update", fmt.Sprintf("%s=0", varName))
+		}
+	}
 
 	if isTogglable(widget) {
 		newList := []ToggleEntry{}
@@ -164,25 +173,15 @@ func handleClose(widget string) error {
 		}
 		s.OpenToggles = newList
 	}
+
 	return saveState(s)
 }
 
 func handleUpdate(widget string, stack int) error {
-	if !isStackable(widget) {
-		return fmt.Errorf("%s is not stackable", widget)
-	}
-
-	s, err := readState()
-	if err != nil {
-		return err
-	}
-
-	setStack(widget, stack)
-
-	idx, entry := findWidget(s, widget)
-	if entry != nil {
-		s.OpenToggles[idx].Stack = stack
-		saveState(s)
+	if isStackable(widget) {
+		if varName, ok := stackVarMap[widget]; ok {
+			_ = runEww("update", fmt.Sprintf("%s=%d", varName, stack))
+		}
 	}
 	return nil
 }
@@ -192,7 +191,7 @@ func main() {
 		fmt.Println("Usage:")
 		fmt.Println("  niv open <widget> [--stack n]")
 		fmt.Println("  niv close <widget|all>")
-		fmt.Println("  niv update <widget> --stack n")
+		fmt.Println("  niv update <widget> [--stack n]")
 		return
 	}
 
