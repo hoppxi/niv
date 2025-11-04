@@ -1,14 +1,15 @@
 (defwidget main-lockscreen []
-  (box
-    :class "main-lockscreen"
-    :valign "center"
-    :halign "center"
-    :orientation "v"
-    :space-evenly false
+  (eventbox
+    :onclick "./bin/niv-ws close lockscreen"
+    (box
+      :class "main-lockscreen"
+      :orientation "v"
+      :space-evenly false
 
-		:style "background-image: url('WALLPAPER_PATH');"
+      :style "background-image: url('${CURRENT_WALLPAPER_PATH}'); background-position: center; background-size: cover; background-repeat: no-repeat; padding-top: 100px"
 
-		(main-clock)
+      (main-clock)
+    )
   )
 )
 
@@ -18,12 +19,13 @@
     :x "0"
     :y "0"
     :width "100%"
-		:height "100%"
+		:height "105%"
     :anchor "center center"
   )
   :stacking "fg"
   :namespace "widget-lockscreen"
-	;:focusable "exclusive"
+	:focusable "exclusive"
+  :exclusive true
   (main-lockscreen)
 )
 
