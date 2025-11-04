@@ -1,8 +1,3 @@
-/*
- Listens to Hyprland's IPC socket for workspace and active window changes,
- and updates eww variables accordingly.
-*/
-
 package main
 
 import (
@@ -13,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"sort"
 	"strings"
 )
 
@@ -38,7 +34,8 @@ func main() {
 	fmt.Fprintf(os.Stderr, "connected to %s\n", sock)
 
 	scanner := bufio.NewScanner(conn)
-	var lastActive, lastWorkspace string
+
+	var lastActive, lastWorkspace, lastWorkspaces string
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -54,18 +51,25 @@ func main() {
 
 		if strings.HasPrefix(line, "workspace>>") ||
 			strings.HasPrefix(line, "focusedmon>>") {
-			data := getFocusedWorkspace()
-			payload, _ := json.Marshal(data)
+			focused := getFocusedWorkspace()
+			payload, _ := json.Marshal(focused)
 			if string(payload) != lastWorkspace {
 				lastWorkspace = string(payload)
 				runEww("FOCUSED_WORKSPACE", lastWorkspace)
+			}
+
+			// Also update WORKSPACES
+			workspaces := getWorkspaces()
+			wsPayload, _ := json.Marshal(workspaces)
+			if string(wsPayload) != lastWorkspaces {
+				lastWorkspaces = string(wsPayload)
+				runEww("WORKSPACES", lastWorkspaces)
 			}
 		}
 	}
 }
 
 func runEww(label, payload string) {
-	// Simple, non-blocking call — no bash, minimal overhead
 	cmd := exec.Command("eww", "update", fmt.Sprintf("%s=%s", label, payload))
 	_ = cmd.Start()
 }
@@ -83,10 +87,6 @@ func getHyprlandSocket() string {
 	}
 
 	socket := filepath.Join(runtime, fmt.Sprintf("hypr/%s/.socket2.sock", sig))
-	if _, err := os.Stat(socket); os.IsNotExist(err) {
-		// Fallback for older versions
-		socket = fmt.Sprintf("/tmp/hypr/%s/.socket2.sock", sig)
-	}
 	return socket
 }
 
@@ -102,7 +102,17 @@ func getActiveWindow() ActiveWindow {
 	data := getHyprctlJSON("activewindow")
 	aw := ActiveWindow{Title: "Desktop", Workspace: 1}
 	if data != nil {
-		_ = json.Unmarshal(data, &aw)
+		var parsed map[string]any
+		if err := json.Unmarshal(data, &parsed); err == nil {
+			if t, ok := parsed["title"].(string); ok {
+				aw.Title = t
+			}
+			if ws, ok := parsed["workspace"].(map[string]any); ok {
+				if id, ok := ws["id"].(float64); ok {
+					aw.Workspace = int(id)
+				}
+			}
+		}
 	}
 	return aw
 }
@@ -111,7 +121,69 @@ func getFocusedWorkspace() Workspace {
 	data := getHyprctlJSON("activeworkspace")
 	ws := Workspace{ID: 1, Windows: 0}
 	if data != nil {
-		_ = json.Unmarshal(data, &ws)
+		var parsed map[string]any
+		if err := json.Unmarshal(data, &parsed); err == nil {
+			if id, ok := parsed["id"].(float64); ok {
+				ws.ID = int(id)
+			}
+		}
 	}
 	return ws
+}
+
+// Persistent first 5 workspaces + dynamic
+func getWorkspaces() []Workspace {
+	base := []Workspace{
+		{ID: 1, Windows: 0},
+		{ID: 2, Windows: 0},
+		{ID: 3, Windows: 0},
+		{ID: 4, Windows: 0},
+		{ID: 5, Windows: 0},
+	}
+
+	data := getHyprctlJSON("workspaces")
+	if data == nil {
+		return base
+	}
+
+	var all []map[string]any
+	if err := json.Unmarshal(data, &all); err != nil {
+		return base
+	}
+
+	existing := make(map[int]int)
+	for _, b := range base {
+		existing[b.ID] = b.Windows
+	}
+
+	for _, ws := range all {
+		if id, ok := ws["id"].(float64); ok {
+			idInt := int(id)
+			windows := 0
+			if wins, ok := ws["windows"].(float64); ok {
+				windows = int(wins)
+			}
+			existing[idInt] = windows
+		}
+	}
+
+	result := []Workspace{}
+	for i := 1; i <= 5; i++ {
+		result = append(result, Workspace{ID: i, Windows: existing[i]})
+	}
+
+	extra := []int{}
+	for id := range existing {
+		if id > 5 {
+			extra = append(extra, id)
+		}
+	}
+
+	sort.Ints(extra)
+
+	for _, id := range extra {
+		result = append(result, Workspace{ID: id, Windows: existing[id]})
+	}
+
+	return result
 }
