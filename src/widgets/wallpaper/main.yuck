@@ -1,0 +1,69 @@
+(defwidget main-wallpaper []
+	(box
+		:class "main-wallpaper"
+		:orientation "v"
+		:spacing 10
+		:space-evenly false
+
+		(box
+			:space-evenly false
+			:spacing 5
+			(button :onclick "./bin/niv-ws close wallpaper" :class "full-rounded" (icon :name "x"))
+			(label :text "Wallpapers")
+		)
+
+		(box
+			:class "g-container"
+			:orientation "v"
+			:spacing 3
+			(button :class "g-btn" 
+				:onclick "./bin/niv-ws close shelf && code ./config/wallpapers.yuck"
+				(box
+					:space-evenly false
+					:spacing 3
+					(icon :name "plus")
+					(label :text "Wallpapers")
+				)
+			)
+		)
+
+		(scroll
+			:height 620
+
+			(box
+				:class "g-container"
+				:orientation "v"
+				:spacing 3
+
+				(for WALLPAPER in {CONFIG_WALLPAPERS_DATA}
+					(button 
+						:class "g-btn"
+						:onclick "swww img ${WALLPAPER} --transition-type=grow --transition-pos=top-right && mcuc generate -i ${WALLPAPER} -f scss -o ~/.config/eww/src/styles/theme/_index.scss && ~/.config/eww/bin/niv restart" 
+						;:timeout "100s"
+						(box
+							:space-evenly false
+							:spacing 3
+							:style "background-image: url('${WALLPAPER}'); background-size: cover; background-position: center; background-repeat: no-repeat; border-radius: 15px;"
+							:width 210
+							:height 160
+						)
+					)
+				)
+			)
+		)
+	)
+)
+
+(defwindow wallpaper
+  :monitor 0
+  :geometry (geometry 
+    :x "5"
+    :y "5"
+    :width "280px"
+		:height "95%"
+    :anchor "center left"
+  )
+  :stacking "fg"
+  :namespace "widget-wallpaper"
+  (main-wallpaper)
+)

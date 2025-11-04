@@ -1,9 +1,9 @@
 (include "./src/widgets/shelf/modules/landing.yuck")
 (include "./src/widgets/shelf/modules/bookmarks.yuck")
-(include "./src/widgets/shelf/modules/wallpapers.yuck")
+; (include "./src/widgets/shelf/modules/wallpapers.yuck")
 (include "./src/widgets/shelf/modules/workspaces.yuck")
 (include "./src/widgets/shelf/modules/accessories.yuck")
-(include "./src/widgets/shelf/modules/about.yuck")
+;(include "./src/widgets/shelf/modules/about.yuck")
 
 (defvar ACTIVE_STACK_SHELF 0)
 (defwidget main-shelf []
@@ -38,10 +38,10 @@
 			:transition {ACTIVE_STACK_SHELF==0 ? "slideleft" : "slideright"}
 			(landing-shelf)
 			(bookmarks-shelf)
-			(wallpapers-shelf)
+			;(wallpapers-shelf)
 			(workspaces-shelf)
 			(accessories-shelf)
-			(about-shelf)
+			;(about-shelf)
 		)
 	)
 )
