@@ -1,31 +1,78 @@
-(defwidget spaces-clock []
-	(box
-		:halign "center"
-		:valign "center"
-		:space-evenly false
-		:class "smart-spacer"
-		:spacing 10
-		;:visible {SONG_STOPPED ? false : true}
+(defpoll ACTIVE_STACK_SPACER :interval "45s" "echo $((RANDOM % 3))")
 
-			; Music spacer
+(defwidget spaces-clock []
+	(stack
+		:selected {!SONG_STOPPED ? ACTIVE_STACK_SPACER : 0}
+		:class "smart-spacer"
+		:transition "slideright"
+
+		;; Music spacer
 		(button
 			:onclick "./bin/niv-ws open media-control"
 			:style "all: unset;"
+			:visible {!SONG_STOPPED}
+
 			(box
 				:halign "center"
 				:valign "center"
 				:space-evenly false
-				:class ",music-spacer"
+				:class "music-spacer"
 				:spacing 10
-				:visible {SONG_STOPPED ? false : true}
 
-				(icon :name "music-2" :class "music-icon")
+				(icon :name "music-2")
 				(label :halign "start" :limit-width 30 :class "info-title" :text {SONG_TITLE})
 				(icon :name "hexagon" :class "separator-icon")
 				(label :halign "start" :limit-width 30 :class "info-artist" :text {SONG_ARTIST})
 			)
 		)
-	
+
+		;; Qoute spacer
+		(button
+			:onclick ""
+			:style "all: unset;"
+
+			(box
+				:halign "center"
+				:valign "center"
+				:space-evenly false
+				:class "qoute-spacer"
+				:spacing 10
+				:orientation "v"
+
+				(box
+					:halign "center"
+					:valign "center"
+					:space-evenly false
+					:spacing 10
+					(icon :name "quote")
+					(label :halign "start" :justify "center" :wrap true :class "info-title" :text {QOUTE.desc})
+				)
+				(box
+					:halign "center"
+					:valign "center"
+					:space-evenly false
+					:spacing 10
+					(icon :name "hexagon" :class "separator-icon")
+					(label :halign "start" :limit-width 30 :class "info-artist" :text {QOUTE.plc})
+				)
+			)
+		)
+
+		;; Greeter spacer
+		(button
+			:onclick ""
+			:style "all: unset;"
+
+			(box
+				:halign "center"
+				:valign "center"
+				:space-evenly false
+				:class "qoute-spacer"
+				:spacing 10
+
+				(icon :name "wave")
+				(label :halign "start" :class "info-title" :text {GREET_MSG.content})
+			)
+		)
 	)
 )
-
