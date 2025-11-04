@@ -1,9 +1,15 @@
+(defvar SEARCH_RESULTS `[]`)
+
 (defwidget main-launcher []
 	(box
 		:class "main-launcher"
 		:orientation "v"
 		:spacing 4
 		:space-evenly false
+		:width 400
+		:halign "center"
+		:valign "center"
+
 		(box
 			:class "launcher"
 			:orientation "v"
@@ -11,29 +17,38 @@
 			:space-evenly false
 			(label :class "info font-s" :halign "end" :text "type ':help' for more options")
 			(overlay
-				(input :active true :class "launcher-input")
+				(input 
+					:active true 
+					:class "launcher-input" 
+					:timeout "10s" 
+					:onchange `eww update SEARCH_RESULTS="$(./bin/niv-search '{}' | jq -c .)"`
+					:onaccept "${SEARCH_RESULTS[0].command} & ./bin/niv-ws close launcher"
+				)
 				(box :class "launcher-icon" :halign "start" (icon :name "search"))
 			)
 		)
-		(box
-			:class "result g-container padded-12 app"
-			:orientation "v"
-			:spacing 3
-			:space-evenly false		
-			(button :class "g-btn about"
-				(box
-					:space-evenly false
-					:spacing 5
-					(image :icon "brave")
-					(label :text "Brave")
-				)
-			)
-			(button :class "g-btn about"
-				(box
-					:space-evenly false
-					:spacing 5
-					(image :icon "telegram-desktop-bin")
-					(label :text "Telegram")
+		(scroll
+			:height 300
+			(box
+				:class "result g-container padded-12 app"
+				:orientation "v"
+				:spacing 3
+				:space-evenly false		
+				:style "background: transparent;"
+				(for RESULT in SEARCH_RESULTS
+				
+					(button :class "g-btn about"
+						:onclick {RESULT.type == "wallpaper" ? "${RESULT.command} && mcuc generate -i ${RESULT.source} -f scss -o ~/.config/eww/src/styles/theme/_index.scss && ./bin/niv restart & ./bin/niv-ws close launcher" : "${RESULT.command} & ./bin/niv-ws close launcher"}
+						(box
+							:space-evenly false
+							:spacing 5
+							:orientation {RESULT.type == "wallpaper" ? "v" : "h"}
+							:halign {RESULT.type == "wallpaper" ? "center" : "start"}
+							(image :image-width 20 :image-height 20 :icon {RESULT.type == "app" ? RESULT.icon : ""} :visible {RESULT.type == "app" ? true : false})
+							(image :image-width 300 :image-height 300 :path {RESULT.type == "wallpaper" ? "${RESULT.source}" : "" } :style "border-radius: 15px;")
+							(label :limit-width 250 :text {RESULT.type == "wallpaper" ? "" : "${RESULT.name}"})
+						)
+					)
 				)
 			)
 		)
@@ -44,12 +59,13 @@
   :monitor 0
   :geometry (geometry 
     :x "0"
-    :y "100"
-    :width "500px"
-    :anchor "top center"
+    :y "0"
+    :width "100%"
+		:height "105%"
+    :anchor "center center"
   )
   :stacking "fg"
   :namespace "widget-launcher"
-	:focusable "ondemand"
+	:focusable "exclusive"
   (main-launcher)
 )
