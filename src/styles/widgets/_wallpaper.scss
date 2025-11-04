@@ -1,0 +1,10 @@
+@import "../theme";
+
+window.wallpaper {
+  background-color: rgba($color: $background, $alpha: 90%);
+  border-radius: 15px;
+}
+
+.main-wallpaper {
+  padding: 10px;
+}
