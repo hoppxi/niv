@@ -1,8 +1,8 @@
-(defpoll ACTIVE_STACK_SPACER :interval "45s" "echo $((RANDOM % 3))")
+(defpoll ACTIVE_STACK_SPACER :interval "45s" "echo $((RANDOM % 2+1))")
 
 (defwidget spaces-clock []
 	(stack
-		:selected {!SONG_STOPPED ? ACTIVE_STACK_SPACER : 0}
+		:selected {SONG_STOPPED ? ACTIVE_STACK_SPACER : 0}
 		:class "smart-spacer"
 		:transition "slideright"
 
