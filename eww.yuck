@@ -23,3 +23,4 @@
 (include "./src/widgets/lockscreen/main.yuck")
 (include "./src/widgets/system-monitor/main.yuck")
 (include "./src/widgets/launcher/main.yuck")
+(include "./src/widgets/wallpaper/main.yuck")

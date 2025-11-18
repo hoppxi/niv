@@ -35,6 +35,7 @@ func main() {
         "icons":      {Name: "icons", Path: filepath.Join(binDir, "niv-icons")},
         "media":      {Name: "media", Path: filepath.Join(binDir, "niv-media")},
         "workspaces": {Name: "workspaces", Path: filepath.Join(binDir, "niv-workspaces")},
+				"esc-func":   {Name: "esc-func", Path: filepath.Join(binDir, "niv-esc-func")},
     }
 
 
