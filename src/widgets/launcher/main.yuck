@@ -45,8 +45,7 @@
 							:orientation {RESULT.type == "wallpaper" ? "v" : "h"}
 							:halign {RESULT.type == "wallpaper" ? "center" : "start"}
 							(image :image-width 20 :image-height 20 :icon {RESULT.type == "app" ? RESULT.icon : ""} :visible {RESULT.type == "app" ? true : false})
-							(image :image-width 300 :image-height 300 :path {RESULT.type == "wallpaper" ? "${RESULT.source}" : "" } :style "border-radius: 15px;")
-							(label :limit-width 250 :text {RESULT.type == "wallpaper" ? "" : "${RESULT.name}"})
+							(label :limit-width 250 :text {RESULT.name})
 						)
 					)
 				)
