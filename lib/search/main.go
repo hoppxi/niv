@@ -6,8 +6,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"io/fs"
 	"math"
+	"net/http"
 	"net/url"
 	"os"
 	"os/exec"
@@ -37,7 +39,7 @@ func main() {
 		term = strings.TrimSpace(strings.Join(args, " "))
 	}
 	if term == "" {
-		printJSON(helpJSON())
+		printJSON(helpJSON(""))
 		return
 	}
 
@@ -47,10 +49,10 @@ func main() {
 		// aliases
 		switch mode {
 		case ":help":
-			printJSON(helpJSON())
+			printJSON(helpJSON(strings.TrimSpace(strings.TrimPrefix(term, toks[0]))))
 			return
 		case ":h":
-			printJSON(helpJSON())
+			printJSON(helpJSON(strings.TrimSpace(strings.TrimPrefix(term, toks[0]))))
 			return
 		case ":bin", ":bins":
 			printJSON(searchBins(strings.TrimSpace(strings.TrimPrefix(term, toks[0]))))
@@ -82,8 +84,12 @@ func main() {
 		case ":cmd", ":sh":
 			printJSON(searchCmdMode(strings.TrimSpace(strings.TrimPrefix(term, toks[0]))))
 			return
+		case ":translate", ":ts":
+			printJSON(searchTranslateMode(strings.TrimSpace(strings.TrimPrefix(term, toks[0]))))
+			return
 		case ":url", ":u":
 			printJSON(searchURLMode(strings.TrimSpace(strings.TrimPrefix(term, toks[0]))))
+			return
 		case ":files", ":file", ":f":
 			printJSON(searchFilesMode(strings.TrimSpace(strings.TrimPrefix(term, toks[0]))))
 			return
@@ -108,7 +114,7 @@ func main() {
 			return
 		default:
 			// unknown mode -> fallback to help
-			printJSON(helpJSON())
+			printJSON(helpJSON(strings.TrimSpace(strings.TrimPrefix(term, toks[0]))))
 			return
 		}
 	}
@@ -210,45 +216,45 @@ func runHelp(cmd string) string {
 
 
 // help
-func helpJSON() []Result {
-	return []Result{
-		{
-			Name:    "Unified search",
-			GUI:     false,
-			Type:    "help",
-			Source:  "internal",
-			Command: `notify-send 'Use: "term" or ":mode options term". Modes: :help, :bin, :clipboard, :wallpapers, :workspaces, :bookmarks, :google, :youtube, :acc, :cal, :files'`,
-		},
-		{
-			Name:    `:files :dir '<dir>' :max <n> <term>`,
-			GUI:     false,
-			Type:    "help",
-			Source:  "internal",
-			Command: `notify-send 'Search files under <dir> (expand ~). Default max 20. Example: sap ":files :dir '~/.config' :max 30 eww"'`,
-		},
-		{
-			Name:    ":wallpapers <term>",
-			GUI:     false,
-			Type:    "help",
-			Source:  "~/.config/eww/config/wallpapers.yuck",
-			Command: "notify-send 'Search wallpapers. If no matches, returns the full wallpaper list.'",
-		},
-		{
-			Name:    ":clipboard <term>",
-			GUI:     false,
-			Type:    "help",
-			Source:  "cliphist or wl-paste",
-			Command: "notify-send 'Search clipboard history. Selection command copies the chosen entry back to clipboard using wl-copy or xclip.'",
-		},
-		{
-			Name:    ":bin <term>",
-			GUI:     false,
-			Type:    "help",
-			Source:  "PATH",
-			Command: "notify-send 'Search binaries in PATH.'",
-		},
+func helpJSON(term string) []Result {
+	helpItems := []Result{
+		{Name: "Unified Search", GUI: false, Type: "help", Source: "internal", Command: ":search"},
+		{Name: ":help or :h", GUI: false, Type: "help", Source: "internal", Command: ":help"},
+		{Name: ":bin <term> or :bins <term>", GUI: false, Type: "help", Source: "PATH", Command: ":bin"},
+		{Name: ":clipboard <term> or :clip <term>", GUI: false, Type: "help", Source: "cliphist or wl-paste", Command: ":clipboard"},
+		{Name: ":wallpapers <term> or :wp <term>", GUI: false, Type: "help", Source: "~/.config/eww/config/wallpapers.yuck", Command: ":wallpapers"},
+		{Name: ":workspaces <term> or :ws <term>", GUI: false, Type: "help", Source: "~/.config/eww/config/workspaces.yuck", Command: ":workspaces"},
+		{Name: ":bookmarks <term> or :bm <term>", GUI: false, Type: "help", Source: "~/.config/eww/config/bookmarks.yuck", Command: ":bookmarks"},
+		{Name: ":google <term> or :g <term>", GUI: false, Type: "help", Source: "Google Suggest API", Command: ":google"},
+		{Name: ":youtube <term> or :yt <term>", GUI: false, Type: "help", Source: "YouTube Suggest API", Command: ":youtube"},
+		{Name: ":translate <term> or :ts <term>", GUI: false, Type: "help", Source: "Google Translate API", Command: ":translate"},
+		{Name: ":url <url> or :u <url>", GUI: false, Type: "help", Source: "system", Command: ":url"},
+		{Name: ":files :dir '<dir>' :max <n> <term> or :f <term>", GUI: false, Type: "help", Source: "filesystem", Command: ":files"},
+		{Name: ":music", GUI: false, Type: "help", Source: "filesystem", Command: ":music"},
+		{Name: ":pictures or :pics or :images", GUI: false, Type: "help", Source: "filesystem", Command: ":pictures"},
+		{Name: ":videos", GUI: false, Type: "help", Source: "filesystem", Command: ":videos"},
+		{Name: ":docs or :documents", GUI: false, Type: "help", Source: "filesystem", Command: ":docs"},
+		{Name: ":configs or :config", GUI: false, Type: "help", Source: "filesystem", Command: ":configs"},
+		{Name: ":notes", GUI: false, Type: "help", Source: "filesystem", Command: ":notes"},
+		{Name: ":cmd <command> or :sh <command>", GUI: false, Type: "help", Source: "system", Command: ":cmd"},
+		{Name: ":acc <term> or :accs <term>", GUI: false, Type: "help", Source: "internal", Command: ":acc"},
+		{Name: ":calc <expression> or :cal <expression>", GUI: false, Type: "help", Source: "internal", Command: ":calc"},
 	}
+
+	if term == "" {
+		return helpItems
+	}
+
+	term = strings.ToLower(term)
+	var filtered []Result
+	for _, item := range helpItems {
+		if strings.Contains(strings.ToLower(item.Name), term) {
+			filtered = append(filtered, item)
+		}
+	}
+	return filtered
 }
+
 
 
 // collect desktop files
@@ -493,10 +499,10 @@ func searchDesktopApps(term string) []Result {
 }
 
 func extractScore(src string) int {
-	parts := strings.Split(src, "|")
-	for _, p := range parts {
-		if strings.HasPrefix(p, "score:") {
-			n, _ := strconv.Atoi(strings.TrimPrefix(p, "score:"))
+	parts := strings.SplitSeq(src, "|")
+	for p := range parts {
+		if after, ok :=strings.CutPrefix(p, "score:"); ok  {
+			n, _ := strconv.Atoi(after)
 			return n
 		}
 	}
@@ -789,58 +795,76 @@ func readDefvarJSON(path, varname string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	txt := string(data)
+	// remove ; comments
 	reComment := regexp.MustCompile(`;[^\n\r]*`)
 	txt = reComment.ReplaceAllString(txt, "")
-	re := regexp.MustCompile("(?s)defvar\\s+" + regexp.QuoteMeta(varname) + "\\s+`\\s*(\\[.*?\\])\\s*`")
-	m := re.FindStringSubmatch(txt)
-	if len(m) >= 2 {
-		return []byte(m[1]), nil
+
+	// Try pattern: defvar VAR `[...]`
+	startTag := fmt.Sprintf("defvar %s `[", varname)
+	start := strings.Index(txt, startTag)
+	if start >= 0 {
+		rest := txt[start+len(startTag):]
+		endRel := strings.Index(rest, "]`")
+		if endRel > 0 {
+			body := rest[:endRel]
+			body = strings.TrimSpace(body)
+			return []byte("[" + body + "]"), nil
+		}
 	}
-	re2 := regexp.MustCompile("(?s)`\\s*(\\[.*?\\])\\s*`")
-	m2 := re2.FindStringSubmatch(txt)
-	if len(m2) >= 2 {
-		return []byte(m2[1]), nil
+
+	// Fallback: just find the first `[ ... ]` block (like wallpaper)
+	start = strings.Index(txt, "`[")
+	if start >= 0 {
+		rest := txt[start+2:]
+		endRel := strings.Index(rest, "]`")
+		if endRel > 0 {
+			body := rest[:endRel]
+			body = strings.TrimSpace(body)
+			return []byte("[" + body + "]"), nil
+		}
 	}
+
 	return nil, errors.New("no defvar JSON block found")
 }
+
+
 
 func searchWorkspacesMode(term string) []Result {
 	home := homeDir()
 	conf := filepath.Join(home, ".config", "eww", "config", "workspaces.yuck")
 	raw, err := readDefvarJSON(conf, "CONFIG_WORKSPACES_DATA")
 	if err != nil {
-		alt := filepath.Join(home, ".config", "workspaces.yuck")
-		raw, err = readDefvarJSON(alt, "CONFIG_WORKSPACES_DATA")
-		if err != nil {
-			return []Result{
-				{
-					Name:    "No workspaces config found",
-					GUI:     false,
-					Type:    "workspace",
-					Source:  conf,
-					Command: "Ensure CONFIG_WORKSPACES_DATA exists in eww config",
-				},
-			}
+		return []Result{
+			{
+				Name:    "No workspaces config found",
+				GUI:     false,
+				Type:    "workspace",
+				Source:  conf,
+				Command: "Ensure CONFIG_WORKSPACES_DATA exists in eww config",
+			},
 		}
 	}
 	
-	var arr []map[string]interface{}
-	if err := json.Unmarshal(raw, &arr); err != nil {
-		fixed := bytes.ReplaceAll(raw, []byte("`"), []byte(""))
-		fixed = bytes.ReplaceAll(fixed, []byte(`'`), []byte(`"`))
-		if err2 := json.Unmarshal(fixed, &arr); err2 != nil {
-			return []Result{
-				{
-					Name:    "Failed to parse workspaces JSON",
-					GUI:     false,
-					Type:    "workspace",
-					Source:  conf,
-					Command: "parsing error",
-				},
-			}
+	clean := bytes.Trim(raw, "` \n\t")
+	clean = bytes.ReplaceAll(clean, []byte(`\'`), []byte(`'`))
+
+	var arr []map[string]any
+	if err := json.Unmarshal(clean, &arr); err != nil {
+		return []Result{
+			{
+				Name:    "Failed to parse workspaces JSON",
+				GUI:     false,
+				Type:    "workspace",
+				Source:  conf,
+				Command: fmt.Sprintf("parsing error: %v", err),
+			},
 		}
 	}
+
+
+
 	out := []Result{}
 	toks := tokensFrom(term)
 	for i, obj := range arr {
@@ -865,6 +889,7 @@ func searchWorkspacesMode(term string) []Result {
 			Type:    "workspace",
 			Source:  fmt.Sprintf("%s#%d", conf, i),
 			Command: command,
+			Icon:    icon,
 		})
 	}
 	return out
@@ -938,61 +963,213 @@ func searchBookmarksMode(term string) []Result {
 			Type:    "bookmark",
 			Source:  urls,
 			Command: cmd,
+			Icon:    icon,
 		})
 	}
 	return out
 }
 
 // :google / :youtube
+
 func searchGoogleMode(term string) []Result {
+	shellEscape := func(s string) string {
+		return "'" + strings.ReplaceAll(s, "'", "'\\''") + "'"
+	}
+
 	term = strings.TrimSpace(term)
 	if term == "" {
-		return []Result{
-			{
-				Name:    "Open Google",
-				GUI:     false,
-				Type:    "google",
-				Source:  "https://google.com",
-				Command: "xdg-open https://google.com",
-			},
+		return []Result{{
+			Name:    "Open Google",
+			GUI:     false,
+			Type:    "google",
+			Source:  "https://google.com",
+			Command: "xdg-open https://google.com",
+		}}
+	}
+
+	apiURL := "https://suggestqueries.google.com/complete/search?client=firefox&q=" + url.QueryEscape(term)
+	resp, err := http.Get(apiURL)
+	if err != nil {
+		return []Result{{Name: "Error fetching suggestions: " + err.Error()}}
+	}
+	defer resp.Body.Close()
+
+	body, _ := io.ReadAll(resp.Body)
+	var data []any
+	if err := json.Unmarshal(body, &data); err != nil {
+		return []Result{{Name: "Error parsing suggestions: " + err.Error()}}
+	}
+
+	results := []Result{}
+	if len(data) > 1 {
+		if arr, ok := data[1].([]any); ok {
+			for _, v := range arr {
+				if s, ok := v.(string); ok {
+					u := "https://www.google.com/search?q=" + url.QueryEscape(s)
+					results = append(results, Result{
+						Name:    s,
+						GUI:     false,
+						Type:    "google",
+						Source:  u,
+						Command: "xdg-open " + shellEscape(u),
+					})
+				}
+			}
 		}
 	}
-	u := "https://google.com/search?q=" + url.QueryEscape(term)
-	return []Result{
-		{
-			Name:    u,
+
+	if len(results) == 0 {
+		u := "https://www.google.com/search?q=" + url.QueryEscape(term)
+		results = append(results, Result{
+			Name:    term,
 			GUI:     false,
 			Type:    "google",
 			Source:  u,
 			Command: "xdg-open " + shellEscape(u),
-		},
+		})
 	}
+
+	return results
 }
 
 func searchYouTubeMode(term string) []Result {
 	term = strings.TrimSpace(term)
 	if term == "" {
-		return []Result{
-			{
-				Name:    "Open YouTube",
-				GUI:     false,
-				Type:    "youtube",
-				Source:  "https://www.youtube.com",
-				Command: "xdg-open https://www.youtube.com",
-			},
-		}
-	}
-	u := "https://www.youtube.com/results?search_query=" + url.QueryEscape(term)
-	return []Result{
-		{
-			Name:    u,
+		return []Result{{
+			Name:    "Open YouTube",
 			GUI:     false,
 			Type:    "youtube",
+			Source:  "https://www.youtube.com",
+			Command: "xdg-open https://www.youtube.com",
+		}}
+	}
+
+	endpoint := "https://suggestqueries.google.com/complete/search?client=youtube&ds=yt&q=" + url.QueryEscape(term)
+	resp, err := http.Get(endpoint)
+	if err == nil {
+		defer resp.Body.Close()
+		if body, err := io.ReadAll(resp.Body); err == nil {
+			raw := strings.TrimSpace(string(body))
+
+			// remove wrapper: window.google.ac.h([...])
+			if strings.HasPrefix(raw, "window.google.ac.h(") && strings.HasSuffix(raw, ")") {
+				raw = strings.TrimPrefix(raw, "window.google.ac.h(")
+				raw = strings.TrimSuffix(raw, ")")
+			}
+
+			var data []any
+			if err := json.Unmarshal([]byte(raw), &data); err == nil {
+				results := []Result{}
+				if len(data) >= 2 {
+					if arr, ok := data[1].([]any); ok {
+						for _, v := range arr {
+							if entry, ok := v.([]any); ok && len(entry) > 0 {
+								if s, ok := entry[0].(string); ok {
+									u := "https://www.youtube.com/results?search_query=" + url.QueryEscape(s)
+									results = append(results, Result{
+										Name:    s,
+										GUI:     false,
+										Type:    "youtube",
+										Source:  u,
+										Command: "xdg-open '" + strings.ReplaceAll(u, "'", "'\\''") + "'",
+									})
+								}
+							}
+						}
+					}
+				}
+				if len(results) > 0 {
+					return results
+				}
+			}
+		}
+	}
+
+	// fallback if no suggestions or error occurred
+	u := "https://www.youtube.com/results?search_query=" + url.QueryEscape(term)
+	return []Result{{
+		Name:    "Search YouTube for " + term,
+		GUI:     false,
+		Type:    "youtube",
+		Source:  u,
+		Command: "xdg-open '" + strings.ReplaceAll(u, "'", "'\\''") + "'",
+	}}
+}
+
+
+// :translate
+func searchTranslateMode(term string) []Result {
+	shellEscape := func(s string) string {
+		return "'" + strings.ReplaceAll(s, "'", "'\\''") + "'"
+	}
+
+	term = strings.TrimSpace(term)
+	if term == "" {
+		return []Result{{
+			Name:    "Enter text to translate",
+			GUI:     false,
+			Type:    "translate",
+			Source:  "https://translate.google.com",
+			Command: "xdg-open https://translate.google.com",
+		}}
+	}
+
+	// Change target language here (e.g. "es" for Spanish, "fr" for French)
+	targetLang := "en"
+
+	// Unofficial Google Translate endpoint
+	apiURL := "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=" + targetLang + "&dt=t&q=" + url.QueryEscape(term)
+
+	resp, err := http.Get(apiURL)
+	if err != nil {
+		return []Result{{Name: "Error fetching translation: " + err.Error()}}
+	}
+	defer resp.Body.Close()
+
+	body, _ := io.ReadAll(resp.Body)
+	var data any
+	if err := json.Unmarshal(body, &data); err != nil {
+		return []Result{{Name: "Error parsing translation: " + err.Error()}}
+	}
+
+	translated := ""
+	// JSON structure: [[[ "translated text", "original text", ... ]], ...]
+	if arr, ok := data.([]any); ok && len(arr) > 0 {
+		if inner, ok := arr[0].([]any); ok {
+			for _, segment := range inner {
+				if segArr, ok := segment.([]any); ok && len(segArr) > 0 {
+					if s, ok := segArr[0].(string); ok {
+						translated += s
+					}
+				}
+			}
+		}
+	}
+
+	results := []Result{}
+	if translated != "" {
+		u := "https://translate.google.com/?sl=auto&tl=" + targetLang + "&text=" + url.QueryEscape(term)
+		results = append(results, Result{
+			Name:    translated,
+			GUI:     false,
+			Type:    "translate",
 			Source:  u,
 			Command: "xdg-open " + shellEscape(u),
-		},
+		})
+	} else {
+		results = append(results, Result{
+			Name:    "No translation found",
+			GUI:     false,
+			Type:    "translate",
+			Source:  "https://translate.google.com",
+			Command: "xdg-open https://translate.google.com",
+		})
 	}
+
+	return results
 }
+
+
 
 // :accessories
 var embeddedAcc = []map[string]string{
