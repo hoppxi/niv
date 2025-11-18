@@ -13,8 +13,8 @@ for dir in ./lib/* ./scripts/*; do
     fi
 done
 
-# Build cmd/niv/main.go
-if [ -f .main.go ]; then
+# Build ./main.go
+if [ -f ./main.go ]; then
     echo "Building ./main.go -> ./bin/niv"
     go build -o ./bin/niv ./main.go
 fi
