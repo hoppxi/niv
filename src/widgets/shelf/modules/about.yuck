@@ -10,20 +10,12 @@
 			(button :onclick "./bin/niv-ws update shelf --stack 0" :class "full-rounded" (icon :name "arrow-left"))
 			(label :text "About")
 		)
-
-		(box
-			:style "background-image: url('${CONFIG_PROFILE_DATA.picture}'); background-size: cover; background-position: center; background-repeat: no-repeat; border-radius: 50%;"
-			:height 120
-			:width 120
-			:halign "center"
-			:valign "center"
-		)
-
 		(box
 			:class "g-container"
 			:orientation "v"
 			:spacing 3
 			(button :class "g-btn about"
+				:onclick "./bin/niv-ws close shelf && code ./config/profile.yuck"
 				(box
 					:space-evenly false
 					:spacing 3
@@ -36,7 +28,7 @@
 					:space-evenly false
 					:spacing 3
 					(vector :name "nixos")
-					(label :text "OS:             ${OS_DATA.os.platform}")
+					(label :text "OS: ${OS_DATA.os.platform}")
 				)
 			)
 			(button :class "g-btn about"
@@ -44,7 +36,7 @@
 					:space-evenly false
 					:spacing 3
 					(icon :name "laptop")
-					(label :text "host:           ${OS_DATA.os.hostname}")
+					(label :text "host: ${OS_DATA.os.hostname}")
 				)
 			)
 			(button :class "g-btn about"
@@ -52,7 +44,7 @@
 					:space-evenly false
 					:spacing 3
 					(icon :name "code")
-					(label :text "Kernel:      ${OS_DATA.os.kernel}")
+					(label :text "Kernel: ${OS_DATA.os.kernel}")
 				)
 			)
 			(button :class "g-btn about"
@@ -60,7 +52,7 @@
 					:space-evenly false
 					:spacing 3
 					(vector :name "linux")
-					(label :text "running:   ${OS_DATA.os.os}")
+					(label :text "running: ${OS_DATA.os.os}")
 				)
 			)
 		)
