@@ -34,6 +34,7 @@
 			:orientation "v"
 			:spacing 3
 			(button :class "g-btn" 
+				:onclick "./bin/niv-ws close shelf && code ./config/bookmarks.yuck"
 				(box
 					:space-evenly false
 					:spacing 3
