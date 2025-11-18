@@ -17,15 +17,15 @@
 					:orientation "v"
 					:valign "fill"
 					(button (icon :name "cpu"))
-					(label :text "25%")
+					(label :text "${CPU_USAGE}%")
 				)
-				(progress :class "qs-scale v" :height 130 :orientation "v" :flipped true)
+				(progress :value {CPU_USAGE} :class "qs-scale v" :height 130 :orientation "v" :flipped true)
 			)
 			(box
 				:orientation "v"
 				:space-evenly false
 				:class "info"
-				(label :class "top" :halign "start" :text "${CPU_DATA.cpu.model}")
+				(label :limit-width 10 :class "top" :halign "start" :text "${CPU_DATA.cpu.model}")
 				(label :halign "start" :text "${CPU_DATA.cpu.base_freq_ghz} GHz")
 				(label :halign "start" :text "${CPU_DATA.cpu.cores} cores")
 				(label :halign "start" :text "${CPU_DATA.cpu.threads} threads")

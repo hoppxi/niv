@@ -17,16 +17,14 @@
 					:orientation "v"
 					:valign "fill"
 					(button (icon :name "upload"))
-					(label :text "25MB")
+					(label :text "${NET_SPEED.upload}Mbps")
 				)
-				(progress :class "qs-scale v" :height 130 :orientation "v" :flipped true)
 				(box
 					:orientation "v"
 					:valign "fill"
 					(button (icon :name "download"))
-					(label :text "33MB")
+					(label :text "${NET_SPEED.download}Mbps")
 				)
-				(progress :class "qs-scale v" :height 130 :orientation "v" :flipped true)
 			)
 			(box
 				:orientation "v"

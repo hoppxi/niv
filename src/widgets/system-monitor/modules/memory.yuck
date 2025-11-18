@@ -16,9 +16,9 @@
 					:orientation "v"
 					:valign "fill"
 					(button (icon :name "memory-stick"))
-					(label :text "25%")
+					(label :text "${MEMORY_USAGE}%")
 				)
-				(progress :class "qs-scale v" :height 130 :orientation "v" :flipped true)
+				(progress :value {MEMORY_USAGE} :class "qs-scale v" :height 130 :orientation "v" :flipped true)
 			)
 			(box
 				:orientation "v"
@@ -28,7 +28,7 @@
 				(label :halign "start" :text "Free : ${MEMORY_DATA.memory.free} MB")
 				(label :halign "start" :text "Swap : ${MEMORY_DATA.memory.swap_total} MB")
 				(label :halign "start" :text "Used : ${MEMORY_DATA.memory.used} MB")
-				(label :halign "start" :text "usage: ${MEMORY_DATA.memory.used * 100/MEMORY_DATA.memory.total_installed}%")
+				(label :halign "start" :text "usage: ${MEMORY_USAGE}%")
 			)
 		)
 	)

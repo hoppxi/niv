@@ -17,9 +17,9 @@
 					:orientation "v"
 					:valign "fill"
 					(button (icon :name BATTERY_ICON))
-					(label :text "25%")
+					(label :text "${EWW_BATTERY.BAT0.capacity}%")
 				)
-				(progress :class "qs-scale v" :height 130 :orientation "v" :flipped true)
+				(progress :value {EWW_BATTERY.BAT0.capacity} :class "qs-scale v" :height 130 :orientation "v" :flipped true)
 			)
 			(box
 				:orientation "v"
