@@ -36,7 +36,9 @@
 					(label :text "Bookmarks")
 				)
 			)
-			(button :class "g-btn" :onclick "./bin/niv-ws update shelf --stack 2"
+			(button :class "g-btn"
+        :timeout "10s"
+				:onclick "./bin/niv-ws open wallpaper"
 				(box
 					:space-evenly false
 					:spacing 3
@@ -44,7 +46,7 @@
 					(label :text "Wallpapers")
 				)
 			)
-			(button :class "g-btn" :onclick "./bin/niv-ws update shelf --stack 3"
+			(button :class "g-btn" :onclick "./bin/niv-ws update shelf --stack 2"
 				(box
 					:space-evenly false
 					:spacing 3
@@ -52,7 +54,7 @@
 					(label :text "Workspaces")
 				)
 			)
-			(button :class "g-btn" :onclick "./bin/niv-ws update shelf --stack 4"
+			(button :class "g-btn" :onclick "./bin/niv-ws update shelf --stack 3"
 				(box
 					:space-evenly false
 					:spacing 3
@@ -66,7 +68,8 @@
 			:orientation "v"
 			:spacing 3
 			:space-evenly false
-			(button :class "g-btn" 
+			(button :class "g-btn"
+				:onclick "./bin/niv-ws close shelf && code ./config/apps.yuck" 
 				(box
 					:space-evenly false
 					:spacing 3
@@ -81,14 +84,7 @@
 				)
 			)
 
-			(button :class "g-btn" :onclick "./bin/niv-ws update shelf --stack 5"
-				(box
-					:space-evenly false
-					:spacing 3
-					(icon :name "info")
-					(label :text "About")
-				)
-			)
+			;
 		)
 	)
 )

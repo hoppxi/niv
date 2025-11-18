@@ -11,6 +11,7 @@
       (button
         :class "btn-bar"
         :onclick "./bin/niv-ws open shelf"
+        :timeout "10s"
         (vector :name "nixos")
       )
     )
@@ -20,6 +21,7 @@
       (button
         :class "btn-bar"
         :onclick "./bin/niv-ws open launcher"
+        :timeout "10s"
         (icon :name "search")
       )
     )
@@ -29,6 +31,7 @@
       (button
         :class "btn-bar"
         :onclick "./bin/niv-ws open system-monitor"
+        :timeout "10s"
         (icon :name "activity")
       )
     )
@@ -37,18 +40,12 @@
       :class "bb-wrap l"
       (button
         :class "btn-bar"
-        :onclick "hyprctl keyword opacity 0"
+        :onclick "hyprctl keyword decoration:blur:enabled false"
         (label 
           :limit-width 20
           :text {ACTIVE_WINDOW.title=="null" ? "Desktop" : ACTIVE_WINDOW.title}
         )
       )
-    )
-
-    (systray
-      :icon-size 14
-      :spacing 5
-      :style "padding: 0px 10px"
     )
   )
 )

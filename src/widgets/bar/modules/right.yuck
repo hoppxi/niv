@@ -42,7 +42,7 @@
     )
     (box
       :class "bb-wrap r"
-      ;:visible {SONG_STOPPED ? false : true}
+      :visible {SONG_STOPPED ? false : true}
       (button
         :class "btn-bar"
         :onclick "./bin/niv-ws open media-control"
