@@ -18,7 +18,7 @@
 
 			(for WORKSPACE in "${CONFIG_WORKSPACES_DATA}"
 				(button :class "g-btn" 
-					:onclick "./scripts/open-workspaces.sh --workspaces '${WORKSPACE.workspaces}' --cmd '${WORKSPACE.cmd}'"
+					:onclick "./bin/niv-open-workspaces --config '$(echo \'${WORKSPACE.workspaces}\')' --extra-cmd '${WORKSPACE.cmd}'"
 					(box
 						:space-evenly false
 						:spacing 5
@@ -35,6 +35,7 @@
 			:orientation "v"
 			:spacing 3
 			(button :class "g-btn" 
+				:onclick "./bin/niv-ws close shelf && code ./config/workspaces.yuck"
 				(box
 					:space-evenly false
 					:spacing 3
