@@ -68,11 +68,21 @@
 (defvar SONG_SEEK_POSITION_NORMALIZED 0)
 
 ;; Static data
-(defpoll AUDIO_DATA :interval "1h" :run-while false "./bin/niv-static --audio")
-(defpoll CPU_DATA :interval "1h" :run-while false "./bin/niv-static --cpu")
-(defpoll OS_DATA :interval "1h" :run-while false "./bin/niv-static --os")
-(defpoll MEMORY_DATA :interval "1h" :run-while false "./bin/niv-static --memory")
-(defpoll NETWORK_DATA :interval "1h" :run-while false "./bin/niv-static --network")
-(defpoll DISPLAY_DATA :interval "1h" :run-while false "./bin/niv-static --display")
-(defpoll BATTERY_DATA :interval "1h" :run-while false "./bin/niv-static --battery")
-(defpoll PKGS_DATA :interval "1h" :run-while false "./bin/niv-static --packages")
+(defpoll AUDIO_DATA :interval "1h" :run-while false "./bin/niv-static-data --audio")
+(defpoll CPU_DATA :interval "1h" :run-while false "./bin/niv-static-data --cpu")
+(defpoll OS_DATA :interval "1h" :run-while false "./bin/niv-static-data --os")
+(defpoll MEMORY_DATA :interval "1h" :run-while false "./bin/niv-static-data --memory")
+(defpoll NETWORK_DATA :interval "1h" :run-while false "./bin/niv-static-data --network")
+(defpoll DISPLAY_DATA :interval "1h" :run-while false "./bin/niv-static-data --display")
+(defpoll BATTERY_DATA :interval "1h" :run-while false "./bin/niv-static-data --battery")
+(defpoll PKGS_DATA :interval "1h" :run-while false "./bin/niv-static-data --packages")
+(defpoll CURRENT_WALLPAPER_PATH :interval "1h" :run-while false "swww query | awk -F'image: ' '{print $2}'")
+
+;; Clock spacer
+(defpoll QOUTE :interval "24h" `./bin/niv-qoute -o verse`)
+(defpoll GREET_MSG :interval "30s" `./bin/niv-greeting`)
+
+;; Monitor
+(deflisten CPU_USAGE `./bin/niv-monitor --cpu`)
+(deflisten NET_SPEED `./bin/niv-monitor --net`)
+(deflisten MEMORY_USAGE `./bin/niv-monitor --memory`)
