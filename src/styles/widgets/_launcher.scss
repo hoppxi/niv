@@ -1,5 +1,9 @@
 @import "../theme";
 
+window.launcher {
+  background-color: rgba($color: $background, $alpha: 0.7);
+}
+
 .main-launcher {
   .launcher-input {
     padding: 10px;
