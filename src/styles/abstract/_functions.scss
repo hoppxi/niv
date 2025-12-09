@@ -1,0 +1,29 @@
+@function random-color($alpha: 1) {
+  $r: random(255) - 1;
+  $g: random(255) - 1;
+  $b: random(255) - 1;
+  @return rgba($r, $g, $b, $alpha);
+}
+
+@function lerp-color($color1, $color2, $t) {
+  $r: round(red($color1) + ($t * (red($color2) - red($color1))));
+  $g: round(green($color1) + ($t * (green($color2) - green($color1))));
+  $b: round(blue($color1) + ($t * (blue($color2) - blue($color1))));
+  @return rgb($r, $g, $b);
+}
+
+// get interpolated color from a list of colors based on position t (0 to 1)
+@function gradient-color($colors, $t) {
+  $n: length($colors);
+  @if $n == 1 {
+    @return nth($colors, 1);
+  }
+
+  // calculate which two colors to interpolate between
+  $scaled-t: $t * ($n - 1);
+  $index1: floor($scaled-t) + 1;
+  $index2: if($index1 == $n, $n, $index1 + 1);
+  $local-t: $scaled-t - floor($scaled-t);
+
+  @return lerp-color(nth($colors, $index1), nth($colors, $index2), $local-t);
+}

@@ -1,0 +1,52 @@
+(defwidget main-network-qs-overlay []
+  
+  (box
+    :orientation "v"
+    :spacing 5
+    :space-evenly false
+
+    (box
+      :space-evenly false
+      :spacing 5
+      (button :onclick "eww update ACTIVE_STACK_QS=0" :class "button" (icon :name "arrow-left"))
+      (label :text "Network")
+    )
+
+    (centerbox
+      :style "padding: 10px"
+      (label :halign "start" :text "Nearby networks")
+      (box)
+      (box
+        :halign "end" 
+        :spacing 3
+        :valign  "center"
+        :space-evenly false
+        (button :onclick "./niv network --airplane" :class "button on-toggle" (icon :name {NETWORK_INFO.enabled ? "plane-landing" : "plane"}))
+        (button :onclick "./niv network --disable-wifi" :class "button on-toggle ${NETWORK_INFO.enabled ? 'on' : ''}" (icon :name {ICONS_INFO.network}))
+        (button :onclick "./niv network --scan" :class "button" (icon :name "rotate-ccw"))
+      )
+    )
+
+    (box
+      :orientation "v"
+      :class "btn-list"
+      :spacing 2
+
+      (for NETWORKS in {NETWORK_INFO.networks}
+      
+        (button
+          :class "button"
+          (box
+            :space-evenly false
+            :halign "start"
+            :spacing 5
+            (icon :name "wifi")
+            (label :text {NETWORKS.ssid})
+            (label :class "secondary" :text "${NETWORKS.type}, speed: ${NETWORKS.speed}")
+          )
+        )
+      )
+    )
+  )
+)
+

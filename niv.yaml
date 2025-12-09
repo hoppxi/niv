@@ -1,0 +1,60 @@
+apps:
+  terminal: alacritty
+  browser: firefox
+  editor: code
+  system_monitor: alacritty -e htop
+  file_manager: nautilus
+  system_info: alacritty -e neofetch
+  screenshot_tool: flameshot-gui
+
+general:
+  display_name: Ermiyas
+  top_left_icon: distributor-logo-nixos
+  dock_icon: distributor-logo-nixos
+  profile_pic: /home/hoppxi/Pictures/Wallpapers/wallhaven-eoejmr.png
+
+pinned_apps:
+  - name: Alacritty
+    icon: Alacritty
+    class: Alacritty
+    command: alacritty &
+
+  - name: Brave
+    icon: brave
+    class: brave-browser
+    command: brave &
+
+  - name: Zed
+    icon: zed
+    class: dev.zed.Zed
+    command: zeditor &
+
+  - name: Files
+    icon: org.gnome.Nautilus
+    class: org.gnome.Nautilus
+    command: nautilus &
+
+  - name: Spotify
+    icon: spotify
+    class: Spotify
+    command: spotify &
+
+widgets:
+  clock: true
+  quick_settings: true
+  media_controls: true
+  system_tray: true
+  verse: true
+  idle_indicator: true
+
+notifications:
+  enable: true
+  dnd: false
+  timeout: 5000
+  history: "~/.local/share/niv/notification-history.jsonl"
+
+notifications_disabled:
+  daemon: "swaync"
+  toggle_cmd: "swaync -t"
+
+wallpapers_path: "/home/hoppxi/Pictures/Wallpapers/"

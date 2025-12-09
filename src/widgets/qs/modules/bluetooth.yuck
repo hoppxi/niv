@@ -1,0 +1,51 @@
+(defwidget main-bluetooth-qs-overlay []
+
+  (box
+    :orientation "v"
+    :spacing 10
+    :space-evenly false
+
+    (box
+      :space-evenly false
+      :spacing 5
+      (button :onclick "eww update ACTIVE_STACK_QS=0" :class "button" (icon :name "arrow-left"))
+      (label :text "Bluetooth")
+    )
+
+
+    (centerbox
+      :style "padding: 10px"
+      (label :halign "start" :text "Bluetooth Devices")
+      (box)
+      (box
+        :halign "end" 
+        :spacing 3
+        :valign "center"
+        :space-evenly false
+        (button :class "button on-toggle" (icon :name {ICONS_INFO.bluetooth}))
+        (button :onclick "./niv bluetooth --scan" :class "button" (icon :name "rotate-ccw"))
+      )
+    )
+    (box
+      :orientation "v"
+      :class "btn-list"
+      :spacing 2
+
+      (for BLUETOOTHS in {BLUETOOTH_INFO.devices}
+        
+        (button
+          :class "button"
+          (box
+            :space-evenly false
+            :halign "start"
+            :spacing 5
+            (icon :name "bluetooth")
+            (label :text {BLUETOOTHS.name})
+            (label :class "secondary" :text "battery: ${BLUETOOTHS.battery}%")
+          )
+        )
+      )
+    )
+  )
+)
+

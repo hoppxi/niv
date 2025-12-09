@@ -1,0 +1,17 @@
+@import "../theme";
+
+.main-clock {
+  .time {
+    font-size: 4.5rem;
+    font-weight: 900;
+    color: $primary;
+  }
+
+  .date {
+    font-size: 1.25rem;
+    opacity: 0.8;
+    padding-left: 0.5rem;
+    font-weight: 500;
+    color: $secondary;
+  }
+}

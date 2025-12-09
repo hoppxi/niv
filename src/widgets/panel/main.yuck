@@ -1,0 +1,140 @@
+
+(defwidget main-panel []
+  (box
+    :class "main-panel"
+    :space-evenly false
+    :spacing 5
+    :orientation "v"
+
+    (box
+      :space-evenly false
+      :spacing 5
+
+      (box
+        :class "profile-pic"
+        :style "background-image: url('${GENERAL_CONFIG.profile_pic}'); background-size: cover; background-position: center;"
+        (box :visible {GENERAL_CONFIG.profile_pic == "null"} (icon :name "user"))
+      )
+
+      (box
+        :orientation "v"
+        (label :halign "start" :class "primary" :text {GENERAL_CONFIG.display_name != "" || GENERAL_CONFIG.display_name != "null" ? GENERAL_CONFIG.display_name : MISC_INFO.name})
+        (label :halign "start" :class "secondary" :text {MISC_INFO.uptime})
+        (label :halign "start" :class "secondary" :text {MISC_INFO.os})
+      )
+    )
+
+    (box
+      :class "panel"
+      :style "border-radius: 15px; padding-top: 10px;"
+      :orientation "v"
+      :visible {WIDGETS_CONFIG.verse}
+      :space-evenly false
+      (label :width 180 :justify "center" :wrap true :text {VERSE.text})
+      (label :class "secondary" :text "~ ${VERSE.ref}")
+    )
+
+    (box
+      :class "panel win"
+      :space-evenly false
+      :spacing 5
+      (label :width 180 :truncate true :text {ACTIVE_WINDOW.title})
+    )
+
+
+
+    (box
+      :class "acc"
+      :spacing 3
+      (button 
+        :class "button"
+        :onclick "./niv open launcher"
+        (box
+          :orientation "v"
+          :spacing 5
+          (icon :name "search")
+          (label :text "Search")
+        )
+      )
+      (button 
+        :class "button"
+        :onclick "./niv open launcher && notify-send 'use the :clip flag'"
+        (box
+          :orientation "v"
+          :spacing 5
+          (icon :name "clipboard")
+          (label :text "Clip")
+        )
+      )
+      (button 
+        :class "button"
+        :onclick "${APPS_CONFIG.settings_manager} &"
+        (box
+          :orientation "v"
+          :spacing 5
+          (icon :name "settings")
+          (label :text "Settings")
+        )
+      )
+    )
+   
+    
+    
+    (box
+      :orientation "v"
+      :class "btn-list"
+      :spacing 2
+
+      (button
+        :class "button"
+        :onclick "${APPS_CONFIG.system_monitor} &"
+        (box
+          :space-evenly false
+          :halign "start"
+          :spacing 5
+          (icon :name "heart-pulse")
+          (label :text "System monitor")
+        )
+      )
+
+      (button
+        :class "button"
+        :onclick "${APPS_CONFIG.system_info} &"
+        (box
+          :space-evenly false
+          :halign "start"
+          :spacing 5
+          (icon :name "info")
+          (label :text "About This PC")
+        )
+      )
+
+      (button
+        :class "button"
+        :onclick "eww open power"
+        (box
+          :space-evenly false
+          :halign "start"
+          :spacing 5
+          (icon :name "power")
+          (label :text "Power")
+        )
+      )
+    )
+
+  )
+)
+
+(defwindow panel
+  :monitor 0
+  :geometry (geometry 
+    :x "10"
+    :y "10"
+    :width "250px"
+    :anchor "top left"
+  )
+  :stacking "fg"
+  :namespace "widget-panel"
+  (main-panel)
+)
+

@@ -1,0 +1,95 @@
+; Bar
+(defvar WORKSPACES `[{"id":1, "windows": 0},{"id": 2, "windows": 0},{"id": 3, "windows": 0},{"id": 4, "windows": 0},{"id": 5, "windows": 0}]`)
+(defvar ACTIVE_WINDOW `{"title": "Desktop", "workspace": 1}`)
+(defvar ACTIVE_WORKSPACE `{"id": 1, "windows": 0}`)
+(defvar OPEN_WINDOWS `[]`)
+
+(defvar WALLPAPER `./assets/images/default_wallpaper.jpg`)
+(defvar WALLPAPERS_PATH `["./assets/images/default_wallpaper.jpg", "./assets/images/default_wallpaper.jpg", "./assets/images/default_wallpaper.jpg", "./assets/images/default_wallpaper.jpg", "./assets/images/default_wallpaper.jpg"]`)
+
+;; Icons
+(defvar ICONS_INFO `{
+    "output-volume": "volume-x",
+    "input-volume": "mic",
+    "network": "wifi-off",
+    "bluetooth": "bluetooth-off"
+}`)
+
+(defvar AUDIO_INFO `{"output": {"name": "Default Sink","level": 100,"muted": false},"input": {"name": "Default source","level": 100,"muted": false}}`)
+
+(defvar DISPLAY_INFO ` { "level": 100 }`)
+
+(defvar NETWORK_INFO `{
+    "enabled": true,
+    "connected": true,
+    "current_connection": { "ssid": "" },
+    "networks": [
+      { "id": "", "ssid": "" },
+      { "id": "", "ssid": "" }
+    ]
+}`)
+
+(defvar BLUETOOTH_INFO ` {
+    "enabled": true,
+    "connected": true,
+    "current_connection": { "name": "", "battery": 100 },
+    "devices": [
+      { "id": "", "name": "" },
+      { "id": "", "name": "" }
+    ]
+},`)
+
+(defvar MISC_INFO `{
+    "name": "username@hostaneme",
+    "os": "osname",
+    "osicon": "osicon theme name",
+    "uptime": "formated time like 10 mintues or 1 hour and 2 min like that"
+  },`)
+
+(defvar MEDIA_INFO `{
+
+    "title": "----",
+    "artist": "--",
+    "album": "--",
+    "album_art": "./assets/icons/music-2.svg",
+    "status": "Stopped",
+    "playing": false,
+    "paused": false,
+    "stopped": true,
+    "elapsed_time": "00:00",
+    "total_time": "00:00",
+    "normalized": 0,
+}`)
+(defvar MEDIA_NORMALIZED_ELAPSED_TIME 0)
+(defvar MEDIA_ELAPSED_TIME "00:00")
+
+;; Media control
+(defvar SONG_TITLE "----")
+(defvar SONG_ARTIST "--")
+(defvar SONG_ALBUM "--")
+(defvar SONG_ALBUM_ART "./assets/icons/music-2.svg")
+(defvar SONG_STATUS "Stopped")
+(defvar SONG_PLAYING false)
+(defvar SONG_PAUSED false)
+(defvar SONG_STOPPED true)
+(defvar SONG_SEEK_POSITION_ELAPSED "00:00")
+(defvar SONG_SEEK_POSITION_TOTAL "00:00")
+(defvar SONG_SEEK_POSITION_NORMALIZED 0)
+
+;; Verse
+(defpoll VERSE :interval "1h" "./niv verse")
+
+;; Notification
+(defvar NOTIFICATION "[]")
+(defvar NOTIFICATION_HISTORY "[]")
+
+
+(defvar APPS_CONFIG "{}")
+(defvar WIDGETS_CONFIG "{}")
+(defvar PINNED_APPS_CONFIG "{}")
+(defvar NOTIFICATION_CONFIG "{}")
+(defvar DISABLED_NOTIFICATION_CONFIG "{}")
+(defvar GENERAL_CONFIG "{}")
+
+
+(defvar DOCKED_APPS "[]")

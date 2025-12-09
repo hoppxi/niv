@@ -1,0 +1,49 @@
+@import "../theme";
+
+.main-notification {
+  padding: 6px;
+  border-radius: 15px;
+  margin-top: 10px;
+  margin-bottom: 40px;
+
+  calendar {
+    padding: 5px;
+    border-radius: 15px;
+
+    .header {
+      border: none;
+    }
+
+    :selected {
+      background-color: $on-primary;
+      border-radius: 5px;
+    }
+  }
+
+  .title {
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .toggle {
+    background-color: transparent;
+    border-radius: 15px;
+  }
+}
+
+.main-notification-view,
+.main-notification {
+  .noti-event {
+    .x-noti-button {
+      opacity: 0;
+    }
+    &:hover {
+      .x-noti-button {
+        opacity: 1;
+      }
+    }
+  }
+  .noti {
+    border-radius: 15px;
+  }
+}

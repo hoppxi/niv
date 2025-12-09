@@ -1,0 +1,59 @@
+(defvar ON_WALLPAPEAR_CHAGE_WPS_STYLE "")
+(defwidget main-wallpaper-selector []
+	(eventbox
+		:onhover "eww update ON_WALLPAPEAR_CHAGE_WPS_STYLE='opacity: 1'"
+		:onhoverlost "eww update ON_WALLPAPEAR_CHAGE_WPS_STYLE='opacity: 0.5'"
+		(box
+			:class "main-wallpaper-selecor panel"
+			:style "${ON_WALLPAPEAR_CHAGE_WPS_STYLE}; transition: 900ms;"
+			:space-evenly false
+			:spacing 5
+			:orientation "v"
+			(centerbox
+				(box :halign "start" :space-evenly false :spacing 5
+					(icon :name "wallpaper")
+					(label :text "Wallpaper selector")
+				)
+				(box)
+				(button :onclick "eww close wallpaper-selector" :halign "end" :class "button" (icon :name "x"))
+			)
+			(box
+				:halign "center"
+				:space-evenly false
+				:spacing 10
+				(for WALLPAPER_PATH in WALLPAPERS_PATH
+					(eventbox
+						:class "hover"
+						:onclick "./niv wallpaper --set=${WALLPAPER_PATH}"
+						(box
+							:class "wallaper-selector-image"
+							:width 200
+							:height 300
+							:style "
+								background-image: url('${WALLPAPER_PATH}');
+							"
+						)
+					)
+				)
+			)
+			(centerbox
+				(button :onclick "./niv wallpaper --previous" :halign "start" :class "button" (icon :name "arrow-left"))
+				(button :onclick "./niv wallpaper --random" :halign "center" :class "button" "Random")
+				(button :onclick "./niv wallpaper --next" :halign "end" :class "button" (icon :name "arrow-right"))
+			)
+		)
+	)
+)
+
+(defwindow wallpaper-selector
+  :monitor 0
+  :geometry (geometry 
+    :x "0"
+    :y "0"
+		:width "1000"
+    :anchor "center center"
+  )
+  :stacking "fg"
+  :namespace "widget-wallpaper-selector"
+  (main-wallpaper-selector)
+)

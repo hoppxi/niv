@@ -1,0 +1,13 @@
+(include "./src/widgets/bar/main.yuck")
+(include "./src/widgets/clock/main.yuck")
+(include "./src/widgets/media/main.yuck")
+(include "./src/widgets/panel/main.yuck")
+(include "./src/widgets/notification/main.yuck")
+(include "./src/widgets/qs/main.yuck")
+(include "./src/widgets/power/main.yuck")
+(include "./src/widgets/launcher/main.yuck")
+(include "./src/widgets/wallpaper/main.yuck")
+
+(include "./src/components/icons.yuck")
+
+(include "./lib/variables.yuck")

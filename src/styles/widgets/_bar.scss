@@ -1,0 +1,86 @@
+@import "../theme";
+
+.main-bar {
+  margin-top: 5px;
+  padding: 0 10px;
+
+  .workspace {
+    padding: 4px;
+
+    .wbtn {
+      min-width: 1.4rem;
+      padding: 0 6px;
+      transition: all 0.3s;
+      border-radius: 100px;
+      font-weight: 800;
+      opacity: 0.7;
+      color: $primary;
+      background-color: transparent;
+
+      &:hover {
+        background-color: rgba($color: $on-background, $alpha: 0.1);
+      }
+
+      &.has-window {
+        min-width: 1.6rem;
+        background-color: rgba($color: $inverse-primary, $alpha: 0.1);
+        border: 1px solid rgba($color: $outline, $alpha: 0.4);
+      }
+      
+      &.active {
+        min-width: 2.2rem;
+        background-color: rgba($color: $inverse-primary, $alpha: 0.2);
+        border: 1px solid rgba($color: $outline, $alpha: 0.4);
+        opacity: 1;
+        font-weight: 900;
+
+        &:hover {
+       	  background-color: rgba($color: $inverse-primary, $alpha: 0.1);
+        }
+
+        &.has-window {
+          background-color: $inverse-primary;
+          
+          &:hover {
+            background-color: rgba($color: $inverse-primary, $alpha: 0.8);
+          }
+        }
+
+      }
+
+    }
+  }
+
+  .battery {
+    trough {
+      background-color: $surface-bright;
+      border-radius: 15px;
+      min-height: 15px;
+      min-width: 35px;
+
+      progress {
+        min-height: 15px;
+        background-color: $inverse-primary;
+        border-radius: 15px;
+      }
+    }
+  }
+
+  .battery-text {
+    font-weight: 900;
+    color: $primary;
+  }
+
+  .systray {
+    background: rgba($color: $surface-container, $alpha: 0.75);
+    border: 1px solid rgba($color: $outline, $alpha: 0.08);
+    box-shadow: 0 20px 50px rgba($color: $shadow, $alpha: 0.5);
+    padding: 4px 10px;
+    border-radius: 100px;
+    transition: all 0.3s;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}

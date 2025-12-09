@@ -1,0 +1,39 @@
+(defwidget right-bar []
+  (box
+    :space-evenly false
+    :class "right-bar"
+    :halign "end"
+    :valign "center"
+    :spacing 5
+
+    (button
+      :class "panel"
+      :onclick "eww open qs --toggle"
+      (box
+        :spacing 5
+        :space-evenly false
+        (icon :name {ICONS_INFO["output-volume"]})
+        (icon :name {ICONS_INFO.network})
+        (overlay
+          (progress :class "battery" :width 10 :value {EWW_BATTERY.BAT0.capacity})
+          (label :class "battery-text" :text "${EWW_BATTERY.BAT0.capacity}%")
+        )
+      )
+    )
+
+    (button
+      :class "panel"
+      :onclick "eww open notification --toggle"
+
+      (box
+        :space-evenly false
+        :spacing 5
+
+        (label :text {formattime(EWW_TIME, "%I:%M %a, %b %d")})
+        (icon :name "bell")
+        
+      )
+    )
+
+  )
+)

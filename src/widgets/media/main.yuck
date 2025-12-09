@@ -1,0 +1,92 @@
+(defvar bars "[1,2,3,4,5,6,7,8]")
+
+(defwidget main-media []
+
+  (box
+    :class "main-media"
+    (overlay
+
+      (box
+        :orientation "v"
+        :space-evenly false
+        :spacing 3
+        :class "album-art-background"
+        :style "background-image: url('${MEDIA_INFO.art}');"
+        :height 160
+        :width 340
+      )
+
+      (box
+        :class "media panel"
+        :orientation "v"
+        :space-evenly false
+        :spacing 10
+
+        (box
+          :spacing 5
+          :space-evenly false
+
+          (box
+            :class "music-art"
+            :style "background-image: url('${MEDIA_INFO.art}');"
+          )
+
+          (box
+            :orientation "v"
+            (label :limit-width 100 :truncate true :halign "start" :class "title" :text {MEDIA_INFO.title})
+            (label :limit-width 100 :truncate true :halign "start" :class "artist" :text "${MEDIA_INFO.artist} . ${MEDIA_INFO.album}" )
+          )
+        )
+
+        (box
+          :orientation "v"
+          :class "seek"
+          :space-evenly false
+          :spacing 5
+
+          (scale :class "seek-slider" :onchange "./niv media --position {}" :value {MEDIA_NORMALIZED_ELAPSED_TIME})
+          (box
+            (label :halign "start" :class "seek-min" :text {MEDIA_ELAPSED_TIME})
+            (label :halign "end" :class "seek-min" :text {MEDIA_INFO.seek_position_total})
+          )
+        )
+
+        (centerbox
+          (box
+            :halign "start"
+            :valign "end"
+            :space-evenly false
+
+            (for bar in {bars}
+              (progress :height 30 :width 5 :class "bars" :orientation "v" :flipped true :value {bar})
+            )
+          )
+          (box)
+
+          (box
+            :halign "end"
+            :valign "center"
+            :space-evenly false
+            :spacing 5
+
+            (button :onclick "./niv media --previous" :class "mbtn" (icon :name "skip-back"))
+            (button :onclick "./niv media --play-pause" :class "mbtn primary" (icon :name "play"))
+            (button :onclick "./niv media --next" :class "mbtn" (icon :name "skip-forward"))
+          )
+        )
+      )
+    )
+  )
+)
+(defwindow media
+  :monitor 0
+  :geometry (geometry 
+    :x "10"
+    :y "10"
+    :anchor "top left"
+  )
+  :stacking "fg"
+  :namespace "widget-media"
+  (main-media)
+)
+

@@ -1,0 +1,28 @@
+(defwidget center-bar []
+  (eventbox
+    :onscroll "hyprctl dispatch workspace r$( [[ {} == 'up' ]] && echo '+' || echo '-' )1"
+    (box
+      :halign "center"
+      :valign "center"
+      :space-evenly false
+      :spacing 3
+      :class "workspace panel"
+      (for WORKSPACE in {WORKSPACES}
+
+        (box
+          (button
+            :class {ACTIVE_WORKSPACE.id == WORKSPACE.id ? (WORKSPACE.windows > 0 ? "has-window active wbtn" : "active wbtn") : (WORKSPACE.windows > 0 ? "has-window wbtn" : "wbtn")}
+            :onclick "hyprctl dispatch workspace ${WORKSPACE.id}"
+            (box
+              (label :visible {ACTIVE_WORKSPACE.id == WORKSPACE.id || WORKSPACE.windows > 0} :text {WORKSPACE.id})
+              (box 
+                :visible {WORKSPACE.windows == 0 && ACTIVE_WORKSPACE.id != WORKSPACE.id }
+                (icon :name "dot")
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+)

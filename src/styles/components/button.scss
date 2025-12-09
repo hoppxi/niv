@@ -1,0 +1,56 @@
+@import "../theme";
+
+button {
+  &.button {
+    background: $surface-container-high;
+    border: 1px solid rgba($color: $outline, $alpha: 0.08);
+    padding: 4px 10px;
+    border-radius: 100px;
+    transition: all 0.3s;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &.toggle {
+    padding: 10px;
+
+    &:hover {
+      background: $surface-container-highest;
+    }
+  }
+
+  &.on-toggle {
+    &.on {
+      background: $primary-container;
+    }
+  }
+}
+
+.hover:hover {
+  opacity: 0.8;
+}
+
+.btn-list {
+  .button {
+    padding: 10px;
+    border-radius: 3px;
+
+    &:hover {
+      background: $surface-container-highest;
+    }
+
+    &:first-child {
+      border-radius: 15px 15px 3px 3px;
+    }
+    &:last-child {
+      border-radius: 3px 3px 15px 15px;
+    }
+
+    &:first-child:last-child {
+      border-radius: 15px;
+    }
+  }
+}
+

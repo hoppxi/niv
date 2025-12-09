@@ -1,0 +1,46 @@
+(defwidget left-bar []
+  (box
+    :valign "center"
+    :halign "start"
+    :space-evenly false
+    :spacing 3
+    :class "left-bar"
+
+    (box
+      :valign "center"
+      :space-evenly false
+      :spacing 3
+      :class "panel"
+
+      (button
+        :class "hover"
+        :onclick "eww open panel --toggle"
+        (image :icon "${GENERAL_CONFIG.top_left_icon != '' || GENERAL_CONFIG.top_left_icon != 'null' ? GENERAL_CONFIG.top_left_icon : 'distributor-logo-nixos'}")
+      )
+
+      (icon :name "chevron-right")
+      (label :limit-width 20 :truncate true :text "${ACTIVE_WINDOW.class} - ${ACTIVE_WINDOW.title}")
+    )
+
+    (box
+      :valign "center"
+      :space-evenly false
+      :spacing 5
+      :class "panel"
+
+      (button
+        :class "hover"
+        :onclick "eww open media --toggle"
+        (icon :name "music-2")
+      )
+      (button
+        :class "hover"
+        :onclick "eww open panel --toggle"
+        :visible {WIDGETS_CONFIG?.idle_indicator}
+        (icon :name "eye")
+      )
+    )
+
+    (systray :visible {WIDGETS_CONFIG?.system_tray} :spacing 8 :valign "center" :halign "center" :icon-size 14 :class "systray")
+  )
+)

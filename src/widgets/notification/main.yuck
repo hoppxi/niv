@@ -1,0 +1,191 @@
+(defvar CALENDAR_REVEALED true)
+(defwidget main-notification []
+  (box
+    :class "main-notification panel"
+    :orientation "v"
+		:space-evenly false
+		:vexpand true
+		:hexpand true
+
+		(box
+			:valign "start"
+			:orientation "v"
+			:spacing 5
+			:space-evenly false
+			
+			(centerbox 
+				(label :halign "start" :class "title" :text "Notifications")
+				(box)
+				(button
+					:halign "end"
+					:class "button on-toggle"
+					:onclick "./niv notification --dnd-toggle"
+					(box
+						:space-evenly false
+						:spacing 5
+						(icon :name "bell-off")
+						(label :text "Don't Disturb")
+					)
+				)
+			)
+		)
+
+		(box
+			:orientation "v"
+			:spacing 10
+			:vexpand true
+
+			(scroll
+				:height 400
+				:visible {arraylength(NOTIFICATION_HISTORY) > 0}
+				:valign "start"
+
+				(box
+					:orientation "v"
+					:space-evenly false
+					:spacing 5
+					:class "main-notification-view"
+					(for NOTI in {NOTIFICATION_HISTORY}
+						(eventbox
+							:class "noti-event"
+						(box
+							:space-evenly false
+							:spacing 10
+							:class "panel noti"
+							(image :icon {NOTI.app_icon} :icon-size "dialog")
+							(box
+								:orientation "v"
+								:space-evenly false
+								(label :halign "start" :class "primary" :text {NOTI.summary})
+								(label :truncate true :halign "start" :markup {NOTI.body})
+								(box
+									:space-evenly false
+									:halign "start"
+									(label :class "secondary" :text {NOTI.app_name})
+									(icon :name "dot")
+									(label :class "secondary" :text {formattime(NOTI.timestamp, "%I:%M %p")})
+									(box
+										(for ACTION in {NOTI.acions}
+											(button 
+												:onclick "./niv notification --action ${ACTION} --id ${NOTI.id}" 
+												:class "button"
+												(label :text {ACTION == "default" ? "Close" : ACTION})
+											)
+										)
+									)
+								)
+							)
+							(button  
+								:class "button x-noti-button" 
+								:onclick "./niv notification --close ${NOTI.id}" 
+								(icon :name "x")
+							)
+						)
+					)
+					)
+				)
+			)
+
+			(box
+				:valign "center"
+				:space-evenly false
+				:orientation "v"
+				:visible {arraylength(NOTIFICATION_HISTORY) == 0}
+				
+				(image :valign "center" :path "./assets/notification.png" :image-width 100 :image-height 100)
+				(label :valign "center" :text "No new notification")
+			)
+		)
+
+		(box 
+			:valign "end"
+			:vexpand true
+			:orientation "v"
+			:space-evenly false
+			:spacing 3
+
+			(centerbox
+				(button 
+					:class "button" 
+					:valign "end"
+					:onclick "eww update CALENDAR_REVEALED=$([ \"$(eww get CALENDAR_REVEALED)\" = \"true\" ] && echo false || echo true)"
+        	(label :text {formattime(EWW_TIME, "%I:%M %a, %b %d")})
+				)
+				(box)
+				(button 
+					:onclick "./niv notification --clear-history"
+					:halign "end"
+					:class "button" 
+					(label :text "Clear")
+				)
+			)
+
+			(revealer
+				:reveal CALENDAR_REVEALED
+				:duration "0.3s"
+				:transition "slideup"
+				(calendar :class "panel")
+			)
+		)
+  )
+)
+
+(defwindow notification
+  :monitor 0
+  :geometry (geometry 
+    :x "10"
+    :width "290px"
+		:height "100%"
+    :anchor "top right"
+  )
+  :stacking "fg"
+  :namespace "widget-notification"
+  (main-notification)
+)
+
+(defwidget main-notification-view []
+	(box
+		:orientation "v"
+		:space-evenly false
+		:spacing 10
+		:class "main-notification-view"
+
+		(for NOTI in {NOTIFICATION}
+			(button
+				:onclick "./niv notification --action default --id ${NOTI.id} && ./niv notification --close ${NOTI.id} --view-only" 
+				(box
+					:space-evenly false
+					:spacing 5
+					:class "noti panel"
+					(image :icon {NOTI.app_icon} :icon-size "dialog")
+					(box
+						:orientation "v"
+						:space-evenly false
+						(label :halign "start" :class "primary" :text {NOTI.summary})
+						(label :truncate true :halign "start" :markup {NOTI.body})
+						(box
+							:space-evenly false
+							:halign "start"
+							(label :class "secondary" :text {NOTI.app_name})
+							(icon :name "dot")
+							(label :class "secondary" :text {formattime(NOTI.timestamp, "%I:%M %p")})
+						)
+					)
+				)
+			)
+		)
+	)
+)
+
+(defwindow notification-view
+  :monitor 0
+  :geometry (geometry 
+    :x "10"
+		:y "10"
+    :width "290px"
+    :anchor "top right"
+  )
+  :stacking "fg"
+  :namespace "widget-notification-view"
+  (main-notification-view)
+)
