@@ -4,8 +4,8 @@
 (defvar ACTIVE_WORKSPACE `{"id": 1, "windows": 0}`)
 (defvar OPEN_WINDOWS `[]`)
 
-(defvar WALLPAPER `./assets/images/default_wallpaper.jpg`)
-(defvar WALLPAPERS_PATH `["./assets/images/default_wallpaper.jpg", "./assets/images/default_wallpaper.jpg", "./assets/images/default_wallpaper.jpg", "./assets/images/default_wallpaper.jpg", "./assets/images/default_wallpaper.jpg"]`)
+(defvar WALLPAPER `./assets/images/default_wallpaper.png`)
+(defvar WALLPAPERS_PATH `["./assets/images/default_wallpaper.png", "./assets/images/default_wallpaper.png", "./assets/images/default_wallpaper.png", "./assets/images/default_wallpaper.png", "./assets/images/default_wallpaper.png"]`)
 
 ;; Icons
 (defvar ICONS_INFO `{
