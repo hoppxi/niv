@@ -58,6 +58,7 @@ var startCmd = &cobra.Command{
 		manager.Manage.StartWatcher(watchers.StartMediaWatcher)
 		manager.Manage.StartWatcher(watchers.StartWorkspaceWatcher)
 		manager.Manage.StartWatcher(watchers.StartMiscWatcher)
+		manager.Manage.StartWatcher(watchers.StartEscWatcher)
 
 		for _, w := range []string{"bar", "wallpaper", "clock", "notification-view"} {
 			if err := exec.Command("eww", "open", w).Run(); err != nil {
