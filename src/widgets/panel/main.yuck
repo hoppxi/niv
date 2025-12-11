@@ -46,9 +46,9 @@
     (box
       :class "acc"
       :spacing 3
-      (button 
+      (button
         :class "button"
-        :onclick "./niv open launcher"
+        :onclick "./niv toggle launcher"
         (box
           :orientation "v"
           :spacing 5
@@ -56,17 +56,17 @@
           (label :text "Search")
         )
       )
-      (button 
+      (button
         :class "button"
-        :onclick "./niv open launcher && notify-send 'use the :clip flag'"
+        :onclick "./niv toggle wallpaper-selector"
         (box
           :orientation "v"
           :spacing 5
-          (icon :name "clipboard")
-          (label :text "Clip")
+          (icon :name "wallpaper")
+          (label :text "Wallpapers")
         )
       )
-      (button 
+      (button
         :class "button"
         :onclick "${APPS_CONFIG.settings_manager} &"
         (box
@@ -77,9 +77,9 @@
         )
       )
     )
-   
-    
-    
+
+
+
     (box
       :orientation "v"
       :class "btn-list"
@@ -111,7 +111,7 @@
 
       (button
         :class "button"
-        :onclick "eww open power"
+        :onclick "./niv toggle power"
         (box
           :space-evenly false
           :halign "start"
@@ -127,7 +127,7 @@
 
 (defwindow panel
   :monitor 0
-  :geometry (geometry 
+  :geometry (geometry
     :x "10"
     :y "10"
     :width "250px"
@@ -137,4 +137,3 @@
   :namespace "widget-panel"
   (main-panel)
 )
-

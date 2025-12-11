@@ -4,7 +4,7 @@
 
 (defwidget main-bar []
   (centerbox
-    :class "main-bar"
+    :class "main-bar panel"
     :valign "center"
     (left-bar)
     (center-bar)
@@ -14,7 +14,7 @@
 
 (defwindow bar
   :monitor 0
-  :geometry (geometry 
+  :geometry (geometry
     :x "0"
     :y "0"
     :width "100%"
@@ -26,4 +26,3 @@
   :namespace "widget-bar"
   (main-bar)
 )
-

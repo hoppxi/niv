@@ -1,3 +1,5 @@
+(defvar SYSTRAY_REVEALER false)
+
 (defwidget left-bar []
   (box
     :valign "center"
@@ -14,7 +16,7 @@
 
       (button
         :class "hover"
-        :onclick "eww open panel --toggle"
+        :onclick "./niv toggle panel"
         (image :icon "${GENERAL_CONFIG.top_left_icon != '' || GENERAL_CONFIG.top_left_icon != 'null' ? GENERAL_CONFIG.top_left_icon : 'distributor-logo-nixos'}")
       )
 
@@ -30,17 +32,25 @@
 
       (button
         :class "hover"
-        :onclick "eww open media --toggle"
+        :onclick "./niv toggle media"
         (icon :name "music-2")
-      )
-      (button
-        :class "hover"
-        :onclick "eww open panel --toggle"
-        :visible {WIDGETS_CONFIG?.idle_indicator}
-        (icon :name "eye")
       )
     )
 
-    (systray :visible {WIDGETS_CONFIG?.system_tray} :spacing 8 :valign "center" :halign "center" :icon-size 14 :class "systray")
+    (box
+      :spacing 3
+      :space-evenly false
+      :class "panel"
+      :visible {WIDGETS_CONFIG.system_tray}
+      (button
+        :onclick "eww update SYSTRAY_REVEALER=$([ \"$(eww get SYSTRAY_REVEALER)\" = \"true\" ] && echo false || echo true)"
+        (icon :name "chevron-right")
+      )
+      (revealer
+        :reveal {SYSTRAY_REVEALER}
+        :transition "slideleft"
+        (systray :visible {WIDGETS_CONFIG?.system_tray} :spacing 8 :valign "center" :halign "center" :icon-size 14 :class "systray")
+      )
+    )
   )
 )

@@ -8,7 +8,7 @@
 
     (button
       :class "panel"
-      :onclick "eww open qs --toggle"
+      :onclick "./niv toggle qs"
       (box
         :spacing 5
         :space-evenly false
@@ -23,7 +23,7 @@
 
     (button
       :class "panel"
-      :onclick "eww open notification --toggle"
+      :onclick "./niv toggle notification"
 
       (box
         :space-evenly false
@@ -31,7 +31,7 @@
 
         (label :text {formattime(EWW_TIME, "%I:%M %a, %b %d")})
         (icon :name "bell")
-        
+
       )
     )
 

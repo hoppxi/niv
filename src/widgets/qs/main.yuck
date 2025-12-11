@@ -1,5 +1,6 @@
 (include "./src/widgets/qs/modules/bluetooth.yuck")
 (include "./src/widgets/qs/modules/network.yuck")
+(include "./src/widgets/qs/modules/media.yuck")
 
 (defvar VOLUME_REVEALER false)
 (defvar DISPLAY_REVEALER false)
@@ -22,10 +23,10 @@
         (label :text "${EWW_BATTERY.BAT0.capacity}% ${EWW_BATTERY.BAT0.status}")
       )
       (box)
-      (button :class "button" :halign "end" :onclick "eww open power" (icon :name "power"))
+      (button :class "button" :halign "end" :onclick "./niv open power" (icon :name "power"))
     )
 
-    (stack
+      (stack
       :selected ACTIVE_STACK_QS
       :same-size true
       :transition {ACTIVE_STACK_QS == 0 ? "slideleft" : "slideright"}
@@ -42,15 +43,21 @@
               :orientation "v"
               :spacing 5
               (centerbox
-                (box :halign "start" :class "icon-container" (icon :name {ICONS_INFO.network}))
+                (box :halign "start" :space-evenly false :spacing 7
+                  (icon :name {ICONS_INFO.network})
+                  (box
+                    :orientation "v"
+                    :space-evenly false
+                    :valign "center"
+                    :spacing 3
+                    (label :halign "start" :class "primary" :text {NETWORK_INFO.current_connection.type == "wifi" ? "Wi-Fi" : "Ethernet"})
+                    (label :halign "start" :limit-width 15 :class "secondary" :text {NETWORK_INFO.connected ? NETWORK_INFO.current_connection.ssid : "Disconnected" })
+                  )
+                )
                 (box)
                 (box :halign "end" (icon :name "chevron-right"))
               )
-              (box
-                :orientation "v"
-                (label :class "primary" :text {NETWORK_INFO.current_connection.type == "wifi" ? "Wi-Fi" : "Ethernet"})
-                (label :class "secondary" :text {NETWORK_INFO.connected ? NETWORK_INFO.current_connection.ssid : "Disconnected" })
-              )
+
             )
           )
           (button
@@ -60,14 +67,51 @@
               :orientation "v"
               :spacing 5
               (centerbox
-                (box :halign "start" :class "icon-container" (icon :name {ICONS_INFO.bluetooth}))
+                (box :halign "start" :space-evenly false :spacing 7
+                  (icon :name {ICONS_INFO.bluetooth})
+                  (box
+                    :orientation "v"
+                    :space-evenly false
+                    :valign "center"
+                    :spacing 3
+                    (label :halign "start" :class "primary" :text "Bluetooth")
+                    (label :halign "start" :limit-width 15 :class "secondary" :text {BLUETOOTH_INFO.connected ? BLUETOOTH_INFO.current_connection.name : "Disconnected"})
+                  )
+                )
                 (box)
                 (box :halign "end" (icon :name "chevron-right"))
               )
+            )
+          )
+        )
+
+       (box
+          :spacing 5
+          (button
+            :class "qs button on-toggle"
+            (box :halign "start" :space-evenly false :spacing 7
+              (icon :name "plane")
               (box
-              :orientation "v"
-                (label :class "primary" :text "Bluetooth")
-                (label :class "secondary" :text {BLUETOOTH_INFO.connected ? BLUETOOTH_INFO.current_connection.name : "Disconnected"})
+                :orientation "v"
+                :space-evenly false
+                :valign "center"
+                :spacing 3
+                (label :halign "start" :class "primary" :text "Airplane")
+                (label :halign "start" :class "secondary" :text "Off")
+              )
+            )
+          )
+          (button
+            :class "qs button on-toggle"
+            (box :halign "start" :space-evenly false :spacing 7
+              (icon :name {ICONS_INFO.network})
+              (box
+                :orientation "v"
+                :space-evenly false
+                :valign "center"
+                :spacing 3
+                (label :halign "start" :class "primary" :text "Idle")
+                (label :halign "start" :class "secondary" :text "Off")
               )
             )
           )
@@ -87,9 +131,9 @@
             (box
               :space-evenly false
               :spacing 5
-              (button 
-                :class "revealer-button" 
-                :onclick "eww update VOLUME_REVEALER=$([ \"$(eww get VOLUME_REVEALER)\" = \"true\" ] && echo false || echo true)" 
+              (button
+                :class "revealer-button"
+                :onclick "eww update VOLUME_REVEALER=$([ \"$(eww get VOLUME_REVEALER)\" = \"true\" ] && echo false || echo true)"
                 (icon :name {ICONS_INFO["output-volume"]})
               )
               (scale :onchange "./niv audio --output-level {}" :value {AUDIO_INFO.output.level})
@@ -144,8 +188,8 @@
             (box
               :space-evenly false
               :spacing 5
-              (button 
-                :onclick "eww update DISPLAY_REVEALER=$([ \"$(eww get DISPLAY_REVEALER)\" = \"true\" ] && echo false || echo true)" 
+              (button
+                :onclick "eww update DISPLAY_REVEALER=$([ \"$(eww get DISPLAY_REVEALER)\" = \"true\" ] && echo false || echo true)"
                 (icon :name "sun")
               )
               (scale :onchange "./niv display --brightness \"{}%\"" :value {DISPLAY_INFO.level})
@@ -179,103 +223,7 @@
           )
         )
 
-        (box
-          :class "acc"
-          :spacing 3
-          (button 
-            :class "button"
-            :onclick {APPS_CONFIG.screeshot_tool}
-            (box
-              :orientation "v"
-              :spacing 5
-              (icon :name "scissors")
-              (label :text "Snip tools")
-            )
-          )
-          (button 
-            :class "button"
-            (box
-              :orientation "v"
-              :spacing 5
-              (icon :name "video")
-              (label :text "Rec")
-            )
-          )
-          (button 
-            :class "button"
-            :onclick "eww open wallpaper-selector --toggle"
-            (box
-              :orientation "v"
-              :spacing 5
-              (icon :name "wallpaper")
-              (label :text "Wallpaper")
-            )
-          )
-        )
-
-        (box
-          :class "media-qs"
-          (overlay
-
-            (box
-              :orientation "v"
-              :space-evenly false
-              :spacing 3
-              :class "album-art-background"
-              :style "background-image: url('${MEDIA_INFO.art}');"
-              :height 120
-              :width 280
-            )
-
-            (box
-              :class "media panel"
-              :orientation "v"
-              :space-evenly false
-              :spacing 10
-
-              (box
-                :spacing 5
-                :space-evenly false
-
-                (box
-                  :class "music-art"
-                  :style "background-image: url('${MEDIA_INFO.art}');"
-                  (box :visible {MEDIA_INFO.art != ""} (icon :name "music-2"))
-                )
-
-                (box
-                  :orientation "v"
-                  (label :limit-width 60 :truncate true :halign "start" :class "title" :text {MEDIA_INFO.title})
-                  (label :limit-width 60 :truncate true :halign "start" :class "artist" :text "${MEDIA_INFO.artist} . ${MEDIA_INFO.album}" )
-                )
-              )
-
-              (centerbox
-                (box
-                  :halign "start"
-                  :valign "end"
-                  :space-evenly false
-
-                  (for bar in {bars}
-                    (progress :height 30 :width 5 :class "bars" :orientation "v" :flipped true :value {bar})
-                  )
-                )
-                (box)
-
-                (box
-                  :halign "end"
-                  :valign "center"
-                  :space-evenly false
-                  :spacing 5
-
-                  (button :onclick "./niv media --previous" :class "mbtn" (icon :name "skip-back"))
-                  (button :onclick "./niv media --play-pause" :class "mbtn primary" (icon :name "play"))
-                  (button :onclick "./niv media --next" :class "mbtn" (icon :name "skip-forward"))
-                )
-              )
-            )
-          )
-        )
+        (main-media-qs-mod)
       )
       (main-network-qs-overlay)
       (main-bluetooth-qs-overlay)
@@ -295,4 +243,3 @@
   :namespace "widget-qs"
   (main-qs)
 )
-
