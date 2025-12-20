@@ -1,0 +1,41 @@
+# Example
+
+apps:
+  terminal: alacritty
+  editor: code
+  system_monitor: alacritty --hold -e btop
+  file_manager: nautilus
+  system_info: alacritty --hold -e neofetch
+  screenshot_tool: flameshot launcher
+
+general:
+  display_name: Ermiyas
+  top_left_icon: distributor-logo-nixos
+  profile_pic: /home/hoppxi/Pictures/Wallpapers/wallhaven-eoejmr.png
+
+wallpapers_path: /home/hoppxi/Pictures/Wallpapers/
+
+# Example extenstion
+launcher-ext:
+  - name: "Wallpapers" # metadata
+    tigger: ":wallpapers" # make sure it does not exist in the built in first then it starts with a colon
+    trigger_short: ":wp" # still make sure it does not extist in the built ins
+    from_folder: "~/Pictures/Wallpapers" # iterate through the folder and generate a default json
+    exclude_type: "webp" # type of file to skip on the iteration
+    on_select: "wigo wallpaper --set {}" # the command to execute on select and {} will be replaced with the filepath found
+    help_text: "Quickly set your desktop background" # help text to show in :help filter; formarted as tigger <term> help_text
+    limit: 20 # the number of results to show; 0 for no limit
+
+  - name: "todo" # metadata
+    tigger: ":todo" # make sure it does not exist in the built in first then it starts with a colon
+    trigger_short: ":to" # still make sure it does not extist in the built ins
+    path: "~/exp/todo" # make sure it is accesible (run chmod +x ~/exp/todo)
+    # the script should retrun a json with these
+    # [{
+    #   "name": "Zed", // what should be seen by the user in the list
+    #   "gui": true, // ignore this should only be true if the command triggers the opening of a gui or tui app
+    #   "type": "app", // you can create yourwon type for categorization
+    #   "source": "/home/hoppxi/.nix-profile/share/applications/dev.zed.Zed.desktop|score:100000", //the source of the thing search or the thing itself with its scroe if neccessary at all.
+    #   "command": "what to do on select",
+    #   "icon": "from icon theme or a filepath"
+    # }] // make sure it array not object

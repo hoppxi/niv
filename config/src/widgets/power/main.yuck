@@ -1,0 +1,91 @@
+(defvar REVEALER_POWER true)
+(defvar POWER_BUTTONS `[
+  {
+    "icon": "lock",
+    "label": "Lock Screen",
+    "cmd": "eww update REVEALER_POWER=false; sleep 1; loginctl lock-session; eww update REVEALER_POWER=true; wigo close power"
+  },
+  {
+    "icon": "pause",
+    "label": "Suspend",
+    "cmd": "eww update REVEALER_POWER=false; sleep 1; systemctl suspend; eww update REVEALER_POWER=true; wigo close power"
+  },
+  {
+    "icon": "logout",
+    "label": "Logout",
+    "cmd": "eww update REVEALER_POWER=false; sleep 1; loginctl terminate-session $XDG_SESSION_ID"
+  },
+  {
+    "icon": "moon_stars",
+    "label": "Hibernate",
+    "cmd": "eww update REVEALER_POWER=false; sleep 1; systemctl hibernate; eww update REVEALER_POWER=true; wigo close power"
+  },
+  {
+    "icon": "refresh",
+    "label": "Restart",
+    "cmd": "eww update REVEALER_POWER=false; sleep 1; systemctl reboot"
+  },
+  {
+    "icon": "power_settings_new",
+    "label": "Shutdown",
+    "cmd": "eww update REVEALER_POWER=false; sleep 1; systemctl poweroff"
+  }
+]`)
+
+
+(defwidget main-power []
+  (box
+    :class "main-power panel"
+		(box
+			:valign "center"
+			:halign "center"    :orientation "v"
+			:space-evenly false
+			:spacing 5
+			(box
+				:orientation "v"
+				:class "info"
+				(label :halign "center" :class "info-title" :text "Power menu")
+				(label :halign "center" :class "info-detail" :text "Click esc to close.")
+			)
+			(revealer
+				:reveal REVEALER_POWER
+				:transition "slideup"
+				:duration "1s"
+				(box
+					:orientation "v"
+					:spacing 3
+					:width 380
+					:class "btn-list"
+					(for BUTTON in POWER_BUTTONS
+						(button
+							:onclick {BUTTON.cmd}
+							:class "button"
+							:timeout "3s"
+							(box
+								:halign "start"
+								:space-evenly false
+								:spacing 5
+								(icon :name {BUTTON.icon})
+								(label :text {BUTTON.label})
+							)
+						)
+					)
+				)
+			)
+		)
+	)
+
+)
+
+(defwindow power
+  :monitor 0
+  :geometry (geometry
+    :width "100%"
+    :height "105%"
+    :anchor "center center"
+  )
+  :stacking "fg"
+  :namespace "widget-power"
+	:focusable "exclusive"
+  (main-power)
+)

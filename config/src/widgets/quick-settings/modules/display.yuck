@@ -1,0 +1,64 @@
+(defwidget main-display []
+  (box
+    :orientation "v"
+		:space-evenly false
+		:vexpand true
+		:hexpand true
+		:spacing 10
+
+
+		(navigator :title "Display" :stack "ACTIVE_STACK_QS")
+
+		(box
+      :space-evenly false
+      :spacing 5
+      :class "slider"
+      :halign "center"
+      (button
+        :onclick ""
+        (icon :name "wb_sunny")
+      )
+      (scale :onchange "wigo display --brightness \"{}%\"" :value {DISPLAY_INFO.level})
+      (label :text "${DISPLAY_INFO.level}%")
+    )
+
+
+		(navigator :title "Nightlight")
+
+
+    (box
+      :space-evenly false
+      :spacing 5
+      :class "slider"
+      :halign "center"
+      (button :class "hover" :onclick "hyprctl hyprsunset temperature 3000" (icon :name "moon_stars"))
+      (scale :width 210 :min 1000 :max 20000 :onchange "hyprctl hyprsunset temperature {}" :value 6000)
+    )
+    (box
+      :space-evenly false
+      :orientation "v"
+      :spacing 5
+			:class "quick-info-container"
+      (label :class "quick-info title" :limit-width 180 :truncate true :halign "start" :text "Overlay level")
+      (label :halign "start" :class "quick-info" :text "Auto")
+      (button :onclick "hyprctl hyprsunset identity" :halign "start" :class "button" (label :text "Disable nightlight"))
+    )
+    (box
+      :space-evenly false
+      :spacing 5
+      :class "slider"
+      :halign "center"
+      (button :class "hover" :onclick "hyprctl hyprsunset gamma 100" (icon :name "light"))
+      (scale :width 210 :min 0 :max 150 :onchange "hyprctl hyprsunset gamma {}" :value 100)
+    )
+    (box
+      :space-evenly false
+      :orientation "v"
+      :spacing 5
+			:class "quick-info-container"
+      (label :class "quick-info title" :limit-width 180 :truncate true :halign "start" :text "Gamma correction")
+      (label :halign "start" :class "quick-info" :text "Auto")
+    )
+
+  )
+)

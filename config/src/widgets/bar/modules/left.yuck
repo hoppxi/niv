@@ -1,0 +1,54 @@
+(defvar SYSTRAY_REVEALER false)
+
+(defwidget left-bar []
+  (box
+    :valign "center"
+    :halign "start"
+    :space-evenly false
+    :spacing 15
+    :class "left-bar"
+
+    (button
+      :class "hover"
+      :onclick "wigo toggle panel"
+      (image :icon "${GENERAL_CONFIG.top_left_icon != '' || GENERAL_CONFIG.top_left_icon != 'null' ? GENERAL_CONFIG.top_left_icon : 'distributor-logo-nixos'}")
+    )
+
+    (icon :size 8 :name "water_drop")
+
+    (eventbox
+      :onscroll "hyprctl dispatch workspace r$( [[ {} == 'up' ]] && echo '+' || echo '-' )1"
+      (box
+        :halign "center"
+        :valign "center"
+        :space-evenly false
+        :spacing 3
+        :class "workspace"
+        (for WORKSPACE in {WORKSPACES}
+
+          (box
+            (button
+              :valign "center"
+              :class {ACTIVE_WORKSPACE.id == WORKSPACE.id ? (WORKSPACE.windows > 0 ? "has-window active wbtn" : "active wbtn") : (WORKSPACE.windows > 0 ? "has-window wbtn" : "wbtn")}
+              :onclick "hyprctl dispatch workspace ${WORKSPACE.id}"
+            )
+          )
+        )
+      )
+    )
+
+    (icon :size 8 :name "water_drop")
+
+    (button
+      :class "hover"
+      :onclick "wigo toggle media"
+      (box
+        :valign "center"
+        :space-evenly false
+        :spacing 5
+        (icon :name "music_note")
+        (label :limit-width 30 :truncate true :width 80 :visible {!MEDIA_INFO.stopped} :text "${MEDIA_INFO.title} . ${MEDIA_INFO.artist}")
+	    )
+	  )
+  )
+)

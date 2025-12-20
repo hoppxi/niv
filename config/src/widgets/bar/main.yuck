@@ -1,0 +1,27 @@
+(include "./src/widgets/bar/modules/left.yuck")
+(include "./src/widgets/bar/modules/right.yuck")
+
+(defwidget main-bar []
+  (centerbox
+    :class "main-bar panel"
+    :valign "center"
+    (left-bar)
+    (label :limit-width 30 :width 80 :truncate true :text {ACTIVE_WINDOW.title})
+    (right-bar)
+  )
+)
+
+(defwindow bar
+  :monitor 0
+  :geometry (geometry
+    :x "0"
+    :y "0"
+    :width "100%"
+    :height "28px"
+    :anchor "top center"
+  )
+  :stacking "fg"
+  :exclusive true
+  :namespace "widget-bar"
+  (main-bar)
+)

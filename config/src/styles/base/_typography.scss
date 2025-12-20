@@ -1,0 +1,21 @@
+@import "../theme";
+
+* {
+  font-family: Inter;
+  font-size: 13px;
+  color: lighten($primary, 30%);
+}
+
+label {
+  &.primary {
+    color: $primary; /* text-white */
+    font-weight: 700; /* font-bold */
+    font-size: 1.1rem;
+  }
+
+  &.secondary {
+    color: rgba($secondary, 0.6);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+}

@@ -1,0 +1,32 @@
+@import "../theme";
+
+window.launcher {
+  background-color: rgba($color: $surface-container, $alpha: 0.7);
+}
+
+.main-launcher {
+  border: none;
+  border-radius: 0;
+  padding: 0;
+
+  .button {
+    margin: 0px 3px;
+  }
+
+  .launcher-input {
+    padding: 5px;
+    font-size: 15px;
+    border-radius: 100px;
+    padding-left: 50px;
+  }
+
+  .launcher-icon {
+    margin-left: 20px;
+  }
+
+  .font-s {
+    color: $outline;
+    font-size: 13px;
+    font-style: italic;
+  }
+}

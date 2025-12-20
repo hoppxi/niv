@@ -1,0 +1,39 @@
+
+(defwidget main-clock []
+  (box
+    :class "main-clock"
+    :valign "center"
+    :orientation "v"
+    :space-evenly false
+    :visible {WIDGETS_CONFIG?.clock}
+    :style "
+    margin-left: ${(5 - (ACTIVE_WORKSPACE.id > 10 ? 10 : ACTIVE_WORKSPACE.id))*60}px;
+		margin-right: ${((ACTIVE_WORKSPACE.id > 10 ? 10 : ACTIVE_WORKSPACE.id) - 5)*60}px;
+		transition: 1s;
+    "
+    :width 1000
+
+    (label
+      :halign "center"
+      :class "time"
+      :text {formattime(EWW_TIME, "%I:%M")}
+    )
+
+    (label
+      :halign "center"
+      :class "date"
+      :text {formattime(EWW_TIME, "%a %b %d, %YG.C.")}
+    )
+  )
+)
+
+(defwindow clock
+  :monitor 0
+  :geometry (geometry
+    :y "50"
+    :anchor "top center"
+  )
+  :stacking "bg"
+  :namespace "widget-clock"
+  (main-clock)
+)

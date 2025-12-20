@@ -1,0 +1,75 @@
+(defvar SEARCH_RESULTS `[]`)
+
+(defwidget main-launcher []
+	(box
+		:class "main-launcher"
+		:orientation "v"
+		:spacing 4
+		:space-evenly false
+		:width 400
+		:halign "center"
+		:valign "center"
+
+		(box
+			:class "launcher"
+			:orientation "v"
+			:spacing 3
+			:space-evenly false
+			(label :class "info font-s" :halign "end" :text "type ':help' for more options")
+			(overlay
+				(input
+					:active true
+					:class "launcher-input"
+					:timeout "10s"
+					:onchange `eww update SEARCH_RESULTS="$(wigo search '{}' | jq -c .)"`
+					:onaccept "${SEARCH_RESULTS[0].command} & wigo close launcher"
+				)
+				(box :class "launcher-icon" :halign "start" (icon :size 16 :name "search"))
+			)
+		)
+		(scroll
+			:height 300
+			(box
+				:class "btn-list"
+				:orientation "v"
+				:spacing 3
+				:space-evenly false
+
+				(for RESULT in SEARCH_RESULTS
+
+					(button :class "button"
+						:onclick "${RESULT.command} & disown & wigo close launcher"
+						(box
+							:space-evenly false
+							:spacing 5
+							(image :icon {RESULT.type == "app" ? RESULT.icon : ""} :visible {RESULT.type == "app" ? true : false})
+							(box
+  							:space-evenly false
+  							:spacing 2
+                :orientation "v"
+                :halign "start"
+							  (label :halign "start" :class "primary" :limit-width 250 :text {RESULT.name})
+							  (label :halign "start" :class "secondary" :limit-width 250 :text {RESULT.comment})
+							)
+						)
+					)
+				)
+			)
+		)
+	)
+)
+
+(defwindow launcher
+  :monitor 0
+  :geometry (geometry
+    :x "0"
+    :y "0"
+    :width "100%"
+		:height "105%"
+    :anchor "center center"
+  )
+  :stacking "fg"
+  :namespace "widget-launcher"
+	:focusable "exclusive"
+  (main-launcher)
+)

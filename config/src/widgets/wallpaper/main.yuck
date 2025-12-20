@@ -1,0 +1,22 @@
+(defwidget main-wallpaper []
+  (image
+    :class "main-wallpaper"
+    :style "background-image: url('${WALLPAPER}')"
+  )
+)
+
+(defwindow wallpaper
+  :focusable false
+  :stacking "bg"
+  :windowtype "normal"
+  :wm-ignore true
+  :geometry (geometry
+    :x 0
+    :y 0
+    :width "100%"
+    :height "96.5%"
+    :anchor "center center"
+  )
+  :monitor 0
+  (main-wallpaper)
+)

@@ -1,0 +1,31 @@
+@import "../theme";
+
+.main-power {
+  border: none;
+  border-radius: 1px;
+  background-color: rgba($color: $surface-container, $alpha: 0.7);
+
+  .info-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+  }
+  .info-detail {
+    font-size: 1rem;
+    font-style: italic;
+  }
+
+  .btn-list {
+    padding: 2px;
+    .button {
+      padding: 8px;
+
+      &:focus {
+        border-radius: 100px;
+        background-color: $secondary-container;
+        * {
+          color: $on-secondary-container;
+        }
+      }
+    }
+  }
+}

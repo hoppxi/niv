@@ -1,0 +1,73 @@
+@import "../theme";
+
+button {
+  border-radius: 100px;
+  * {
+    font-weight: normal;
+  }
+
+  &.button {
+    background: $surface-container;
+    border: 1px solid rgba($color: $outline, $alpha: 0.08);
+    padding: 2px 8px;
+    transition: all 0.3s;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  &.toggle {
+    padding: 10px;
+
+    &:hover {
+      background: $surface-container-high;
+    }
+  }
+
+  &.on-toggle {
+    &.on {
+      background: $primary;
+      * {
+        color: $on-primary;
+      }
+    }
+  }
+}
+
+.hover:hover {
+  opacity: 0.8;
+}
+
+.btn-list {
+  .button {
+    padding: 10px;
+    border-radius: 3px;
+
+    &:hover {
+      background: $surface-container-high;
+    }
+
+    &:first-child {
+      border-radius: 15px 15px 3px 3px;
+    }
+    &:last-child {
+      border-radius: 3px 3px 15px 15px;
+    }
+
+    &:first-child:last-child {
+      border-radius: 15px;
+    }
+  }
+
+  &.h {
+    .button {
+      &:first-child {
+        border-radius: 15px 3px 3px 15px;
+      }
+      &:last-child {
+        border-radius: 3px 15px 15px 3px;
+      }
+    }
+  }
+}

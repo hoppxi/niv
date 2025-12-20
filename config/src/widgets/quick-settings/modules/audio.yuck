@@ -1,0 +1,55 @@
+(defwidget main-audio []
+  (box
+    :orientation "v"
+		:space-evenly false
+		:vexpand true
+		:hexpand true
+		:spacing 10
+
+
+		(navigator :title "Audio" :stack "ACTIVE_STACK_QS")
+
+		(box
+      :space-evenly false
+      :spacing 5
+      :class "slider"
+      :halign "center"
+      (button (icon :name {ICONS_INFO["output-volume"]}))
+      (scale :onchange "wigo audio --output-level {}" :value {AUDIO_INFO.output.level})
+      (label :text "${AUDIO_INFO.output.level}%")
+    )
+
+		(box
+			:halign "start"
+			:orientation "v"
+			:spacing 5
+			:space-evenly false
+			:class "quick-info-container"
+      (label :limit-width 180 :truncate true :halign "start" :class "quick-info title" :text "Primary: ${AUDIO_INFO.output.name}")
+      (label :halign "start" :class "quick-info" :text "Volume ${AUDIO_INFO.output.level}%")
+      (button :onclick "wigo audio --output-toggle-mute" :halign "start" :class "button" (label :text "Mute Speaker"))
+		)
+
+	  (navigator :title "MIC")
+
+
+    (box
+      :space-evenly false
+      :spacing 5
+      :class "slider"
+      :halign "center"
+      (button (icon :name {ICONS_INFO["input-volume"]}))
+      (scale :onchange "wigo audio --input-level {}" :value {AUDIO_INFO.input.level})
+      (label :text "${AUDIO_INFO.input.level}%")
+    )
+    (box
+      :space-evenly false
+      :orientation "v"
+      :spacing 5
+			:class "quick-info-container"
+      (label :class "quick-info title" :limit-width 180 :truncate true :halign "start" :text "Primary: ${AUDIO_INFO.input.name}")
+      (label :halign "start" :class "quick-info" :text "Volume ${AUDIO_INFO.input.level}%")
+      (button :onclick "wigo audio --input-toggle-mute" :halign "start" :class "button" (label :text "Mute mic"))
+    )
+  )
+)

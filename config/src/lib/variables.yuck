@@ -1,0 +1,127 @@
+; Bar
+(defvar WORKSPACES `[
+  { "id": 1, "windows": 0 },
+  { "id": 2, "windows": 0 },
+  { "id": 3, "windows": 0 },
+  { "id": 4, "windows": 0 },
+  { "id": 5, "windows": 0 },
+  { "id": 6, "windows": 0 },
+  { "id": 7, "windows": 0 },
+  { "id": 8, "windows": 0 },
+  { "id": 9, "windows": 0 },
+  { "id": 10, "windows": 0 }
+]`)
+(defvar ACTIVE_WINDOW `{"title": "Desktop", "workspace": 1}`)
+(defvar ACTIVE_WORKSPACE `{"id": 1, "windows": 0}`)
+
+(defvar WALLPAPER `./assets/images/default_wallpaper.png`)
+(defvar WALLPAPERS_PATH `["./assets/images/default_wallpaper.png"]`)
+
+;; Icons
+(defvar ICONS_INFO `{
+  "output-volume": "volume_off",
+  "input-volume": "mic_off",
+  "network": "wifi_off",
+  "bluetooth": "bluetooth_disabled"
+}`)
+
+(defvar AUDIO_INFO `{
+  "output": {
+    "name": "Default Sink",
+    "level": 100,
+    "muted": false
+  },
+  "input": {
+    "name": "Default source",
+    "level": 100,
+    "muted": false
+  }
+}`)
+
+(defvar DISPLAY_INFO `{ "level": 100 }`)
+
+(defvar NETWORK_INFO `{
+    "enabled": true,
+    "connected": false,
+    "current_connection": { "ssid": "Not connected", "speed": "170" },
+    "networks": []
+}`)
+
+(defvar BLUETOOTH_INFO ` {
+    "enabled": true,
+    "connected": false,
+    "current_connection": { "name": "Not connected", "battery": 100 },
+    "devices": []
+},`)
+
+(defvar MISC_INFO `{
+  "name": "uname@hostaneme",
+  "os": "Nixos",
+  "osicon": "nixos",
+  "uptime": "0 hr"
+},`)
+
+(defvar MEDIA_INFO `{
+  "title": "No media playing",
+  "artist": "--",
+  "album": "--",
+  "album_art": "./assets/icons/music-2.svg",
+  "status": "Stopped",
+  "playing": false,
+  "paused": false,
+  "stopped": true,
+  "elapsed_time": "00:00",
+  "total_time": "00:00",
+  "normalized": 0
+}`)
+
+(defvar MEDIA_NORMALIZED_ELAPSED_TIME 0)
+(defvar MEDIA_ELAPSED_TIME "00:00")
+
+;; Verse
+(defvar BATTERY_INFO `{
+  "voltage": "0V",
+  "design_capacity": "0 mAh",
+  "current_capacity": "0 mAh"
+}`)
+(defvar BATTERY_DYNAMIC_INFO `{
+  "level": 0,
+  "status": "Discharging",
+  "time_remaining": "0h",
+  "power_mode": "balanced",
+  "source": "Battery"
+}`)
+
+;; Notification
+(defvar NOTIFICATION "[]")
+(defvar NOTIFICATION_HISTORY "[]")
+
+(defvar APPS_CONFIG `{
+  "terminal": "alacritty",
+  "editor": "code",
+  "system_monitor": "alacritty --hold -e btop",
+  "file_manager": "nautilus",
+  "system_info": "alacritty --hold -e neofetch",
+  "screenshot_tool": "flameshot launcher"
+}`)
+(defvar GENERAL_CONFIG `{
+  "display_name": ""
+}`)
+
+(defvar NOTIFICATION_CONFIG `{"enable": true, "dnd": false}`)
+
+(defvar WIDGETS_CONFIG `{
+  "clock": true,
+  "quick_settings": true,
+  "panel": true,
+  "media_controls": true,
+  "system_tray:" false
+}`)
+
+(defvar OSD_VOLUME false)
+(defvar OSD_DISPLAY false)
+(defvar OSD_BATTERY_FULL false)
+(defvar OSD_BATTERY_LOW_20 false)
+(defvar OSD_BATTERY_LOW_5 false)
+(defvar OSD_CHARGER_PLUGGED false)
+(defvar OSD_CHARGER_UNPLUGGED false)

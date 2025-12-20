@@ -1,0 +1,27 @@
+@import "../theme";
+
+.main-osd {
+  .osd-container {
+    padding: 10px;
+    border-radius: 100px;
+    * {
+      font-size: 1rem;
+    }
+
+    .progress {
+      all: unset;
+      trough {
+        background-color: $surface-bright;
+        border-radius: 15px;
+        min-height: 15px;
+        min-width: 100px;
+
+        progress {
+          min-height: 15px;
+          background-color: $primary;
+          border-radius: 15px;
+        }
+      }
+    }
+  }
+}

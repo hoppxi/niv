@@ -1,0 +1,66 @@
+(defwidget main-media []
+
+  (box
+    :class "main-media"
+    (overlay
+
+      (box
+        :orientation "v"
+        :space-evenly false
+        :spacing 3
+        :class "album-art-background"
+        :style "background-image: url('${MEDIA_INFO.art}');"
+        :height 160
+        :width 340
+      )
+
+      (box
+        :class "media panel"
+        :orientation "v"
+        :space-evenly false
+        :spacing 10
+
+        (box
+          :orientation "v"
+          (label :limit-width 100 :truncate true :halign "start" :class "primary" :text {MEDIA_INFO.title})
+          (label :limit-width 100 :truncate true :halign "start" :class "secondary" :text "${MEDIA_INFO.artist} . ${MEDIA_INFO.album}" )
+        )
+
+        (box
+          :orientation "v"
+          :class "seek"
+          :space-evenly false
+          :spacing 5
+
+          (scale :class "seek-slider" :onchange "wigo media --position {}" :value {MEDIA_NORMALIZED_ELAPSED_TIME})
+          (box
+            (label :halign "start" :class "seek-min" :text {MEDIA_ELAPSED_TIME})
+            (label :halign "end" :class "seek-min" :text {MEDIA_INFO.seek_position_total})
+          )
+        )
+
+        (box
+          :halign "center"
+          :valign "center"
+          :space-evenly false
+          :spacing 5
+
+          (button :valign "center" :width 20 :height 20 :onclick "wigo media --previous" :class "mbtn" (icon :name "skip_previous"))
+          (button :valign "center" :width 20 :height 20 :onclick "wigo media --play-pause" :class "mbtn primary" (icon :size 20 :name {MEDIA_INFO.playing ? "pause" : "play_arrow"}))
+          (button :valign "center" :width 20 :height 20 :onclick "wigo media --next" :class "mbtn" (icon :name "skip_next"))
+        )
+      )
+    )
+  )
+)
+(defwindow media
+  :monitor 0
+  :geometry (geometry
+    :x "330"
+    :y "10"
+    :anchor "top left"
+  )
+  :stacking "fg"
+  :namespace "widget-media"
+  (main-media)
+)

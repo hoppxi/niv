@@ -1,0 +1,7 @@
+(defwidget icon [name ?size]
+  (label :halign "center" :valign "center" :markup "<span font_family='Material Symbols Rounded' font_size='${size != "" ? size : 14}pt'>${name}</span>")
+)
+
+(defwidget icon-filled [name ?size]
+  (label :halign "center" :valign "center" :markup "<span font_family='Material Symbols Filled' font_size='${size != "" ? size : 14}pt'>${name}</span>")
+)

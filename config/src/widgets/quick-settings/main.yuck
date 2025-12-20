@@ -1,0 +1,141 @@
+
+(include "./src/widgets/quick-settings/modules/notifications/main.yuck")
+(include "./src/widgets/quick-settings/modules/network.yuck")
+(include "./src/widgets/quick-settings/modules/bluetooth.yuck")
+(include "./src/widgets/quick-settings/modules/audio.yuck")
+(include "./src/widgets/quick-settings/modules/display.yuck")
+(include "./src/widgets/quick-settings/modules/battery.yuck")
+(include "./src/widgets/quick-settings/modules/calendar.yuck")
+
+(defvar ACTIVE_STACK_QS 0)
+
+(defwidget main-quick-settings []
+  (box
+    :class "main-quick-settings panel"
+    :orientation "v"
+    :space-evenly false
+    :spacing 10
+
+    (centerbox
+      (button
+        :halign "start"
+        :valign "center"
+        :style "padding: 0 5px;"
+        :visible {ACTIVE_STACK_QS!=6}
+        :onclick "eww update ACTIVE_STACK_QS=6"
+        (box
+          :space-evenly false
+          :spacing 3
+          (icon :name "calendar_month")
+          (label :text {formattime(EWW_TIME, "%I:%M %a, %b %d")})
+        )
+      )
+      (box)
+      (box
+        :halign "end"
+        :space-evenly false
+        :spacing 10
+        :class "top-action"
+        (button :class "hover" :halign "end" :onclick "${APPS_CONFIG.editor} ~/.config/ewwigo.yaml" (icon :name "edit"))
+        (button :class "hover" :halign "end" :onclick "wigo open power" (icon :name "power_settings_new"))
+      )
+    )
+
+
+    (stack
+      :selected ACTIVE_STACK_QS
+      :transition {ACTIVE_STACK_QS==0 ? "slideleft" : "slideright"}
+      (box
+        :orientation "v"
+        :space-evenly false
+        :spacing 15
+        :vexpand true
+
+        (box
+          :style "padding: 0px 5px;"
+          :spacing 3
+          :halign "center"
+          :valign "center"
+          :space-evenly false
+
+          (button
+            :onclick "eww update ACTIVE_STACK_QS=1"
+            :class "button qs-btn ${NETWORK_INFO.enabled ? 'active' : ''}"
+            (icon :name {ICONS_INFO.network})
+          )
+          (button
+            :onclick "eww update ACTIVE_STACK_QS=2"
+            :class "button qs-btn ${BLUETOOTH_INFO.enabled ? 'active' : ''}"
+            (icon :name {ICONS_INFO.bluetooth})
+          )
+          (button
+            :class "button qs-btn"
+            (icon :name "visibility_lock")
+          )
+          (button
+            :onclick "eww update ACTIVE_STACK_QS=5"
+            :class "button qs-btn"
+            (icon :name "battery_android_frame_share")
+          )
+        )
+
+        (box
+          :class "sliders"
+          :orientation "v"
+          :spacing 10
+          :space-evenly false
+
+          (box
+            :space-evenly false
+            :spacing 5
+            :class "slider"
+            :halign "center"
+            (button
+              :onclick "wigo audio --output-toggle-mute"
+              (icon :name {ICONS_INFO["output-volume"]})
+            )
+            (scale :onchange "wigo audio --output-level {}" :value {AUDIO_INFO.output.level})
+            (label :text "${AUDIO_INFO.output.level}%")
+            (button :class "hover" :onclick "eww update ACTIVE_STACK_QS=3" (icon :name "chevron_forward"))
+          )
+
+          (box
+            :space-evenly false
+            :spacing 5
+            :class "slider"
+            :halign "center"
+            (button
+              :onclick "wigo audio --input-toggle-mute"
+              (icon :name "wb_sunny")
+            )
+            (scale :onchange "wigo display --brightness \"{}%\"" :value {DISPLAY_INFO.level})
+            (label :text "${DISPLAY_INFO.level}%")
+            (button :class "hover" :onclick "eww update ACTIVE_STACK_QS=4" (icon :name "chevron_forward"))
+          )
+        )
+
+        (main-notification)
+      )
+      (main-network)
+      (main-bluetooth)
+      (main-audio)
+      (main-display)
+      (main-battery)
+      (main-calendar)
+    )
+
+  )
+)
+
+(defwindow quick-settings
+  :monitor 0
+  :geometry (geometry
+    :x "10"
+    :width "300px"
+		:height "100%"
+    :anchor "top right"
+  )
+  :stacking "fg"
+  :namespace "widget-quick-settings"
+  (main-quick-settings)
+)

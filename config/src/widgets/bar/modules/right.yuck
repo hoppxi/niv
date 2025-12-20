@@ -1,0 +1,36 @@
+(defwidget right-bar []
+  (box
+    :space-evenly false
+    :class "right-bar"
+    :halign "end"
+    :valign "center"
+    :spacing 15
+
+    (button
+      :onclick "wigo toggle calendar"
+      :class "q-info"
+      (label :text {formattime(EWW_TIME, "%I:%M %a, %b %d")})
+    )
+
+    (icon :size 8 :name "water_drop")
+
+    (button
+      :onclick "wigo toggle quick-settings"
+      :class "q-info"
+      (box
+        :spacing 5
+        :space-evenly false
+        (icon :name {ICONS_INFO["output-volume"]})
+        (icon :size 12 :name {ICONS_INFO.network})
+        (overlay
+          :halign "center"
+          :valign "center"
+          (progress :class "battery" :width 10 :value {EWW_BATTERY.BAT0.capacity})
+          (label :class "battery-text" :text "${EWW_BATTERY.BAT0.capacity}%")
+        )
+        (icon :name "notifications")
+      )
+    )
+
+  )
+)

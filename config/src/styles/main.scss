@@ -1,0 +1,20 @@
+@use "base/reset";
+@use "base/typography";
+
+@use "theme";
+
+@use "components/button";
+@use "components/panel";
+@use "components/input";
+@use "components/menu";
+@use "components/navigator";
+
+@use "widgets/bar";
+@use "widgets/clock";
+@use "widgets/media";
+@use "widgets/panelw";
+@use "widgets/quick-settings";
+@use "widgets/power";
+@use "widgets/launcher";
+@use "widgets/wallpaper";
+@use "widgets/osd";

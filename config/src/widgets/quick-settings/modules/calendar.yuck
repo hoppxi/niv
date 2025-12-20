@@ -1,0 +1,23 @@
+(defwidget main-calendar []
+  (box
+    :orientation "v"
+		:space-evenly false
+		:vexpand true
+		:hexpand true
+		:spacing 10
+
+		(navigator :title {formattime(EWW_TIME, "%I:%M %a, %b %d")} :stack "ACTIVE_STACK_QS")
+
+		(box
+			:halign "start"
+			:orientation "v"
+			:spacing 5
+			:space-evenly false
+			:class "quick-info-container"
+      (label :halign "start" :class "quick-info title" :text "Nothing is celebrated today")
+      (label :halign "start" :class "quick-info" :text "Have a nice day!")
+		)
+
+    (box :class "panel" (calendar :class "calendar"))
+  )
+)

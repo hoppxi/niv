@@ -1,0 +1,21 @@
+@import "../theme";
+
+.navigator {
+  .stack-title {
+    font-size: 1.3rem;
+  }
+
+  .separator {
+    padding: 1px;
+    margin: 10px;
+    background-color: $surface-container-highest;
+    border-radius: 100px;
+  }
+}
+
+.separator {
+  padding: 1px;
+  margin: 10px;
+  background-color: $surface-container-highest;
+  border-radius: 100px;
+}

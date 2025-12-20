@@ -1,0 +1,97 @@
+@import "../theme";
+
+.main-media {
+  border-radius: 20px;
+  background-color: $background;
+
+  .album-art-background {
+    border-radius: 20px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.5;
+  }
+
+  .media {
+    min-width: 300px;
+    background-color: rgba($color: $background, $alpha: 60%);
+
+    padding: 15px;
+
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    .mbtn {
+      padding: 8px;
+      border-radius: 9999px;
+      transition: all 0.2s ease-in-out;
+      background-color: transparent;
+
+      &:hover {
+        background-color: rgba($primary, 0.2);
+      }
+
+      &.primary {
+        min-width: 100px;
+        padding: 4px;
+        background-color: $primary-container;
+        border-radius: 100px;
+        transition: all 0.3s ease-in-out; /* transition */
+
+        /* shadow-lg */
+        box-shadow:
+          0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+        &:hover {
+          background-color: rgba($primary-container, 0.8);
+        }
+      }
+    }
+
+    .bars {
+      all: unset;
+      * {
+        all: unset;
+      }
+      margin-left: 3px;
+      trough {
+        background-color: transparent;
+        border-radius: 15px;
+        min-height: 30px;
+        min-width: 5px;
+
+        progress {
+          background-color: $primary;
+          border-radius: 15px;
+          min-width: 5px;
+        }
+      }
+    }
+
+    .seek {
+      all: unset;
+      * {
+        all: unset;
+      }
+      margin-top: 5px;
+      .seek-slider {
+        background-color: $surface-bright;
+        border-radius: 15px;
+
+        > contents > trough {
+          highlight {
+            background-color: $primary;
+            padding: 3px;
+            border-radius: 14px;
+          }
+        }
+      }
+
+      .seek-min {
+        font-size: 10px;
+        color: $outline;
+      }
+    }
+  }
+}

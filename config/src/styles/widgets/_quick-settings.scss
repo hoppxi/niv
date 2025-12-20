@@ -1,0 +1,177 @@
+@import "../theme";
+
+.main-quick-settings {
+  padding: 6px;
+  margin-top: 10px;
+  margin-bottom: 40px;
+
+  button.qs-btn {
+    /* padding: 15px; */
+    min-height: 3.5rem;
+    min-width: 3rem;
+    border-radius: 20px;
+    transition: all 0.3s;
+
+    &.active {
+      background: $primary;
+
+      * {
+        color: $on-primary;
+      }
+    }
+  }
+
+  .slider {
+    all: unset;
+    * {
+      all: unset;
+    }
+    trough {
+      background-color: rgba($color: $surface-container-high, $alpha: 0.75);
+      border-radius: 15px;
+      min-height: 15px;
+      min-width: 180px;
+
+      highlight {
+        min-height: 15px;
+        background-color: $primary;
+        border-radius: 15px;
+      }
+    }
+  }
+
+  .quick-container {
+    padding: 10px 5px;
+
+    .quick-bar {
+      padding: 0px 5px;
+    }
+
+    .separator {
+      margin: 4px;
+    }
+  }
+
+  .quick-info-container {
+    padding-left: 5px;
+
+    .quick-info {
+      &.title {
+        font-size: 1.1rem;
+      }
+    }
+  }
+
+  .top-action {
+    padding: 5px 8px;
+  }
+
+  .calendar {
+    all: unset;
+    * {
+      all: unset;
+    }
+
+    * {
+      padding: 5px 0px;
+      color: $primary;
+    }
+
+    :selected {
+      color: $on-background;
+      font-weight: bolder;
+      background-color: $primary-container;
+      border-radius: 8px;
+    }
+
+    .header {
+      color: $on-background;
+      margin: 15px;
+      min-height: 400px;
+    }
+
+    .highlight {
+      color: $on-tertiary-container;
+      font-weight: bold;
+    }
+
+    .button {
+      color: $on-background;
+      padding-top: 10px;
+    }
+
+    :indeterminate {
+      color: $on-background;
+    }
+  }
+}
+
+.main-notification {
+  padding: 6px;
+  border-radius: 15px;
+
+  .toggle {
+    background-color: transparent;
+    border-radius: 15px;
+  }
+
+  .media-noti {
+    border-radius: 1.5rem;
+    background-color: $background;
+
+    .album-art-background {
+      border-radius: 1.5rem;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      opacity: 0.5;
+    }
+
+    .media {
+      background-color: rgba($color: #000000, $alpha: 60%);
+
+      padding: 1.25rem; /* p-5 */
+
+      border-radius: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+
+      .music-art {
+        border-radius: 0.75rem;
+        background-color: rgba(0, 0, 0, 0.2);
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+        min-width: 3rem;
+        min-height: 3rem;
+        background-size: cover;
+        background-position: center;
+      }
+
+      .title {
+        color: $primary; /* text-white */
+        font-weight: 700; /* font-bold */
+      }
+
+      .artist {
+        color: rgba($secondary, 0.6);
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.main-notification-view,
+.main-notification {
+  .noti-event {
+    .x-noti-button {
+      opacity: 0;
+    }
+    &:hover {
+      .x-noti-button {
+        opacity: 1;
+      }
+    }
+  }
+  .noti {
+    border-radius: 15px;
+  }
+}

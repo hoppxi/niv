@@ -1,0 +1,19 @@
+@import "../theme";
+
+menu {
+  background: $background;
+  border: 1px solid rgba($color: $outline, $alpha: 0.08);
+  border-radius: 5px;
+  padding: 6px;
+}
+menuitem {
+  padding: 4px 10px;
+  border-radius: 5px;
+  transition: all 0.3s;
+  border: 1px solid transparent;
+
+  &:hover {
+    opacity: 0.8;
+    border-color: rgba($color: $outline, $alpha: 0.08);
+  }
+}

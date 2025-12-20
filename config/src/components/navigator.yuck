@@ -1,0 +1,22 @@
+(defwidget navigator [title ?stack]
+	(box
+		:valign "center"
+		:orientation "v"
+		:spacing 5
+		:space-evenly false
+		:class "navigator"
+		(centerbox
+		  (button
+				:visible {stack != ""}
+				:valign "center"
+				:halign "start"
+				:class "hover"
+				:onclick "eww update ${stack}=0"
+				(icon :size 24 :name "chevron_backward")
+			)
+      (label :halign "center" :valign "center" :class "stack-title" :text {title})
+      (box)
+    )
+    (box :class "separator")
+	)
+)

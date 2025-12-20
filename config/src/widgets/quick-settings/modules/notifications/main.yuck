@@ -1,0 +1,119 @@
+(include "./src/widgets/quick-settings/modules/notifications/media-noti.yuck")
+(include "./src/widgets/quick-settings/modules/notifications/view.yuck")
+
+(defwidget main-notification []
+  (box
+    :class "main-notification"
+    :orientation "v"
+		:space-evenly false
+		:vexpand true
+		:hexpand true
+		:spacing 5
+
+		(box
+			:valign "start"
+			:orientation "v"
+			:spacing 5
+			:space-evenly false
+			:class "navigator"
+      (label :class "stack-title" :text "Notifications")
+      (box :class "separator")
+		)
+
+		(centerbox
+  		(box)
+      (box)
+      (box
+        :halign "end"
+        :spacing 3
+        :valign  "center"
+        :space-evenly false
+    		(button
+     			:onclick "wigo notification --clear-history"
+     			:halign "end"
+     			:class "button on-toggle"
+          :tooltip "Clear"
+     			(icon :name "clear_all")
+    		)
+        (button
+     			:onclick "wigo notification --dnd-toggle"
+     			:halign "start"
+     			:class "button on-toggle"
+          :tooltip "Don\'t distrub"
+     			(icon :name "do_not_disturb_on")
+     		)
+      )
+    )
+
+		(box
+			:orientation "v"
+			:spacing 10
+			:vexpand true
+			:space-evenly false
+
+      (main-media-noti-mod)
+
+			(scroll
+				:height 300
+				:visible {arraylength(NOTIFICATION_HISTORY) > 0}
+				:valign "start"
+
+				(box
+					:orientation "v"
+					:space-evenly false
+					:spacing 5
+					:class "main-notification-view"
+					(for NOTI in {NOTIFICATION_HISTORY}
+						(eventbox
+							:class "noti-event"
+						(box
+							:space-evenly false
+							:spacing 10
+							:class "panel noti"
+							(image :visible {matches(NOTI.app_icon, "^[A-Za-z0-9]+([_-][A-Za-z0-9]+)*$")} :icon {matches(NOTI.app_icon, "^[A-Za-z0-9]+([_-][A-Za-z0-9]+)*$") ? NOTI.app_icon : NOTI.app_name } :icon-size "dialog")
+							(image :visible {!matches(NOTI.app_icon, "^[A-Za-z0-9]+([_-][A-Za-z0-9]+)*$")} :path {!matches(NOTI.app_icon, "^[A-Za-z0-9]+([_-][A-Za-z0-9]+)*$") ? NOTI.app_icon : "" } :image-width 50 :image-height 50)
+							(box
+								:orientation "v"
+								:space-evenly false
+								(label :halign "start" :class "primary" :text {NOTI.summary})
+								(label :truncate true :halign "start" :markup {NOTI.body})
+								(box
+									:space-evenly false
+									:halign "start"
+									(label :class "secondary" :text {NOTI.app_name})
+									(icon :size 10 :name "stat_0")
+									(label :class "secondary" :text {formattime(NOTI.timestamp, "%I:%M %p")})
+									(box
+										(for ACTION in {NOTI.acions}
+											(button
+												:onclick "wigo notification --action ${ACTION} --id ${NOTI.id}"
+												:class "button"
+												(label :text {ACTION == "default" ? "Close" : ACTION})
+											)
+										)
+									)
+								)
+							)
+							(button
+								:class "button x-noti-button"
+								:onclick "wigo notification --close ${NOTI.id}"
+								(icon :name "close")
+							)
+						)
+					)
+					)
+				)
+			)
+
+			(box
+				:valign "center"
+				:space-evenly false
+				:orientation "v"
+				:visible {arraylength(NOTIFICATION_HISTORY) == 0}
+
+				(icon :size 30 :name "notifications_off")
+				(label :valign "center" :text "No new notification")
+			)
+		)
+  )
+)

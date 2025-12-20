@@ -1,0 +1,74 @@
+(defwidget main-bluetooth []
+  (box
+    :orientation "v"
+		:space-evenly false
+		:vexpand true
+		:hexpand true
+		:spacing 10
+
+
+		(navigator :title "Bluetooth" :stack "ACTIVE_STACK_QS")
+
+		(box
+			:halign "start"
+			:orientation "v"
+			:spacing 5
+			:space-evenly false
+			:class "quick-info-container"
+      (label :halign "start" :class "quick-info title" :text {NETWORK_INFO.current_connection.name})
+      (label :halign "start" :class "quick-info" :text "Connected, ${NETWORK_INFO.current_connection?.battery}%")
+		)
+
+    (box
+      :orientation "v"
+  		:space-evenly false
+  		:vexpand true
+  		:hexpand true
+  		:spacing 5
+      :class "quick-container"
+
+      (centerbox
+        :class "quick-bar"
+        (label :halign "start" :text "Bluetooth Devices")
+        (box)
+        (box
+          :halign "end"
+          :spacing 3
+          :valign "center"
+          :space-evenly false
+          (button :class "button on-toggle" (icon :name {ICONS_INFO.bluetooth}))
+          (button :onclick "wigo bluetooth --scan" :class "button" (icon :name "refresh"))
+        )
+      )
+
+      (box :class "separator")
+
+  		(scroll
+  			:height 360
+  			:valign "start"
+
+  			(box
+          :orientation "v"
+          :class "btn-list"
+          :spacing 2
+          :space-evenly false
+
+          (for BLUETOOTHS in {BLUETOOTH_INFO.devices}
+
+            (button
+              :class "button"
+              (box
+                :space-evenly false
+                :halign "start"
+                :spacing 5
+                (icon :name "bluetooth")
+                (label :text {BLUETOOTHS.name})
+                (label :class "secondary" :text "battery: ${BLUETOOTHS.battery}%")
+              )
+            )
+          )
+        )
+  		)
+    )
+  )
+)

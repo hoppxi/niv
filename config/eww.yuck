@@ -1,0 +1,28 @@
+
+(include "./src/components/icons.yuck")
+(include "./src/components/navigator.yuck")
+
+(include "./src/widgets/bar/main.yuck")
+(include "./src/widgets/clock/main.yuck")
+(include "./src/widgets/media/main.yuck")
+(include "./src/widgets/panel/main.yuck")
+(include "./src/widgets/quick-settings/main.yuck")
+(include "./src/widgets/power/main.yuck")
+(include "./src/widgets/launcher/main.yuck")
+(include "./src/widgets/wallpaper/main.yuck")
+(include "./src/widgets/osd/main.yuck")
+
+(include "./src/lib/variables.yuck")
+
+
+(defwindow closer
+  :monitor 0
+  :geometry (geometry
+    :width "100%"
+		:height "96%"
+    :anchor "bottom center"
+  )
+  :stacking "fg"
+  :namespace "widget-closer"
+  (eventbox :onclick "wigo close all")
+)

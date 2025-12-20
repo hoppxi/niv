@@ -1,0 +1,48 @@
+
+(defwidget main-notification-view []
+	(box
+		:orientation "v"
+		:space-evenly false
+		:spacing 10
+		:class "main-notification-view"
+
+		(for NOTI in {NOTIFICATION}
+			(button
+				:onclick "wigo notification --action default --id ${NOTI.id} && wigo notification --close ${NOTI.id} --view-only"
+				(box
+					:space-evenly false
+					:spacing 5
+					:class "noti panel"
+					(image :visible {matches(NOTI.app_icon, "^[A-Za-z0-9]+([_-][A-Za-z0-9]+)*$")} :icon {matches(NOTI.app_icon, "^[A-Za-z0-9]+([_-][A-Za-z0-9]+)*$") ? NOTI.app_icon : NOTI.app_name } :icon-size "dialog")
+					(image :visible {!matches(NOTI.app_icon, "^[A-Za-z0-9]+([_-][A-Za-z0-9]+)*$")} :path {!matches(NOTI.app_icon, "^[A-Za-z0-9]+([_-][A-Za-z0-9]+)*$") ? NOTI.app_icon : "" } :image-width 50 :image-height 50)
+					(box
+						:orientation "v"
+						:space-evenly false
+						(label :halign "start" :class "primary" :text {NOTI.summary})
+						(label :truncate true :halign "start" :markup {NOTI.body})
+						(box
+							:space-evenly false
+							:halign "start"
+							(label :class "secondary" :text {NOTI.app_name})
+							(icon :name "stat_0")
+							(label :class "secondary" :text {formattime(NOTI.timestamp, "%I:%M %p")})
+						)
+					)
+				)
+			)
+		)
+	)
+)
+
+(defwindow notification-view
+  :monitor 0
+  :geometry (geometry
+    :x "10"
+		:y "10"
+    :width "290px"
+    :anchor "top right"
+  )
+  :stacking "fg"
+  :namespace "widget-notification-view"
+  (main-notification-view)
+)

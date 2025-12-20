@@ -1,0 +1,42 @@
+(defwidget main-media-noti-mod []
+
+  (box
+    :class "media-noti"
+    :visible {!MEDIA_INFO.stopped}
+    (overlay
+
+      (box
+        :orientation "v"
+        :space-evenly false
+        :spacing 3
+        :class "album-art-background"
+        :style "background-image: url('${MEDIA_INFO.art}');"
+        :height 70
+      )
+
+      (box
+        :class "media panel"
+        :orientation "v"
+        :space-evenly false
+        :spacing 10
+
+        (box
+          :spacing 5
+          :space-evenly false
+
+          (box
+            :class "music-art"
+            :style "background-image: url('${MEDIA_INFO.art}');"
+            (box :visible {MEDIA_INFO.art != ""} (icon :name "music_note"))
+          )
+
+          (box
+            :orientation "v"
+            (label :limit-width 60 :truncate true :halign "start" :class "title" :text {MEDIA_INFO.title})
+            (label :limit-width 60 :truncate true :halign "start" :class "artist" :text "${MEDIA_INFO.artist} . ${MEDIA_INFO.album}" )
+          )
+        )
+      )
+    )
+  )
+)

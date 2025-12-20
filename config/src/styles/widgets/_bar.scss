@@ -1,0 +1,72 @@
+@import "../theme";
+
+.main-bar {
+  border-radius: 0px;
+  padding: 3px 10px;
+  border: none;
+
+  .workspace {
+    .wbtn {
+      all: unset;
+      padding: 8px;
+      transition: all 0.3s;
+      border-radius: 100px;
+      font-weight: 800;
+      opacity: 0.7;
+      color: $primary;
+      border: 1px solid rgba($color: $outline, $alpha: 0.4);
+
+      &:hover {
+        border: 1px solid rgba($color: $outline, $alpha: 0.7);
+      }
+
+      &.has-window {
+        background-color: lighten($primary, 5%);
+      }
+
+      &.active {
+        min-width: 1.3rem;
+        background-color: lighten($primary, 5%);
+        font-weight: 900;
+
+        &:hover {
+          background-color: rgba($color: lighten($primary, 5%), $alpha: 0.8);
+        }
+
+        &.has-window {
+          background-color: $primary;
+
+          &:hover {
+            background-color: rgba($color: $primary, $alpha: 0.8);
+          }
+        }
+      }
+    }
+  }
+
+  .q-info {
+    transition: 0.3s;
+    padding: 0 6px;
+  }
+
+  .battery {
+    all: unset;
+    trough {
+      background-color: $surface-bright;
+      border-radius: 15px;
+      min-height: 15px;
+      min-width: 35px;
+
+      progress {
+        min-height: 15px;
+        background-color: $inverse-primary;
+        border-radius: 15px;
+      }
+    }
+  }
+
+  .battery-text {
+    font-weight: 700;
+    color: $primary;
+  }
+}
