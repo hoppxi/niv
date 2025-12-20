@@ -31,7 +31,7 @@
           version = "0.1.0";
           src = ./.;
 
-          vendorHash = pkgs.lib.fakeHash;
+          vendorHash = "sha256-W1liTEluyPaW6K3JGIf3MSUmPn3BWumzAW1uQfBcVMQ=";
 
           subPackages = [ "cmd/wigo" ];
 
