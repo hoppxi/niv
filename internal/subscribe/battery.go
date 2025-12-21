@@ -56,24 +56,20 @@ func BatteryEvents() BatteryEventsT {
 
 			msg := string(buf[:n])
 
-			// 1. Filter for Power Supply Subsystem
 			if !strings.Contains(msg, "SUBSYSTEM=power_supply") {
 				continue
 			}
 
-			// 2. Trigger the General Dynamic Change Event
-			// This covers status, capacity, and online/offline changes
 			if strings.Contains(msg, "ACTION=change") {
 				nonBlock(dynamic)
 			}
 
-			// 3. Logic for Specific Thresholds (Battery Capacity)
 			if cap := extract(msg, "POWER_SUPPLY_CAPACITY="); cap != "" {
 				if p, err := strconv.Atoi(cap); err == nil {
 					switch {
 					case p <= 5:
 						nonBlock(low5)
-					case p <= 20:
+					case p == 20:
 						nonBlock(low20)
 					case p == 100:
 						nonBlock(full)
@@ -81,11 +77,11 @@ func BatteryEvents() BatteryEventsT {
 				}
 			}
 
-			// 4. Logic for Charger State
 			if online := extract(msg, "POWER_SUPPLY_ONLINE="); online != "" {
-				if online == "1" {
+				switch online {
+				case "1":
 					nonBlock(plugged)
-				} else if online == "0" {
+				case "0":
 					nonBlock(unplugged)
 				}
 			}
@@ -104,9 +100,10 @@ func BatteryEvents() BatteryEventsT {
 
 func extract(msg, key string) string {
 	// Uevents are null-terminated strings
-	for _, part := range strings.Split(msg, "\x00") {
-		if strings.HasPrefix(part, key) {
-			return strings.TrimPrefix(part, key)
+	strings.SplitSeq(msg, "\x00")
+	for part := range strings.SplitSeq(msg, "\x00") {
+		if mg, suc := strings.CutPrefix(part, key); suc {
+			return mg
 		}
 	}
 	return ""

@@ -10,14 +10,14 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hoppxi/wigo/internal/utils"
 	"github.com/ncruces/zenity"
 	"github.com/spf13/viper"
 )
 
 const (
-	WALLPAPERS_PATH_TMP = "/tmp/wigo/wallpapers_path"
-	WALLPAPER_TMP       = "/tmp/wigo/wallpaper"
-	WALLPAPER           = "WALLPAPER"
+	WALLPAPER_TMP = "/tmp/wigo/wallpaper"
+	WALLPAPER     = "WALLPAPER"
 )
 
 func isImageFile(path string) bool {
@@ -37,7 +37,16 @@ func SetWallpaperStartup() {
 
 	wp := strings.TrimSpace(string(data))
 
-	if wp != "" {
+	cropped, err := utils.ObjectFitCover(wp, 1366, 738, "/tmp/wigo", "wallpaper_cropped")
+	if err != nil {
+		fmt.Println(err)
+	}
+	rounded, err := utils.ApplyBorderRadius(cropped, 20, 20, 0, 0, "/tmp/wigo", "wallpaper_rounded")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	if rounded != "" {
 		if err := exec.Command("eww", "update", fmt.Sprintf("%s=%s", WALLPAPER, wp)).Run(); err != nil {
 			log.Printf("Failed to apply wallpaper: %v", err)
 		}
@@ -53,13 +62,22 @@ func SetWallpaper(wallpaperPath string) error {
 		return fmt.Errorf("validation failed: could not check file status for %s: %w", wallpaperPath, err)
 	}
 
-	ewwCommand := fmt.Sprintf("%s=%s", WALLPAPER, wallpaperPath)
+	cropped, err := utils.ObjectFitCover(wallpaperPath, 1366, 738, "/tmp/wigo", "wallpaper_cropped")
+	if err != nil {
+		return err
+	}
+	rounded, err := utils.ApplyBorderRadius(cropped, 20, 20, 0, 0, "/tmp/wigo", "wallpaper_rounded")
+	if err != nil {
+		return err
+	}
+
+	ewwCommand := fmt.Sprintf("%s=%s", WALLPAPER, rounded)
 
 	cmd := exec.Command("eww", "update", ewwCommand)
 	if err := cmd.Run(); err != nil {
 		return fmt.Errorf("failed to run 'eww update %s': %w", ewwCommand, err)
 	}
-	log.Printf("Successfully updated Eww variable %s.", WALLPAPER)
+	log.Printf("Successfully updated Eww variable %s.", rounded)
 
 	data := []byte(wallpaperPath)
 
@@ -124,11 +142,10 @@ func SelectAndSetWallpaper() error {
 	file, err := zenity.SelectFile(
 		zenity.Title("Select Wallpaper"),
 		zenity.FileFilters{
-			{Name: "Images", Patterns: []string{"png", "jpg", "jpeg", "webp"}},
+			{Name: "Images", Patterns: []string{"png", "jpg", "jpeg"}},
 		},
 	)
 
-	log.Print(file)
 	if err != nil {
 		return err
 	}
