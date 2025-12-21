@@ -13,23 +13,6 @@ It currently uses eee as its frontend, with plans to migrate to a pure **gotk4-l
 
 ## Installation
 
-```sh
-git clone git@github.com:hoppxi/wigo.git
-cd wigo
-
-chmod +x ./scripts/build.sh
-./scripts/build.sh
-
-# run the setup
-wigo setup
-
-# run wigo
-wigo start &! # run the widgets
-wigo notification &! # run the notification daemon; make sure there is no other daemon is running.
-
-wigo help # for furthur exploration.
-```
-
 ### NixOS
 
 ```sh
