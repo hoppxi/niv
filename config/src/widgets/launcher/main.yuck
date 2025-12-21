@@ -34,6 +34,7 @@
 				:orientation "v"
 				:spacing 3
 				:space-evenly false
+				:visible {SEARCH_RESULTS != "null"}
 
 				(for RESULT in SEARCH_RESULTS
 
@@ -49,7 +50,7 @@
                 :orientation "v"
                 :halign "start"
 							  (label :halign "start" :class "primary" :limit-width 250 :text {RESULT.name})
-							  (label :halign "start" :class "secondary" :limit-width 250 :text {RESULT.comment})
+							  (label :visible {RESULT.comment != "null"} :halign "start" :class "secondary" :limit-width 250 :text {RESULT.comment})
 							)
 						)
 					)
