@@ -6,6 +6,7 @@
 (include "./src/widgets/quick-settings/modules/display.yuck")
 (include "./src/widgets/quick-settings/modules/battery.yuck")
 (include "./src/widgets/quick-settings/modules/calendar.yuck")
+(include "./src/widgets/quick-settings/modules/about.yuck")
 
 (defvar ACTIVE_STACK_QS 0)
 
@@ -17,27 +18,42 @@
     :spacing 10
 
     (centerbox
-      (button
+      :class "top-nav"
+      (box
+        :space-evenly false
+        :spacing 5
         :halign "start"
-        :valign "center"
-        :style "padding: 0 5px;"
-        :visible {ACTIVE_STACK_QS!=6}
-        :onclick "eww update ACTIVE_STACK_QS=6"
+
         (box
-          :space-evenly false
-          :spacing 3
-          (icon :name "calendar_month")
-          (label :text {formattime(EWW_TIME, "%I:%M %a, %b %d")})
+          :class "profile-pic"
+          :width 40
+          :height 40
+          :halign "center"
+          :valign "center"
+          (image :class "profile-pic-container" :path {GENERAL_CONFIG?.profile_pic} :image-width 40 :image-height 40)
+          (box
+            :halign "center"
+            :valign "center"
+            :visible {GENERAL_CONFIG.profile_pic == "null" || GENERAL_CONFIG.profile_pic == ""}
+            (icon :name "account_circle")
+          )
+        )
+
+        (box
+          :orientation "v"
+          (label :halign "start" :class "primary" :text {GENERAL_CONFIG.display_name != "" ? GENERAL_CONFIG.display_name : MISC_INFO.name})
+          (label :halign "start" :class "secondary" :text {MISC_INFO.uptime})
         )
       )
       (box)
       (box
         :halign "end"
-        :space-evenly false
-        :spacing 10
-        :class "top-action"
-        (button :class "hover" :halign "end" :onclick "${APPS_CONFIG.editor} ~/.config/ewwigo.yaml" (icon :name "edit"))
-        (button :class "hover" :halign "end" :onclick "wigo open power" (icon :name "power_settings_new"))
+        :valign "end"
+        :class "btn-list h"
+        :spacing 2
+        (button :valign "end" :class "button" :onclick "eww update ACTIVE_STACK_QS=7" (icon :name "info"))
+        (button :valign "end" :class "button" :onclick "wigo reload &" (icon :name "replay"))
+        (button :valign "end" :class "button" :onclick "wigo toggle power" (icon :name "power_settings_new"))
       )
     )
 
@@ -122,6 +138,7 @@
       (main-display)
       (main-battery)
       (main-calendar)
+      (main-about)
     )
 
   )

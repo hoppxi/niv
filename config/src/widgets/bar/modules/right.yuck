@@ -7,7 +7,7 @@
     :spacing 15
 
     (button
-      :onclick "wigo toggle calendar"
+      :onclick "eww update ACTIVE_STACK_QS=6 & wigo open quick-settings "
       :class "q-info"
       (label :text {formattime(EWW_TIME, "%I:%M %a, %b %d")})
     )

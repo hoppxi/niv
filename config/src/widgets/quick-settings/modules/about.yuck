@@ -1,0 +1,129 @@
+(defwidget main-about []
+  (box
+    :orientation "v"
+		:space-evenly false
+		:vexpand true
+		:hexpand true
+		:spacing 10
+
+		(navigator :title "Profile" :stack "ACTIVE_STACK_QS")
+
+		(box
+			:halign "start"
+			:orientation "v"
+			:spacing 5
+			:space-evenly false
+			:class "quick-info-container"
+      (label :halign "start" :class "quick-info title" :text {MISC_INFO.name})
+      (label :halign "start" :class "quick-info" :text {MISC_INFO.os})
+		)
+
+    (box
+      :orientation "v"
+      :class "btn-list"
+      :spacing 2
+      :space-evenly false
+
+      (button
+        :class "button"
+        :onclick "wigo wallpaper --select"
+        (box
+          :space-evenly false
+          :halign "start"
+          :spacing 5
+          (icon :name "attach_file_add")
+          (label :text "Select Wallpaper")
+        )
+      )
+      (button
+        :class "button"
+        :onclick "wigo wallpaper --random"
+        (box
+          :space-evenly false
+          :halign "start"
+          :spacing 5
+          (icon :name "draw_abstract")
+          (label :text "Random Wallpaper")
+        )
+      )
+      (button
+        :class "button"
+        :style "background: #daaf37;"
+        (box
+          :space-evenly false
+          :spacing 5
+          :halign "start"
+          (icon :name "format_color_fill")
+          (label :text "Accent")
+        )
+      )
+    )
+
+    (box
+      :orientation "v"
+      :class "btn-list"
+      :spacing 2
+      :space-evenly false
+
+      (button
+        :class "button"
+        :onclick "${APPS_CONFIG.screenshot_tool} &"
+        (box
+          :space-evenly false
+          :halign "start"
+          :spacing 5
+          (icon :name "screenshot_frame_2")
+          (label :text "Screenshot tool")
+        )
+      )
+
+      (button
+        :class "button"
+        :onclick "${APPS_CONFIG.editor} &"
+        (box
+          :space-evenly false
+          :halign "start"
+          :spacing 5
+          (icon :name "code")
+          (label :text "Code Editor")
+        )
+      )
+
+      (button
+        :class "button"
+        :onclick "${APPS_CONFIG.browser} &"
+        (box
+          :space-evenly false
+          :halign "start"
+          :spacing 5
+          (icon :name "captive_portal")
+          (label :text "Browser")
+        )
+      )
+
+      (button
+        :class "button"
+        :onclick "${APPS_CONFIG.system_monitor} &"
+        (box
+          :space-evenly false
+          :halign "start"
+          :spacing 5
+          (icon :name "monitor_heart")
+          (label :text "System monitor")
+        )
+      )
+
+      (button
+        :class "button"
+        :onclick "${APPS_CONFIG.system_info} &"
+        (box
+          :space-evenly false
+          :halign "start"
+          :spacing 5
+          (icon :name "info")
+          (label :text "About This PC")
+        )
+      )
+    )
+  )
+)

@@ -10,7 +10,7 @@
 
     (button
       :class "hover"
-      :onclick "wigo toggle panel"
+      :onclick "wigo toggle launcher"
       (image :icon "${GENERAL_CONFIG.top_left_icon != '' || GENERAL_CONFIG.top_left_icon != 'null' ? GENERAL_CONFIG.top_left_icon : 'distributor-logo-nixos'}")
     )
 

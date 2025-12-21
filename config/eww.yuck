@@ -5,7 +5,6 @@
 (include "./src/widgets/bar/main.yuck")
 (include "./src/widgets/clock/main.yuck")
 (include "./src/widgets/media/main.yuck")
-(include "./src/widgets/panel/main.yuck")
 (include "./src/widgets/quick-settings/main.yuck")
 (include "./src/widgets/power/main.yuck")
 (include "./src/widgets/launcher/main.yuck")
