@@ -1,5 +1,5 @@
 {
-  description = "Wigo: eww and go widget panel and wallpaper bar for Wayland";
+  description = "Wigo – eww widget panel and wallpaper bar for Wayland";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -12,7 +12,10 @@
       nixpkgs,
       flake-utils,
     }:
-    flake-utils.lib.eachDefaultSystem (
+    {
+      homeModules.wigo = import ./nix/wigo.nix;
+    }
+    // flake-utils.lib.eachDefaultSystem (
       system:
       let
         pkgs = import nixpkgs { inherit system; };
@@ -28,34 +31,18 @@
       {
         packages.default = pkgs.buildGoModule {
           pname = "wigo";
-          version = "0.1.0";
+          version = "0.1.1";
           src = ./.;
 
-          vendorHash = "sha256-W1liTEluyPaW6K3JGIf3MSUmPn3BWumzAW1uQfBcVMQ=";
+          vendorHash = "sha256-pkSrmi7XyNBfXBoQ9T/DGoTprnSml8hwr0T+yf03f2E=";
 
           subPackages = [ "cmd/wigo" ];
 
           nativeBuildInputs = [ pkgs.makeWrapper ];
-
+          buildFlagsArray = [ "-mod=mod" ];
           postInstall = ''
             wrapProgram $out/bin/wigo \
               --prefix PATH : ${pkgs.lib.makeBinPath runtimeDeps}
-          '';
-        };
-
-        devShells.default = pkgs.mkShell {
-          buildInputs =
-            with pkgs;
-            [
-              go
-            ]
-            ++ runtimeDeps;
-
-          shellHook = ''
-            echo "--- Wigo Development Environment ---"
-            go build -o wigo ./cmd/wigo
-            export PATH="$PWD:$PATH"
-            echo "Ready! 'wigo' binary has been built and added to your temporary PATH."
           '';
         };
       }

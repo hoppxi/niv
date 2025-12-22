@@ -28,9 +28,50 @@ To add Wigo as an input:
 inputs.wigo.url = "github:hoppxi/wigo";
 
 # Then in your configuration:
-home.packages = [
-  inputs.wigo.packages.${pkgs.system}.default
-];
+{
+  imports = [
+    inputs.wigo.homeModules.wigo
+  ];
+
+  programs.wigo = {
+    enable = true;
+    notification = true;
+
+    settings = {
+      apps = {
+        terminal = "alacritty";
+        editor = "code";
+        system_monitor = "alacritty --hold -e btop";
+        file_manager = "nautilus";
+        system_info = "alacritty --hold -e neofetch";
+        screenshot_tool = "flameshot launcher";
+      };
+
+      general = {
+        display_name = "Ermiyas";
+        top_left_icon = "distributor-logo-nixos";
+        profile_pic = "";
+      };
+
+      wallpapers_path = "/home/hoppxi/Pictures/Wallpapers";
+      
+      # example
+      launcher-ext = [
+        {
+          name = "Wallpapers";
+          trigger = ":wallpapers";
+          trigger_short = ":wp";
+          from_folder = "~/Pictures/Wallpapers";
+          exclude_type = "webp";
+          on_select = "wigo wallpaper --set {}";
+          help_text = "Quickly set your desktop background";
+          limit = 20;
+        }
+      ];
+    };
+  };
+}
+
 ```
 
 
