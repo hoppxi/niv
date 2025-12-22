@@ -36,8 +36,13 @@ func SetWallpaperStartup() {
 	}
 
 	wp := strings.TrimSpace(string(data))
+	w, h, err := utils.GetCurrentMonitorDimensions()
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
 
-	cropped, err := utils.ObjectFitCover(wp, 1366, 738, "/tmp/wigo", "wallpaper_cropped")
+	cropped, err := utils.ObjectFitCover(wp, w, h-30, "/tmp/wigo", "wallpaper_cropped")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -47,7 +52,7 @@ func SetWallpaperStartup() {
 	}
 
 	if rounded != "" {
-		if err := exec.Command("eww", "update", fmt.Sprintf("%s=%s", WALLPAPER, wp)).Run(); err != nil {
+		if err := exec.Command("eww", "update", fmt.Sprintf("%s=%s", WALLPAPER, rounded)).Run(); err != nil {
 			log.Printf("Failed to apply wallpaper: %v", err)
 		}
 	}
@@ -62,7 +67,12 @@ func SetWallpaper(wallpaperPath string) error {
 		return fmt.Errorf("validation failed: could not check file status for %s: %w", wallpaperPath, err)
 	}
 
-	cropped, err := utils.ObjectFitCover(wallpaperPath, 1366, 738, "/tmp/wigo", "wallpaper_cropped")
+	w, h, err := utils.GetCurrentMonitorDimensions()
+	if err != nil {
+		return err
+	}
+
+	cropped, err := utils.ObjectFitCover(wallpaperPath, w, h-30, "/tmp/wigo", "wallpaper_cropped")
 	if err != nil {
 		return err
 	}

@@ -1,12 +1,15 @@
 package utils
 
 import (
+	"encoding/json"
 	"fmt"
 	"image"
 	"image/color"
 	"image/jpeg"
 	"image/png"
+	"io"
 	"math"
+	"net"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -15,6 +18,51 @@ import (
 
 	"golang.org/x/image/draw"
 )
+
+func HyprctlSocket() string {
+	return filepath.Join(os.Getenv("XDG_RUNTIME_DIR"), "hypr", os.Getenv("HYPRLAND_INSTANCE_SIGNATURE"), ".socket.sock")
+}
+
+func HyprQuery(cmd string) ([]byte, error) {
+	conn, err := net.Dial("unix", HyprctlSocket())
+	if err != nil {
+		return nil, err
+	}
+	defer conn.Close()
+
+	_, err = conn.Write([]byte(cmd))
+	if err != nil {
+		return nil, err
+	}
+
+	return io.ReadAll(conn)
+}
+
+type Monitor struct {
+	Width   int  `json:"width"`
+	Height  int  `json:"height"`
+	Focused bool `json:"focused"`
+}
+
+func GetCurrentMonitorDimensions() (int, int, error) {
+	data, err := HyprQuery("j/monitors")
+	if err != nil {
+		return 0, 0, err
+	}
+
+	var monitors []Monitor
+	if err := json.Unmarshal(data, &monitors); err != nil {
+		return 0, 0, err
+	}
+
+	for _, m := range monitors {
+		if m.Focused {
+			return m.Width, m.Height, nil
+		}
+	}
+
+	return 0, 0, fmt.Errorf("no focused monitor found")
+}
 
 func GetScreenSize() (width, height int, err error) {
 	out, err := exec.Command("xdpyinfo").Output()
