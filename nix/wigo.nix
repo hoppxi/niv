@@ -126,12 +126,10 @@ in
 
       Service = {
         Type = "simple";
-        ExecStart =
-          if cfg.notification then
-            "${pkgs.bash}/bin/bash -c '${cfg.package}/bin/wigo & sleep 1 && ${cfg.package}/bin/wigo notification'"
-          else
-            "${cfg.package}/bin/wigo";
+        ExecStart = "${cfg.package}/bin/wigo start";
+        ExecStartPost = if cfg.notification then "${cfg.package}/bin/wigo notification" else null;
         Restart = "on-failure";
+        RestartSec = 2;
       };
 
       Install = {
