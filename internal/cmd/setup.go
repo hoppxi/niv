@@ -30,6 +30,14 @@ type Config struct {
 	WallpaperPath string `yaml:"wallpapers_path"`
 }
 
+var initMode bool
+
+func init() {
+	setupCmd.Flags().BoolVar(&initMode, "init", false, "Run without prompts or confirmations")
+	generateConfigCmd.Flags().BoolVar(&initMode, "init", false, "Run without prompts or confirmations")
+	updateCmd.Flags().BoolVar(&initMode, "init", false, "Run without prompts or confirmations")
+}
+
 func getWigoDir() string {
 	configDir, _ := os.UserConfigDir()
 	return filepath.Join(configDir, "eww")
@@ -44,8 +52,10 @@ var setupCmd = &cobra.Command{
 
 		if _, err := os.Stat(wigoDir); !os.IsNotExist(err) {
 			fmt.Printf("Warning: Wigo config already exists at %s\n", wigoDir)
-			if !confirm(reader, "Continuing will overwrite your current configs Proceed?") {
-				return
+			if !initMode {
+				if !confirm(reader, "Continuing will overwrite your current configs Proceed?") {
+					return
+				}
 			}
 		}
 
@@ -67,8 +77,10 @@ var generateConfigCmd = &cobra.Command{
 
 		yamlPath := filepath.Join(wigoDir, "wigo.yaml")
 		if _, err := os.Stat(yamlPath); !os.IsNotExist(err) {
-			if !confirm(reader, "wigo.yaml already exists. Overwrite with new settings?") {
-				return
+			if !initMode {
+				if !confirm(reader, "wigo.yaml already exists. Overwrite with new settings?") {
+					return
+				}
 			}
 		}
 
@@ -86,8 +98,10 @@ var updateCmd = &cobra.Command{
 		wigoDir := getWigoDir()
 
 		fmt.Println("This will overwrite your src, assets, and scss files with the latest versions.")
-		if !confirm(reader, "Are you sure you want to update assets?") {
-			return
+		if !initMode {
+			if !confirm(reader, "Are you sure you want to update assets?") {
+				return
+			}
 		}
 
 		err := extractEmbed(wigoDir)
@@ -100,19 +114,36 @@ var updateCmd = &cobra.Command{
 }
 
 func generateWigoYaml(reader *bufio.Reader, targetDir string) {
+
 	conf := Config{}
-	conf.Apps.Terminal = prompt(reader, "Terminal Emulator", "alacritty")
-	conf.Apps.Editor = prompt(reader, "Text Editor", "code")
-	conf.Apps.SystemMonitor = prompt(reader, "System Monitor", "alacritty --hold -e btop")
-	conf.Apps.FileManager = prompt(reader, "File Manager", "nautilus")
-	conf.Apps.SystemInfo = prompt(reader, "System Info Tool", "alacritty --hold -e neofetch")
-	conf.Apps.Screenshot = prompt(reader, "Screenshot Tool", "flameshot launcher")
 
-	conf.General.DisplayName = prompt(reader, "Your Display Name", "User")
-	conf.General.Icon = prompt(reader, "Top Left Icon", "distributor-logo-nixos")
-	conf.General.ProfilePic = prompt(reader, "Profile Picture Path", "")
+	if initMode {
+		conf.Apps.Terminal = "alacritty"
+		conf.Apps.Editor = "code"
+		conf.Apps.SystemMonitor = "alacritty --hold -e btop"
+		conf.Apps.FileManager = "nautilus"
+		conf.Apps.SystemInfo = "alacritty --hold -e neofetch"
+		conf.Apps.Screenshot = "flameshot launcher"
 
-	conf.WallpaperPath = prompt(reader, "Wallpapers Directory", filepath.Join(os.Getenv("HOME"), "Pictures/Wallpapers"))
+		conf.General.DisplayName = "User"
+		conf.General.Icon = "distributor-logo-nixos"
+		conf.General.ProfilePic = ""
+
+		conf.WallpaperPath = filepath.Join(os.Getenv("HOME"), "Pictures/Wallpapers")
+	} else {
+		conf.Apps.Terminal = prompt(reader, "Terminal Emulator", "alacritty")
+		conf.Apps.Editor = prompt(reader, "Text Editor", "code")
+		conf.Apps.SystemMonitor = prompt(reader, "System Monitor", "alacritty --hold -e btop")
+		conf.Apps.FileManager = prompt(reader, "File Manager", "nautilus")
+		conf.Apps.SystemInfo = prompt(reader, "System Info Tool", "alacritty --hold -e neofetch")
+		conf.Apps.Screenshot = prompt(reader, "Screenshot Tool", "flameshot launcher")
+
+		conf.General.DisplayName = prompt(reader, "Your Display Name", "User")
+		conf.General.Icon = prompt(reader, "Top Left Icon", "distributor-logo-nixos")
+		conf.General.ProfilePic = prompt(reader, "Profile Picture Path", "")
+
+		conf.WallpaperPath = prompt(reader, "Wallpapers Directory", filepath.Join(os.Getenv("HOME"), "Pictures/Wallpapers"))
+	}
 
 	d, _ := yaml.Marshal(&conf)
 	os.WriteFile(filepath.Join(targetDir, "wigo.yaml"), d, 0644)
