@@ -43,6 +43,9 @@
           postInstall = ''
             wrapProgram $out/bin/wigo \
               --prefix PATH : ${pkgs.lib.makeBinPath runtimeDeps}
+
+            echo "Running wigo update --init post-install to setup the environment..."
+            $out/bin/wigo update --init
           '';
         };
       }
