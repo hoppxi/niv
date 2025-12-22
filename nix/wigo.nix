@@ -60,7 +60,6 @@ in
             type = lib.types.listOf (
               lib.types.submodule {
                 options = {
-                  # Wallpaper launcher schema
                   name = lib.mkOption {
                     type = lib.types.nullOr lib.types.str;
                     default = null;
@@ -103,8 +102,8 @@ in
             default = [ ];
             description = ''
               Optional launcher extensions. Each entry must be either:
-              1) Wallpaper type: name, trigger, trigger_short, from_folder, exclude_type, on_select, limit
-              2) Executable type: name, trigger, trigger_short, path
+              1) From folder type: name, trigger, trigger_short, from_folder, exclude_type, on_select, limit
+              2) From Executable: name, trigger, trigger_short, path
             '';
           };
         };
@@ -126,10 +125,28 @@ in
 
       Service = {
         Type = "simple";
-        ExecStart = "${cfg.package}/bin/wigo start";
-        ExecStartPost = if cfg.notification then "${cfg.package}/bin/wigo notification" else null;
-        Restart = "on-failure";
-        RestartSec = 2;
+        ExecStart = ''${pkgs.bash}/bin/bash -c "${cfg.package}/bin/wigo start & wait"'';
+        Restart = "always";
+        RestartSec = 5;
+      };
+
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
+    };
+
+    systemd.user.services.wigo-notification = lib.mkIf cfg.notification {
+      Unit = {
+        Description = "Wigo Notification";
+        After = [ "graphical-session.target" ];
+        Wants = [ "graphical-session.target" ];
+      };
+
+      Service = {
+        Type = "simple";
+        ExecStart = ''${pkgs.bash}/bin/bash -c "${pkgs.coreutils}/bin/sleep 5; ${cfg.package}/bin/wigo notification & wait"'';
+        Restart = "always";
+        RestartSec = 5;
       };
 
       Install = {
