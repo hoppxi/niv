@@ -9,10 +9,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var Version = "0.1.1"
+
 var rootCmd = &cobra.Command{
-	Use:   "wigo",
-	Short: "Wigo CLI for EWW widgets and system monitoring",
-	Long:  "Wigo controls EWW widgets and monitors system info",
+	Use:     "wigo",
+	Version: Version,
+	Short:   "Wigo CLI for EWW widgets and system monitoring",
+	Long:    "Wigo controls EWW widgets and monitors system info",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		if cmd.Name() == "setup" || cmd.Name() == "config" || cmd.Name() == "update" || cmd.Name() == "help" {
 			return
