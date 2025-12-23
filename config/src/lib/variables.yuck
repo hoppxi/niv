@@ -1,21 +1,21 @@
 ; Bar
 (defvar WORKSPACES `[
-  { "id": 1, "windows": 0 },
-  { "id": 2, "windows": 0 },
-  { "id": 3, "windows": 0 },
-  { "id": 4, "windows": 0 },
-  { "id": 5, "windows": 0 },
-  { "id": 6, "windows": 0 },
-  { "id": 7, "windows": 0 },
-  { "id": 8, "windows": 0 },
-  { "id": 9, "windows": 0 },
-  { "id": 10, "windows": 0 }
+  { "id": 1, "windows": [] },
+  { "id": 2, "windows": [] },
+  { "id": 3, "windows": [] },
+  { "id": 4, "windows": [] },
+  { "id": 5, "windows": [] },
+  { "id": 6, "windows": [] },
+  { "id": 7, "windows": [] },
+  { "id": 8, "windows": [] },
+  { "id": 9, "windows": [] },
+  { "id": 10, "windows": [] }
 ]`)
 (defvar ACTIVE_WINDOW `{"title": "Desktop", "workspace": 1}`)
 (defvar ACTIVE_WORKSPACE `{"id": 1, "windows": 0}`)
 
-(defvar WALLPAPER `./assets/images/default_wallpaper.png`)
-(defvar WALLPAPERS_PATH `["./assets/images/default_wallpaper.png"]`)
+(defvar WALLPAPER `/tmp/wigo/wallpaper_rounded.png`)
+(defvar WALLPAPERS_PATH `~/.config/eww/assets/images/default_wallpaper.png`)
 
 ;; Icons
 (defvar ICONS_INFO `{
@@ -43,7 +43,7 @@
 (defvar NETWORK_INFO `{
     "enabled": true,
     "connected": false,
-    "current_connection": { "ssid": "Not connected", "speed": "170" },
+    "current_connection": { "ssid": "Not connected", "strength": "0", "type": "wifi" },
     "networks": []
 }`)
 
@@ -51,7 +51,7 @@
     "enabled": true,
     "connected": false,
     "current_connection": { "name": "Not connected", "battery": 100 },
-    "devices": []
+    "connected_devices": []
 },`)
 
 (defvar MISC_INFO `{
@@ -78,7 +78,6 @@
 (defvar MEDIA_NORMALIZED_ELAPSED_TIME 0)
 (defvar MEDIA_ELAPSED_TIME "00:00")
 
-;; Verse
 (defvar BATTERY_INFO `{
   "voltage": "0V",
   "design_capacity": "0 mAh",
@@ -125,3 +124,6 @@
 (defvar OSD_BATTERY_LOW_5 false)
 (defvar OSD_CHARGER_PLUGGED false)
 (defvar OSD_CHARGER_UNPLUGGED false)
+(defvar OSD_CAPS false)
+(defvar OSD_NUM false)
+(defvar OSD_SCROLL false)

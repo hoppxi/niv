@@ -18,7 +18,18 @@ func equalWindow(a, b workspace.Window) bool {
 
 // Compare workspace
 func equalWorkspace(a, b workspace.Workspace) bool {
-	return a.ID == b.ID && a.Windows == b.Windows
+	if a.ID != b.ID {
+		return false
+	}
+	if len(a.Windows) != len(b.Windows) {
+		return false
+	}
+	for i := range a.Windows {
+		if !equalWindow(a.Windows[i], b.Windows[i]) {
+			return false
+		}
+	}
+	return true
 }
 
 // Compare workspace lists

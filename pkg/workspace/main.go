@@ -7,6 +7,10 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
+	"sync"
+
+	"github.com/hoppxi/wigo/pkg/search"
 )
 
 type hyprWorkspace struct {
@@ -18,20 +22,26 @@ type hyprWindow struct {
 	Title        string `json:"title"`
 	Class        string `json:"class"`
 	InitialClass string `json:"initialClass"`
+	Address      string `json:"address"`
 	Workspace    struct {
 		ID int `json:"id"`
 	} `json:"workspace"`
 }
 
+// Updated Workspace struct to hold a slice of Window structs
 type Workspace struct {
-	ID      int `json:"id"`
-	Windows int `json:"windows"`
+	ID      int      `json:"id"`
+	Windows []Window `json:"windows"`
+	Active  bool     `json:"active"`
 }
 
+// Updated Window struct to include the Icon field
 type Window struct {
 	Title     string `json:"title"`
 	Workspace int    `json:"workspace"`
 	Class     string `json:"class"`
+	Icon      string `json:"icon"`
+	Address   string `json:"address"`
 }
 
 func ctlSocket() string {
@@ -62,16 +72,17 @@ func GetActiveWorkspace() Workspace {
 	var data hyprWorkspace
 	res, err := hyprQuery("j/activeworkspace")
 	if err != nil || json.Unmarshal(res, &data) != nil {
-		return Workspace{ID: 1, Windows: 0}
+		return Workspace{ID: 1, Windows: nil}
 	}
-	return Workspace{ID: data.ID, Windows: data.Windows}
+	// Return empty slice instead of 0
+	return Workspace{ID: data.ID, Windows: []Window{}}
 }
 
 func GetActiveWindow() Window {
 	var data hyprWindow
 	res, err := hyprQuery("j/activewindow")
 	if err != nil || json.Unmarshal(res, &data) != nil {
-		return Window{Title: "Desktop", Workspace: 1, Class: "Niv"}
+		return Window{Title: "Desktop", Workspace: 1, Class: "Niv", Icon: Icons("Desktop")}
 	}
 
 	title, class := data.Title, data.Class
@@ -81,43 +92,139 @@ func GetActiveWindow() Window {
 	if class == "" {
 		class = data.InitialClass
 	}
-	if class == "" {
-		class = "Niv"
-	}
 
 	return Window{
 		Title:     title,
 		Workspace: data.Workspace.ID,
 		Class:     class,
+		Icon:      Icons(class),
+		Address:   data.Address,
 	}
 }
 
 func GetWorkspaces() []Workspace {
 	persistent := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-	exists := map[int]int{}
+	workspaceMap := make(map[int][]Window)
+
 	for _, id := range persistent {
-		exists[id] = 0
+		workspaceMap[id] = []Window{}
 	}
 
-	var ws []hyprWorkspace
-	res, err := hyprQuery("j/workspaces")
-	if err == nil {
-		if err := json.Unmarshal(res, &ws); err == nil {
-			for _, w := range ws {
-				exists[w.ID] = w.Windows
+	var hyprWs []hyprWorkspace
+	if res, err := hyprQuery("j/workspaces"); err == nil {
+		if err := json.Unmarshal(res, &hyprWs); err == nil {
+			for _, w := range hyprWs {
+				if _, ok := workspaceMap[w.ID]; !ok {
+					workspaceMap[w.ID] = []Window{}
+				}
 			}
 		}
 	}
 
-	ids := make([]int, 0, len(exists))
-	for id := range exists {
+	var clients []hyprWindow
+	if res, err := hyprQuery("j/clients"); err == nil {
+		if err := json.Unmarshal(res, &clients); err == nil {
+			for _, c := range clients {
+				class := c.Class
+				if class == "" {
+					class = c.InitialClass
+				}
+
+				win := Window{
+					Title:     c.Title,
+					Workspace: c.Workspace.ID,
+					Class:     class,
+					Icon:      Icons(class),
+					Address:   c.Address,
+				}
+
+				workspaceMap[c.Workspace.ID] = append(workspaceMap[c.Workspace.ID], win)
+			}
+		}
+	}
+
+	ids := make([]int, 0, len(workspaceMap))
+	for id := range workspaceMap {
 		ids = append(ids, id)
 	}
 	sort.Ints(ids)
 
 	out := make([]Workspace, 0, len(ids))
+	activeWs := GetActiveWorkspace()
 	for _, id := range ids {
-		out = append(out, Workspace{ID: id, Windows: exists[id]})
+		out = append(out, Workspace{
+			ID:      id,
+			Windows: workspaceMap[id],
+			Active:  id == activeWs.ID,
+		})
 	}
+
 	return out
+}
+
+func GetWorkspace(id int) Workspace {
+	// 1. Determine if this workspace is the currently focused one
+	activeWs := GetActiveWorkspace()
+	isActive := (id == activeWs.ID)
+
+	windows := []Window{}
+	if res, err := hyprQuery("j/clients"); err == nil {
+		var clients []hyprWindow
+		if err := json.Unmarshal(res, &clients); err == nil {
+			for _, c := range clients {
+				if c.Workspace.ID == id {
+					class := c.Class
+					if class == "" {
+						class = c.InitialClass
+					}
+
+					windows = append(windows, Window{
+						Title:     c.Title,
+						Workspace: c.Workspace.ID,
+						Class:     class,
+						Icon:      Icons(class),
+						Address:   c.Address,
+					})
+				}
+			}
+		}
+	}
+
+	return Workspace{
+		ID:      id,
+		Windows: windows,
+		Active:  isActive,
+	}
+}
+
+var (
+	iconCache map[string]string
+	once      sync.Once
+)
+
+func Icons(class string) string {
+	once.Do(func() {
+		iconCache = make(map[string]string)
+
+		allApps := search.SearchDesktopApps("")
+
+		for _, app := range allApps {
+			nameKey := strings.ToLower(app.Name)
+			cmdKey := strings.ToLower(app.Command)
+
+			if _, exists := iconCache[nameKey]; !exists {
+				iconCache[nameKey] = app.Icon
+			}
+			if _, exists := iconCache[cmdKey]; !exists {
+				iconCache[cmdKey] = app.Icon
+			}
+		}
+	})
+
+	target := strings.ToLower(class)
+	if icon, found := iconCache[target]; found && icon != "" {
+		return icon
+	}
+
+	return "desktop"
 }
