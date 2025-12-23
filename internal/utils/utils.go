@@ -23,6 +23,20 @@ func HyprctlSocket() string {
 	return filepath.Join(os.Getenv("XDG_RUNTIME_DIR"), "hypr", os.Getenv("HYPRLAND_INSTANCE_SIGNATURE"), ".socket.sock")
 }
 
+func HyprCmd(cmd string) error {
+	conn, err := net.Dial("unix", HyprctlSocket())
+	if err != nil {
+		return err
+	}
+	defer conn.Close()
+
+	_, err = conn.Write([]byte(cmd))
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func HyprQuery(cmd string) ([]byte, error) {
 	conn, err := net.Dial("unix", HyprctlSocket())
 	if err != nil {

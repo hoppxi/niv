@@ -2,32 +2,13 @@ package watchers
 
 import (
 	"log"
-	"net"
 	"os"
-	"path/filepath"
 
 	"github.com/fsnotify/fsnotify"
+	"github.com/hoppxi/wigo/internal/utils"
 )
 
 const stateFile = "/tmp/wigo/wigo_widget_state"
-
-func ctlSocket() string {
-	return filepath.Join(os.Getenv("XDG_RUNTIME_DIR"), "hypr", os.Getenv("HYPRLAND_INSTANCE_SIGNATURE"), ".socket.sock")
-}
-
-func runHyprctlCmd(cmd string) error {
-	conn, err := net.Dial("unix", ctlSocket())
-	if err != nil {
-		return err
-	}
-	defer conn.Close()
-
-	_, err = conn.Write([]byte(cmd))
-	if err != nil {
-		return err
-	}
-	return nil
-}
 
 func StartEscWatcher(stop <-chan struct{}) {
 	watcher, err := fsnotify.NewWatcher()
@@ -37,14 +18,14 @@ func StartEscWatcher(stop <-chan struct{}) {
 	defer watcher.Close()
 
 	bindEsc := func() {
-		if err := runHyprctlCmd("keyword bind ,escape,exec,wigo close all"); err != nil {
+		if err := utils.HyprCmd("keyword bind ,escape,exec,wigo close all"); err != nil {
 			log.Printf("Unable to bind esc to close the widget. error: %v", err)
 		}
 		// exec.Command("hyprctl", "keyword", "bind", ",escape,exec,wigo close all").Run()
 	}
 
 	unbindEsc := func() {
-		if err := runHyprctlCmd("keyword unbind ,escape"); err != nil {
+		if err := utils.HyprCmd("keyword unbind ,escape"); err != nil {
 			log.Printf("Unable to bind esc to close the widget. error: %v", err)
 		}
 		// exec.Command("hyprctl", "keyword", "unbind", ",escape").Run()
