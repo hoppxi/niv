@@ -9,6 +9,7 @@
     :class "left-bar"
 
     (button
+      :timeout "100s"
       :class "hover"
       :onclick "wigo toggle launcher"
       (image :icon "${GENERAL_CONFIG.top_left_icon != '' || GENERAL_CONFIG.top_left_icon != 'null' ? GENERAL_CONFIG.top_left_icon : 'distributor-logo-nixos'}")
@@ -18,6 +19,7 @@
 
     (eventbox
       :onscroll "hyprctl dispatch workspace r$( [[ {} == 'up' ]] && echo '+' || echo '-' )1"
+      :timeout "100s"
       (box
         :halign "center"
         :valign "center"
@@ -28,8 +30,9 @@
 
           (box
             (button
+              :timeout "100s"
               :valign "center"
-              :class {ACTIVE_WORKSPACE.id == WORKSPACE.id ? (WORKSPACE.windows > 0 ? "has-window active wbtn" : "active wbtn") : (WORKSPACE.windows > 0 ? "has-window wbtn" : "wbtn")}
+              :class {ACTIVE_WORKSPACE.id == WORKSPACE.id ? (arraylength(WORKSPACE.windows) > 0 ? "has-window active wbtn" : "active wbtn") : (arraylength(WORKSPACE.windows) > 0 ? "has-window wbtn" : "wbtn")}
               :onclick "hyprctl dispatch workspace ${WORKSPACE.id}"
             )
           )
@@ -42,6 +45,7 @@
     (button
       :class "hover"
       :onclick "wigo toggle media"
+      :timeout "100s"
       (box
         :valign "center"
         :space-evenly false

@@ -6,7 +6,11 @@
     :class "main-bar panel"
     :valign "center"
     (left-bar)
-    (label :limit-width 30 :width 80 :truncate true :text {ACTIVE_WINDOW.title})
+    (box
+      :space-evenly false
+      :spacing 3
+      (image :icon {ACTIVE_WINDOW.icon})
+      (label :limit-width 30 :width 80 :truncate true :text {ACTIVE_WINDOW.title})
     (right-bar)
   )
 )

@@ -7,6 +7,7 @@
     :spacing 15
 
     (button
+      :timeout "100s"
       :onclick "eww update ACTIVE_STACK_QS=6 & wigo open quick-settings "
       :class "q-info"
       (label :text {formattime(EWW_TIME, "%I:%M %a, %b %d")})
@@ -15,6 +16,7 @@
     (icon :size 8 :name "water_drop")
 
     (button
+      :timeout "100s"
       :onclick "wigo toggle quick-settings"
       :class "q-info"
       (box
