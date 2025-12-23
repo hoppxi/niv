@@ -22,7 +22,7 @@
 					:class "launcher-input"
 					:timeout "10s"
 					:onchange `eww update SEARCH_RESULTS="$(wigo search '{}' | jq -c .)"`
-					:onaccept "${SEARCH_RESULTS[0].command} & wigo close launcher"
+					:onaccept "setsid nohup ${SEARCH_RESULTS[0].command} >/dev/null 2>&1 < /dev/null & wigo close launcher"
 				)
 				(box :class "launcher-icon" :halign "start" (icon :size 16 :name "search"))
 			)
