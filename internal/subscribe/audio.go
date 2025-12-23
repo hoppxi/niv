@@ -1,52 +1,83 @@
 package subscribe
 
 import (
-	"bufio"
 	"log"
-	"strings"
 
-	"github.com/hoppxi/wigo/internal/manager"
+	"github.com/jfreymuth/pulse/proto"
 )
+
+type AudioEvent struct {
+	Facility proto.SubscriptionEventType
+	Index    uint32
+}
 
 func AudioEvents() <-chan AudioEvent {
 	out := make(chan AudioEvent, 16)
-	cmd, cancel := manager.NewCmd("pactl", "subscribe")
 
-	stdout, err := cmd.StdoutPipe()
+	client, conn, err := proto.Connect("")
 	if err != nil {
-		log.Printf("subscribe: failed to get stdout pipe: %v", err)
-		cancel() // Clean up context if pipe fails
+		log.Printf("failed to connect to pulse server: %v", err)
 		close(out)
 		return out
 	}
-
-	if manager.StartTrackedCmd(cmd, cancel) == nil {
-		close(out)
-		return out
-	}
-
 	go func() {
-		defer close(out)
-		scanner := bufio.NewScanner(stdout)
+		defer conn.Close()
+		ch := make(chan struct{}, 1)
 
-		for scanner.Scan() {
-			line := scanner.Text()
-			if isAudioChange(line) {
-				select {
-				case out <- AudioEvent{}:
-				default:
+		client.Callback = func(val any) {
+			switch val := val.(type) {
+			case *proto.SubscribeEvent:
+				if val.Event.GetType() == proto.EventChange {
+					select {
+					case ch <- struct{}{}:
+					default:
+					}
 				}
+			}
+		}
+
+		err := client.Request(&proto.SetClientName{}, nil)
+		if err != nil {
+			log.Printf("SetClientName failed: %v", err)
+			close(out)
+			return
+		}
+
+		err = client.Request(&proto.Subscribe{Mask: proto.SubscriptionMaskAll}, nil)
+		if err != nil {
+			log.Printf("Subscribe failed: %v", err)
+			close(out)
+			return
+		}
+
+		var defaultSinkName string
+		serverInfo := proto.GetServerInfoReply{}
+		err = client.Request(&proto.GetServerInfo{}, &serverInfo)
+		if err != nil {
+			log.Printf("GetServerInfo failed: %v", err)
+			close(out)
+			return
+		}
+		defaultSinkName = serverInfo.DefaultSinkName
+
+		for range ch {
+			repl := proto.GetSinkInfoReply{}
+			err = client.Request(&proto.GetSinkInfo{SinkIndex: proto.Undefined, SinkName: defaultSinkName}, &repl)
+			if err != nil {
+				log.Printf("GetSinkInfo failed: %v", err)
+				continue
+			}
+			var acc int64
+			for _, vol := range repl.ChannelVolumes {
+				acc += int64(vol)
+			}
+			acc /= int64(len(repl.ChannelVolumes))
+			select {
+			case out <- AudioEvent{Facility: proto.EventSink, Index: 0}:
+			default:
 			}
 		}
 	}()
 
 	return out
-}
-
-func isAudioChange(line string) bool {
-	line = strings.ToLower(line)
-	return strings.Contains(line, "sink") ||
-		strings.Contains(line, "source") ||
-		strings.Contains(line, "server") ||
-		strings.Contains(line, "card")
 }

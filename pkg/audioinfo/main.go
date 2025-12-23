@@ -1,18 +1,16 @@
 package audioinfo
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
-	"os/exec"
-	"regexp"
-	"strconv"
-	"strings"
+
+	"github.com/jfreymuth/pulse"
+	"github.com/jfreymuth/pulse/proto"
 )
 
 type AudioDevice struct {
 	Name  string `json:"name"`
-	Level int    `json:"level"`
+	Level int    `json:"level"` // percent 0-100
 	Muted bool   `json:"muted"`
 }
 
@@ -21,94 +19,84 @@ type AudioInfo struct {
 	Input  AudioDevice `json:"input"`
 }
 
-func parseVolume(line string) int {
-	re := regexp.MustCompile(`(\d+)%`)
-	matches := re.FindAllStringSubmatch(line, -1)
-	if len(matches) == 0 {
+func channelVolumesToPercent(cv proto.ChannelVolumes) int {
+	if len(cv) == 0 {
 		return 100
 	}
-	var sum int
-	for _, m := range matches {
-		v, _ := strconv.Atoi(m[1])
-		sum += v
+	var sum float64
+	for _, v := range cv {
+		sum += float64(v) / float64(proto.VolumeNorm) * 100.0
 	}
-	return sum / len(matches)
+	pct := int(sum/float64(len(cv)) + 0.5)
+	if pct < 0 {
+		pct = 0
+	}
+	if pct > 100 {
+		pct = 100
+	}
+	return pct
 }
 
-func parseMuted(line string) bool {
-	return strings.Contains(strings.ToLower(line), "yes")
-}
-
-func getDefaultDeviceName(kind string) (string, error) {
-	cmd := exec.Command("pactl", "info")
-	out, err := cmd.Output()
-	if err != nil {
-		return "", err
-	}
-	lines := strings.Split(string(out), "\n")
-	prefix := ""
-	if kind == "sink" {
-		prefix = "Default Sink: "
-	} else {
-		prefix = "Default Source: "
-	}
-	for _, line := range lines {
-		if after, found := strings.CutPrefix(line, prefix); found {
-			return after, nil
+func getDeviceInfo(c *pulse.Client, isSink bool) (AudioDevice, error) {
+	var dev AudioDevice
+	if isSink {
+		s, err := c.DefaultSink()
+		if err != nil {
+			return dev, fmt.Errorf("failed to get default sink: %w", err)
 		}
-	}
-	return "", fmt.Errorf("default %s not found", kind)
-}
-
-func getDeviceFromPactl(kind string) (AudioDevice, error) {
-	name, err := getDefaultDeviceName(kind)
-	if err != nil {
-		return AudioDevice{}, err
-	}
-
-	cmd := exec.Command("pactl", "list", kind+"s")
-	out, err := cmd.Output()
-	if err != nil {
-		return AudioDevice{}, err
-	}
-
-	devices := bytes.SplitSeq(out, []byte("\n\n"))
-	for block := range devices {
-		if !bytes.Contains(block, []byte(name)) {
-			continue
+		id := s.ID()
+		name := s.Name()
+		var reply proto.GetSinkInfoReply
+		req := proto.GetSinkInfo{SinkIndex: proto.Undefined, SinkName: id}
+		if err := c.RawRequest(&req, &reply); err != nil {
+			return dev, fmt.Errorf("failed to request sink info: %w", err)
 		}
-		lines := bytes.Split(block, []byte("\n"))
-		dev := AudioDevice{Name: name}
-		for _, l := range lines {
-			line := strings.TrimSpace(string(l))
-			if strings.HasPrefix(line, "Mute:") {
-				dev.Muted = parseMuted(line)
-			}
-			if strings.HasPrefix(line, "Volume:") {
-				dev.Level = parseVolume(line)
-			}
+		dev = AudioDevice{
+			Name:  name,
+			Level: channelVolumesToPercent(reply.ChannelVolumes),
+			Muted: reply.Mute,
 		}
 		return dev, nil
 	}
 
-	// fallback
-	return AudioDevice{Name: name, Level: 100, Muted: false}, nil
+	src, err := c.DefaultSource()
+	if err != nil {
+		return dev, fmt.Errorf("failed to get default source: %w", err)
+	}
+	id := src.ID()
+	name := src.Name()
+	var reply proto.GetSourceInfoReply
+	req := proto.GetSourceInfo{SourceIndex: proto.Undefined, SourceName: id}
+	if err := c.RawRequest(&req, &reply); err != nil {
+		return dev, fmt.Errorf("failed to request source info: %w", err)
+	}
+	dev = AudioDevice{
+		Name:  name,
+		Level: channelVolumesToPercent(reply.ChannelVolumes),
+		Muted: reply.Mute,
+	}
+	return dev, nil
 }
 
 func GetAudioInfo() (*AudioInfo, error) {
-	out, err := getDeviceFromPactl("sink")
+	c, err := pulse.NewClient()
 	if err != nil {
-		return nil, fmt.Errorf("failed to get output: %v", err)
+		return nil, fmt.Errorf("failed to create pulse client: %w", err)
 	}
+	defer c.Close()
 
-	in, err := getDeviceFromPactl("source")
+	out, err := getDeviceInfo(c, true)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get input: %v", err)
+		return nil, err
 	}
-
-	info := &AudioInfo{}
-	info.Output = out
-	info.Input = in
+	in, err := getDeviceInfo(c, false)
+	if err != nil {
+		return nil, err
+	}
+	info := &AudioInfo{
+		Output: out,
+		Input:  in,
+	}
 	return info, nil
 }
 

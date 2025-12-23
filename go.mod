@@ -6,6 +6,7 @@ require (
 	github.com/fsnotify/fsnotify v1.9.0
 	github.com/godbus/dbus/v5 v5.2.0
 	github.com/google/uuid v1.6.0
+	github.com/jfreymuth/pulse v0.1.1
 	github.com/knetic/govaluate v3.0.0+incompatible
 	github.com/ncruces/zenity v0.10.14
 	github.com/spf13/cobra v1.10.1
