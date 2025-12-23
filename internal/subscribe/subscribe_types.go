@@ -20,7 +20,6 @@ type Notification struct {
 
 type NetworkEvent struct{}
 type BluetoothEvent struct{}
-type AudioEvent struct{}
 type MediaEvent struct {
 	Player   string
 	Property string
