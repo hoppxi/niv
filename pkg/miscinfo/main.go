@@ -12,10 +12,10 @@ import (
 
 // MiscInfo struct for JSON
 type MiscInfo struct {
-		Name   string `json:"name"`
-		OS     string `json:"os"`
-		OSIcon string `json:"osicon"`
-		Uptime string `json:"uptime"`
+	Name   string `json:"name"`
+	OS     string `json:"os"`
+	OSIcon string `json:"osicon"`
+	Uptime string `json:"uptime"`
 }
 
 // GetMisc gathers misc information
@@ -47,13 +47,10 @@ func GetMisc() MiscInfo {
 	return info
 }
 
-// JSON helper
 func GetMiscJSON() ([]byte, error) {
 	info := GetMisc()
 	return json.MarshalIndent(info, "", "  ")
 }
-
-// ---- Helpers ----
 
 func getLinuxDistro() (name, icon string) {
 	f, err := os.Open("/etc/os-release")
@@ -81,7 +78,7 @@ func getLinuxDistro() (name, icon string) {
 		id = "linux"
 	}
 
-	return prettyName, id
+	return prettyName, "distributor-logo-" + id
 }
 
 func GetUptime() string {
