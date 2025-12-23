@@ -72,4 +72,5 @@ func init() {
 	rootCmd.AddCommand(searchCmd)
 	rootCmd.AddCommand(notificationCmd)
 	rootCmd.AddCommand(wallpaperCmd)
+	rootCmd.AddCommand(idleCmd)
 }

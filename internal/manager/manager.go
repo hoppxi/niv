@@ -12,6 +12,9 @@ import (
 	"sync"
 	"syscall"
 	"time"
+
+	"github.com/hoppxi/wigo/internal/wallpaper"
+	"github.com/hoppxi/wigo/internal/watchers"
 )
 
 type TrackedCmd struct {
@@ -20,10 +23,11 @@ type TrackedCmd struct {
 }
 
 type AppManager struct {
-	mu    sync.Mutex
-	cmds  []TrackedCmd
-	stops []chan struct{}
-	wg    sync.WaitGroup
+	mu      sync.Mutex
+	cmds    []TrackedCmd
+	stops   []chan struct{}
+	wg      sync.WaitGroup
+	started bool
 }
 
 var Manage = &AppManager{}
@@ -117,6 +121,40 @@ func (m *AppManager) handleConnection(conn net.Conn) {
 
 	case "STATUS":
 		_, _ = conn.Write([]byte("OK: running"))
+	case "START":
+		m.mu.Lock()
+		if m.started {
+			m.mu.Unlock()
+			_, _ = conn.Write([]byte("OK: Already started"))
+			return
+		}
+		m.started = true
+		m.mu.Unlock()
+
+		log.Println("Received START via IPC. Initializing watchers and widgets...")
+		_, _ = conn.Write([]byte("OK: Starting"))
+
+		cfg := Config.Load()
+		wallpaper.SetWallpaperStartup()
+		watchers.ConfigUpdate(cfg)
+		Config.Watch(func() {
+			watchers.ConfigUpdate(cfg)
+		})
+
+		Manage.StartWatcher(watchers.StartAudioWatcher)
+		Manage.StartWatcher(watchers.StartBatteryWatcher)
+		Manage.StartWatcher(watchers.StartNetworkWatcher)
+		Manage.StartWatcher(watchers.StartBluetoothWatcher)
+		Manage.StartWatcher(watchers.StartDisplayWatcher)
+		Manage.StartWatcher(watchers.StartMediaWatcher)
+		Manage.StartWatcher(watchers.StartWorkspaceWatcher)
+		Manage.StartWatcher(watchers.StartMiscWatcher)
+		Manage.StartWatcher(watchers.StartEscWatcher)
+		Manage.StartWatcher(watchers.StartLEDsWatcher)
+
+		if err := exec.Command("eww", "open-many", "bar", "wallpaper", "clock", "notification-view", "osd").Run(); err != nil {
+			log.Printf("Failed to start widgets: %v", err)
+		}
 
 	default:
 		_, _ = conn.Write([]byte("ERR: unknown command"))
