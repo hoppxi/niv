@@ -70,11 +70,11 @@ func mapNetwork(n *netinfo.NetworkInfo) string {
 	}
 
 	switch {
-	case n.CurrentConnection.Speed >= 70:
+	case n.CurrentConnection.Strength >= 70:
 		return "wifi"
-	case n.CurrentConnection.Speed >= 40:
+	case n.CurrentConnection.Strength >= 40:
 		return "wifi_2_bar"
-	case n.CurrentConnection.Speed >= 1:
+	case n.CurrentConnection.Strength >= 1:
 		return "wifi_1_bar"
 	default:
 		return "wifi"
