@@ -7,10 +7,6 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
-	"strings"
-	"sync"
-
-	"github.com/hoppxi/wigo/pkg/search"
 )
 
 type hyprWorkspace struct {
@@ -40,7 +36,6 @@ type Window struct {
 	Title     string `json:"title"`
 	Workspace int    `json:"workspace"`
 	Class     string `json:"class"`
-	Icon      string `json:"icon"`
 	Address   string `json:"address"`
 }
 
@@ -82,7 +77,7 @@ func GetActiveWindow() Window {
 	var data hyprWindow
 	res, err := hyprQuery("j/activewindow")
 	if err != nil || json.Unmarshal(res, &data) != nil {
-		return Window{Title: "Desktop", Workspace: 1, Class: "Niv", Icon: Icons("Desktop")}
+		return Window{Title: "Desktop", Workspace: 1, Class: "Wigo"}
 	}
 
 	title, class := data.Title, data.Class
@@ -97,7 +92,6 @@ func GetActiveWindow() Window {
 		Title:     title,
 		Workspace: data.Workspace.ID,
 		Class:     class,
-		Icon:      Icons(class),
 		Address:   data.Address,
 	}
 }
@@ -134,7 +128,6 @@ func GetWorkspaces() []Workspace {
 					Title:     c.Title,
 					Workspace: c.Workspace.ID,
 					Class:     class,
-					Icon:      Icons(class),
 					Address:   c.Address,
 				}
 
@@ -182,7 +175,6 @@ func GetWorkspace(id int) Workspace {
 						Title:     c.Title,
 						Workspace: c.Workspace.ID,
 						Class:     class,
-						Icon:      Icons(class),
 						Address:   c.Address,
 					})
 				}
@@ -195,36 +187,4 @@ func GetWorkspace(id int) Workspace {
 		Windows: windows,
 		Active:  isActive,
 	}
-}
-
-var (
-	iconCache map[string]string
-	once      sync.Once
-)
-
-func Icons(class string) string {
-	once.Do(func() {
-		iconCache = make(map[string]string)
-
-		allApps := search.SearchDesktopApps("")
-
-		for _, app := range allApps {
-			nameKey := strings.ToLower(app.Name)
-			cmdKey := strings.ToLower(app.Command)
-
-			if _, exists := iconCache[nameKey]; !exists {
-				iconCache[nameKey] = app.Icon
-			}
-			if _, exists := iconCache[cmdKey]; !exists {
-				iconCache[cmdKey] = app.Icon
-			}
-		}
-	})
-
-	target := strings.ToLower(class)
-	if icon, found := iconCache[target]; found && icon != "" {
-		return icon
-	}
-
-	return "desktop"
 }
