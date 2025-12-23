@@ -1,6 +1,7 @@
 
 (include "./src/components/icons.yuck")
 (include "./src/components/navigator.yuck")
+(include "./src/components/osd.yuck")
 
 (include "./src/widgets/bar/main.yuck")
 (include "./src/widgets/clock/main.yuck")

@@ -25,48 +25,14 @@
       (label :text "${DISPLAY_INFO.level}%")
     )
 
-
-    ;; Battery
-    (box
-      :visible {OSD_BATTERY_FULL}
-      :space-evenly false
-      :spacing 10
-      :class "osd-container panel"
-      (icon :name "battery_android_frame_full")
-      (label :text "Battery full 100%")
-    )
-    (box
-      :visible {OSD_BATTERY_LOW_20}
-      :space-evenly false
-      :spacing 10
-      :class "osd-container panel"
-      (icon :name "battery_android_frame_1")
-      (label :text "Battery below 20%")
-    )
-    (box
-      :visible {OSD_BATTERY_LOW_5}
-      :space-evenly false
-      :spacing 10
-      :class "osd-container panel"
-      (icon :name "battery_android_alert")
-      (label :text "Battery below 5%")
-    )
-    (box
-      :visible {OSD_CHARGER_PLUGGED}
-      :space-evenly false
-      :spacing 10
-      :class "osd-container panel"
-      (icon :name "power")
-      (label :text "Charger plugged")
-    )
-    (box
-      :visible {OSD_CHARGER_UNPLUGGED}
-      :space-evenly false
-      :spacing 10
-      :class "osd-container panel"
-      (icon :name "power_off")
-      (label :text "Charger unplugged")
-    )
+    (osd-container :visible {OSD_BATTERY_FULL} :icon-text "battery_android_frame_full" :name "Battery full 100%")
+    (osd-container :visible {OSD_BATTERY_LOW_20} :icon-text "battery_android_frame_1" :name "Battery at 20%")
+    (osd-container :visible {OSD_BATTERY_LOW_5} :icon-text "battery_android_alert" :name "Battery below 5%")
+    (osd-container :visible {OSD_CHARGER_PLUGGED} :icon-text "power" :name "Charger plugged")
+    (osd-container :visible {OSD_CHARGER_UNPLUGGED} :icon-text "power_off" :name "Charger unplugged")
+    (osd-container :visible {OSD_CAPS} :icon-text "keyboard_capslock" :name "Caps lock on")
+    (osd-container :visible {OSD_NUM} :icon-text "dialpad" :name "Num lock on")
+    (osd-container :visible {OSD_SCROLL} :icon-text "swap_vert" :name "Caps lock on")
   )
 )
 
