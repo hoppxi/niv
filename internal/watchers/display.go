@@ -8,10 +8,11 @@ import (
 )
 
 func StartDisplayWatcher(stop <-chan struct{}) {
-	info, _ := displayinfo.GetDisplayInfo()
-	updateEww("DISPLAY_INFO", info)
+	prev, _ := displayinfo.GetDisplayInfo()
+	updateEww("DISPLAY_INFO", prev)
 
 	events := subscribe.DisplayEvents()
+	var osdTimer *time.Timer
 
 	for {
 		select {
@@ -21,11 +22,19 @@ func StartDisplayWatcher(stop <-chan struct{}) {
 			info, _ := displayinfo.GetDisplayInfo()
 			updateEww("DISPLAY_INFO", info)
 
-			go func() {
+			if prev.Level != info.Level {
+
 				updateEwwNoJson("OSD_DISPLAY", true)
-				time.Sleep(5 * time.Second)
-				updateEwwNoJson("OSD_DISPLAY", false)
-			}()
+				if osdTimer != nil {
+					osdTimer.Stop()
+				}
+
+				osdTimer = time.AfterFunc(3*time.Second, func() {
+					updateEwwNoJson("OSD_DISPLAY", false)
+				})
+
+				prev = info
+			}
 		}
 	}
 }

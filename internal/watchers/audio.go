@@ -19,6 +19,7 @@ func StartAudioWatcher(stop <-chan struct{}) {
 	updateEww("ICONS_INFO", iconInfo)
 
 	events := subscribe.AudioEvents()
+	var osdTimer *time.Timer
 
 	for {
 		select {
@@ -30,16 +31,18 @@ func StartAudioWatcher(stop <-chan struct{}) {
 
 			iconInfo := iconsinfo.GetIcons()
 			updateEww("ICONS_INFO", iconInfo)
-			go func() {
-				if prev.Output.Level != info.Output.Level {
-					updateEwwNoJson("OSD_VOLUME", true)
-					time.Sleep(5 * time.Second)
-					updateEwwNoJson("OSD_VOLUME", false)
 
-					prev = info
+			if prev.Output.Level != info.Output.Level {
+				updateEwwNoJson("OSD_VOLUME", true)
+				if osdTimer != nil {
+					osdTimer.Stop()
 				}
-			}()
 
+				osdTimer = time.AfterFunc(3*time.Second, func() {
+					updateEwwNoJson("OSD_VOLUME", false)
+				})
+				prev = info
+			}
 		}
 	}
 }
