@@ -15,8 +15,8 @@
 			:spacing 5
 			:space-evenly false
 			:class "quick-info-container"
-      (label :halign "start" :class "quick-info title" :text {NETWORK_INFO.current_connection.name})
-      (label :halign "start" :class "quick-info" :text "Connected, ${NETWORK_INFO.current_connection?.battery}%")
+      (label :halign "start" :class "quick-info title" :text {BLUETOOTH_INFO.current_connection.name != "" ? BLUETOOTH_INFO.current_connection.name : "Disconnected"})
+      (label :halign "start" :class "quick-info" :text "${BLUETOOTH_INFO.current_connection.name != '' ? 'Connected' : 'Not available'}, ${BLUETOOTH_INFO.current_connection?.battery}%")
 		)
 
     (box
@@ -29,7 +29,7 @@
 
       (centerbox
         :class "quick-bar"
-        (label :halign "start" :text "Bluetooth Devices")
+        (label :halign "start" :text "Paired Devices")
         (box)
         (box
           :halign "end"
@@ -53,7 +53,7 @@
           :spacing 2
           :space-evenly false
 
-          (for BLUETOOTHS in {BLUETOOTH_INFO.devices}
+          (for BLUETOOTH in {BLUETOOTH_INFO.connected_devices}
 
             (button
               :class "button"
@@ -62,8 +62,13 @@
                 :halign "start"
                 :spacing 5
                 (icon :name "bluetooth")
-                (label :text {BLUETOOTHS.name})
-                (label :class "secondary" :text "battery: ${BLUETOOTHS.battery}%")
+                (box
+                  :halign "start"
+                  :orientation "v"
+                  :spacing 5
+                  (label :halign "start" :text {BLUETOOTH.name})
+                  (label :halign "start" :class "secondary" :text "id: ${BLUETOOTH.id}")
+                )
               )
             )
           )

@@ -15,7 +15,7 @@
 			:space-evenly false
 			:class "quick-info-container"
       (label :halign "start" :class "quick-info title" :text {NETWORK_INFO.current_connection.ssid})
-      (label :halign "start" :class "quick-info" :text "Connected, ${NETWORK_INFO.current_connection?.speed}")
+      (label :halign "start" :class "quick-info" :text "Connected, ${NETWORK_INFO.current_connection?.strength}")
 		)
 
     (box
@@ -53,7 +53,7 @@
           :spacing 2
           :space-evenly false
 
-          (for NETWORKS in {NETWORK_INFO.networks}
+          (for NETWORK in {NETWORK_INFO.networks}
 
             (button
               :class "button"
@@ -61,9 +61,14 @@
                 :space-evenly false
                 :halign "start"
                 :spacing 5
-                (icon :name "wifi_password")
-                (label :text {NETWORKS.ssid})
-                (label :class "secondary" :text "${NETWORKS.type}, speed: ${NETWORKS.speed}")
+                (icon :name {NETWORK.active ? "signal_wifi_4_bar" : "wifi_password"})
+                (box
+                  :halign "start"
+                  :spacing 5
+                  :orientation "v"
+                  (label :halign "start" :text {NETWORK.ssid})
+                  (label :halign "start" :class "secondary" :text "${NETWORK.type}, strength: ${NETWORK.strength}")
+                )
               )
             )
           )

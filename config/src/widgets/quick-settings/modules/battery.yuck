@@ -14,8 +14,8 @@
 			:spacing 5
 			:space-evenly false
 			:class "quick-info-container"
-      (label :halign "start" :class "quick-info title" :text {EWW_BATTERY.BAT0.capacity})
-      (label :halign "start" :class "quick-info" :text "${EWW_BATTERY.BAT0.status}")
+      (label :halign "start" :class "quick-info title" :text "${EWW_BATTERY.BAT0.capacity}%, ${EWW_BATTERY.BAT0.status}")
+      (label :halign "start" :class "quick-info" :text "${BATTERY_DYNAMIC_INFO.time_remaining} Remaining")
 		)
 
     (box
@@ -60,7 +60,7 @@
               :halign "start"
               :spacing 5
               (icon :name "battery_android_frame_full")
-              (label :text "Level: ${EWW_BATTERY.BAT0.capacity}")
+              (label :text "Level: ${EWW_BATTERY.BAT0.capacity}%")
             )
           )
 
@@ -103,7 +103,7 @@
               :halign "start"
               :spacing 5
               (icon :name "electric_bolt")
-              (label :text "Volate: ${BATTERY_INFO.voltage}")
+              (label :text "Voltage: ${BATTERY_INFO.voltage}")
             )
           )
 

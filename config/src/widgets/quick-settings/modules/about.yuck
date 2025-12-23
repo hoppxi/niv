@@ -26,6 +26,7 @@
 
       (button
         :class "button"
+        :timeout "100s"
         :onclick "wigo wallpaper --select"
         (box
           :space-evenly false
@@ -37,6 +38,7 @@
       )
       (button
         :class "button"
+        :timeout "100s"
         :onclick "wigo wallpaper --random"
         (box
           :space-evenly false
