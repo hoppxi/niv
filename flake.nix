@@ -34,7 +34,7 @@
           version = "0.1.1";
           src = ./.;
 
-          vendorHash = "sha256-pkSrmi7XyNBfXBoQ9T/DGoTprnSml8hwr0T+yf03f2E=";
+          vendorHash = "sha256-W5xDH/LhRee+kCAXJSMCiU15RXOTtNcwC6eWuEZKHZQ=";
 
           subPackages = [ "cmd/wigo" ];
 
