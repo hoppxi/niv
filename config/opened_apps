@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+set -u
+
+for cmd in socat jq; do
+  if ! command -v "$cmd" >/dev/null 2>&1; then
+    echo "error: required command '$cmd' not found" >&2
+    exit 2
+  fi
+done
+
+find_socket() {
+  : "${XDG_RUNTIME_DIR:=${XDG_RUNTIME_DIR:-/run/user/$(id -u)}}"
+
+  candidates=()
+
+  if [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
+    candidates+=("$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket.sock")
+    candidates+=("/tmp/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket.sock")
+  else
+    candidates+=("$XDG_RUNTIME_DIR/hypr/"*"/.socket.sock")
+    candidates+=("/tmp/hypr/"*"/.socket.sock")
+  fi
+
+  for p in "${candidates[@]}"; do
+    for sock in $p; do
+      [ -e "$sock" ] || continue
+      if [ -S "$sock" ]; then
+        printf '%s' "$sock"
+        return 0
+      fi
+    done
+  done
+
+  return 1
+}
+
+SOCK="$(find_socket)" || {
+  echo "error: could not find Hyprland control socket. Is Hyprland running?" >&2
+  exit 3
+}
+
+RESP="$(printf 'j/clients' | socat - UNIX-CONNECT:"$SOCK" 2>/dev/null)" || {
+  echo "error: failed to query socket at '$SOCK' (socat failed)" >&2
+  exit 4
+}
+
+if [ -z "${RESP//[[:space:]]/}" ]; then
+  echo "error: empty response from hypr control socket" >&2
+  exit 5
+fi
+
+echo "$RESP" | jq '
+  # ensure we have an array
+  if (type == "array") then . else [.] end
+  | map(
+      {
+        name: (.title // .name // .class // "Window"),
+        gui: true,
+        type: "apps",
+        source: "hyprctl",
+        command: ("hyprctl dispatch focuswindow address:" + (.address // ""))
+      }
+    )
+'

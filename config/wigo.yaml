@@ -26,10 +26,11 @@ launcher-ext:
     help_text: "Quickly set your desktop background" # help text to show in :help filter; formarted as tigger <term> help_text
     limit: 20 # the number of results to show; 0 for no limit
 
-  - name: "todo" # metadata
-    tigger: ":todo" # make sure it does not exist in the built in first then it starts with a colon
-    trigger_short: ":to" # still make sure it does not extist in the built ins
-    path: "~/exp/todo" # make sure it is accesible (run chmod +x ~/exp/todo)
+  - name: "Opened Apps" # metadata
+    tigger: ":o-apps" # make sure it does not exist in the built in first then it starts with a colon
+    trigger_short: ":oa" # still make sure it does not extist in the built ins
+    # you can find the script in opened_apps in this repo
+    path: "~/.config/eww/opened_apps" # make sure it is accesible (run chmod +x ~/.config/eww/opened_apps)
     # the script should retrun a json with these
     # [{
     #   "name": "Zed", // what should be seen by the user in the list
